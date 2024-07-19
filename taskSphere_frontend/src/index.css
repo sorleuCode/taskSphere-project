@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+
+    @keyframes grow {
+        0% {
+          width: 0;
+        }
+        100% {
+          width: var(--progress-width);
+        }
+      }
+
+      .progress-bar {
+        --progress-width: 0%;
+        animation: grow 5s forwards;
+        transition: width 2s ease-out;
+      }
+
+
+      .zoom-in {
+        transform: scale(0);
+        animation: zoomIn 1s forwards;
+      }
+      
+      @keyframes zoomIn {
+        0% { transform: scale(0); }
+        100% { transform: scale(1); }
+      }
+      
+      
+      
+      
+}
