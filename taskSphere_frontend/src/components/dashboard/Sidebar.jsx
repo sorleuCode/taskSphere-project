@@ -15,9 +15,10 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="w-57 gap-10 bg-gray-100 h-screen p-5 flex flex-col">
+    <div className="w-57 gap-10 bg-gray-50 h-screen p-5 flex flex-col text-black">
       <div className="flex justify-center items-center mb-5">
-        <span className="w-10 flex justify-center items-center m-auto h-10 rounded-full bg-blue-700 font-bold text-white text-xl">AF</span>
+        <img src="" alt="" />
+        <span className='font-bold text-lg'>Tasksphere</span>
       </div>
       <div className="flex-1">
         <ul>

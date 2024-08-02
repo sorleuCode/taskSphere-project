@@ -1,14 +1,36 @@
-import React from 'react'
+// import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
-import { BrowserRouter } from 'react-router-dom'
+import CssBaseline from '@mui/material/CssBaseline'
+import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
+import theme from './theme';
+
+// Cấu hình react-toastify
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import "./index.css"
+
+
+// Cấu hình MUI Dialog
+import { ConfirmProvider } from 'material-ui-confirm'
+import App from './App'
+import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <CssVarsProvider theme={theme}>
+    <ConfirmProvider defaultOptions={{
+      allowClose: false,
+      dialogProps: { maxWidth: 'xs' },
+      buttonOrder: ['confirm', 'cancel'],
+      cancellationButtonProps: { color: 'inherit' },
+      confirmationButtonProps: { color: 'secondary', variant: 'outlined' }
+    }}>
+      <CssBaseline />
+      <BrowserRouter>
+         <App/>
+      </BrowserRouter>
+      <ToastContainer position="bottom-left" theme="colored" />
+    </ConfirmProvider>
+  </CssVarsProvider>
+  // </React.StrictMode>
 )
