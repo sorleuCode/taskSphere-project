@@ -50,7 +50,7 @@ const deleteItem = async (columnId) => {
     if (!targetColumn) {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Column not found!')
     }
-
+    
     // Xóa Column
     await columnModel.deleteOneById(columnId)
 

@@ -10,15 +10,9 @@ import { boardModel } from '~/models/boardModel'
 
 const createNew = async (req, res, next) => {
   try {
-    // console.log('req.body: ', req.body)
-    // console.log('req.query: ', req.query)
-    // console.log('req.params: ', req.params)
-    // console.log('req.files: ', req.files)
-    // console.log('req.cookies: ', req.cookies)
-    // console.log('req.jwtDecoded: ', req.jwtDecoded)
-
-    // Điều hướng dữ liệu sang tầng Service
-    const createdBoard = await boardService.createNew(req.body)
+   
+    const allData = {...req.body, creatorId: req.user._id}
+    const createdBoard = await boardService.createNew(allData)
 
     console.log("controller", createdBoard)
 
@@ -40,12 +34,15 @@ const getDetails = async (req, res, next) => {
 
 const getAllboardsDetails = async (req, res) => {
   try {
-      const boards = await boardModel.Board.find();
+
+      const boards = await boardModel.Board.find({creatorId: req.user._id});
+
       if(boards) {
         res.status(StatusCodes.OK).json(boards)
       }
       res.status(500).json({message: "no boards found"})
   } catch (error) {
+
       res.json(error.message)
   }
 }

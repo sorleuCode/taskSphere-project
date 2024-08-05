@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom/client'
 import CssBaseline from '@mui/material/CssBaseline'
 import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
 import theme from './theme';
-
+import {store} from "./redux/store/store";
+import { Provider } from 'react-redux';
 // Cấu hình react-toastify
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'

@@ -10,6 +10,7 @@ const mongoose = require("mongoose")
 const boardRoute = require("./routes/boardRoute")
 const cardRoute = require("./routes/cardRoute")
 const columnRoute = require("./routes/columnRoute")
+const userRoute = require("./routes/userRoute")
 const cookieParser = require("cookie-parser")
 
 const app = express()
@@ -25,20 +26,7 @@ app.use(cookieParser());
 app.use("/boards", boardRoute)
 app.use("/cards", cardRoute)
 app.use("/columns", columnRoute)
-
-// Enable req.body json data
-// app.use(express.json())
-
-
-
-// Middleware xử lý lỗi tập trung
-
-
-
-
-
-
-
+app.use("/users", userRoute)
 
 console.log('1. Connecting to MongoDB Cloud Atlas...')
 connectDB()
@@ -49,8 +37,9 @@ app.use(errorHandler)
 mongoose.connection.once("open", () => {
   console.log("Database Connected");
 
-  if (process.env.BUILD_MODE === 'production') {
-    app.listen(process.env.PORT, () => {
+ if (process.env.BUILD_MODE === 'production') {
+  
+  app.listen(process.env.PORT, () => {
       console.log(`2. Production: Hi ${process.env.AUTHOR}, Back-end Server is running successfully at Port: ${process.env.PORT}`)
     })
   } else {

@@ -9,12 +9,12 @@ const Login = () => {
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
-  };
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-600">
       <div className="bg-white max-h-[100%] text-black rounded-lg p-6 shadow-lg w-full max-w-md">
-        <button className="bg-red-500 text-white py-2 px-4 rounded mb-4 w-full flex items-center justify-start gap-28">
+        <button className="bg-blue-700 text-white py-2 px-4 rounded mb-4 w-full flex items-center justify-start gap-28">
           <FaGoogle />
           <span>Sign In with Google</span>
         </button>

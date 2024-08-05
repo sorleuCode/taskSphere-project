@@ -24,6 +24,33 @@ const createNew = async (reqBody) => {
   } catch (error) { throw error }
 }
 
+const updateCard = async(cardId, reqBody) => {
+  try {
+    const updateData = {
+      ...reqBody,
+      updatedAt: Date.now()
+    }
+    const updatedCard = await cardModel.update(cardId, updateData)
+    return updatedCard
+
+  } catch (error) {
+    throw error 
+  }
+}
+
+const findOneById = async (cardId) => {
+  try {
+    const card = await cardModel.findOneById(cardId)
+    if (!card) {
+      throw new ApiError(StatusCodes.NOT_FOUND, 'card not found!')
+    }
+  } catch (error) {
+    throw error
+  }
+}
+
 export const cardService = {
-  createNew
+  createNew,
+  updateCard,
+  findOneById
 }

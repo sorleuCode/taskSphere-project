@@ -54,7 +54,7 @@ const ProgressBar = ({ label, percentage }) => {
             </div>
             <div className="w-full bg-gray-700 rounded-full h-2.5">
                 <div
-                    className="bg-blue-500 h-2.5 rounded-full progress-bar"
+                    className="bg-blue-700 h-2.5 rounded-full progress-bar"
                     style={{ "--progress-width": `${width}%` }}
                 ></div>
             </div>
@@ -117,8 +117,8 @@ const LandinPage = () => {
                     />
                 </div>
 
-                <div name="about" className="px-4 py-8 flex flex-col items-center justify-center min-h-3/4 bg-gray-800 text-white rounded-[10px] mt-16">
-                    <div className="m-auto flex items-center justify-between w-[100%] ">
+                <div name="about" className="px-4 py-8 flex flex-col items-center justify-center min-h-3/4 bg-gray-200 text-white rounded-[10px] mt-16">
+                    <div className="m-auto text-black flex items-center justify-between w-[100%] ">
                         <div className="w-[50%]">
                             <h1 className="text-3xl font-medium mb-8">
                                 Empowering Teams to Achieve More
@@ -134,23 +134,23 @@ const LandinPage = () => {
                             </div>
 
 
-                            <section className="text-white">
+                            <section className="text-black">
                                 <h2 className="text-3xl font-medium text-center mb-8">Our mission</h2>
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
                                     <div className="flex flex-col items-center text-center">
-                                        <FaProjectDiagram className="text-3xl mb-4" />
+                                        <FaProjectDiagram className="text-3xl mb-4 text-blue-700" />
                                         <h3 className=" text-sm font-normal">Reinventing project management</h3>
                                     </div>
                                     <div className="flex flex-col items-center text-center">
-                                        <FaStream className="text-3xl mb-4" />
+                                        <FaStream className="text-3xl mb-4  text-blue-700"/>
                                         <h3 className="text-sm font-normal">Streamlining the workflow</h3>
                                     </div>
                                     <div className="flex flex-col items-center text-center">
-                                        <FaFlag className="text-3xl mb-4" />
+                                        <FaFlag className="text-3xl mb-4  text-blue-700"/>
                                         <h3 className="text-sm font-normal">Maximizing team productivity</h3>
                                     </div>
                                     <div className="flex flex-col items-center text-center">
-                                        <FaComments className="text-3xl mb-4" />
+                                        <FaComments className="text-3xl mb-4  text-blue-700"/>
                                         <h3 className="text-sm font-normal">Enhancing team communication</h3>
                                     </div>
                                 </div>
@@ -159,7 +159,7 @@ const LandinPage = () => {
                         </div>
 
                         <div className="bg-white max-h-[100%] text-black rounded-lg p-6 shadow-lg w-full max-w-md">
-                            <button className="bg-red-500 text-white py-2 px-4 rounded mb-4 w-full flex items-center justify-start gap-28">
+                            <button className="bg-blue-700 text-white py-2 px-4 rounded mb-4 w-full flex items-center justify-start gap-28">
                                 <FaGoogle />
                                 <span>Sign up with Google</span>
                             </button>

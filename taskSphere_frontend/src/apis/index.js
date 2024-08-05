@@ -1,5 +1,18 @@
 import axios from 'axios'
-import { API_ROOT } from '../utils/constants'
+let API = ''
+
+
+if (import.meta.env.BUILD_MODE === 'dev') {
+  API = axios.create(import.meta.env.BASE_URL)
+
+}
+
+if (import.meta.env.BUILD_MODE === 'production') {
+  // Lưu ý: Đây là domain ví dụ sau khi Deploy Production (xem video 75 và video 76 để hiểu rõ kiến thức phần này, còn hiện tại mình đã xóa domain này rồi, đừng cố truy cập làm gì =))
+  API = axios.create(import.meta.env.BASE_URL_PRO)
+}
+// console.log('🚀 ~ file: constants.js:7 ~ apiRoot:', apiRoot)
+export const API_ROOT = API
 
 /**
  * Lưu ý: Đối với việc sử dụng axios ở khóa MERN Stack Pro trên kênh YouTube: TrungQuanDev - Một Lập Trình Viên
