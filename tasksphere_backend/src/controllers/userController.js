@@ -88,6 +88,34 @@ const getUser = async (req, res) => {
   }
 }
 
+const uploadProfilePic = async (req, res) => {
+  try {
+    const {imageUrl} = req.body
+    const  user = User.findOne(req.params.id)
+    if (!user) {
+      console.error(`User with ID ${req.params.id} not found`);
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    if (imageUrl) {
+
+        user.profileImage = imageUrl;
+        user.fullname = user.fullname;
+        user.email = user.email;
+        user.password = user.password
+      } 
+        
+
+    const updatedUser = await user.save();
+
+    res.status(200).json(updatedUser)
+    
+
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+
 
 const getAllUsers = async (req, res) => {
   const users = await User.find().sort("-createdAt");
@@ -153,6 +181,7 @@ module.exports = {
   userLogin,
   getAllUsers,
   updateUser,
+  uploadProfilePic,
   logoutUser,
   getUser
 };

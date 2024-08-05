@@ -22,6 +22,7 @@
     "aos": "^2.3.4",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",
+    "firebase": "^10.12.5",
     "gapi-script": "^1.2.0",
     "lodash": "^4.17.21",
     "material-ui-confirm": "^3.0.9",

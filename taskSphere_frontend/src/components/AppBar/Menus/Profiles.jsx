@@ -10,9 +10,11 @@ import IconButton from '@mui/material/IconButton'
 import PersonAdd from '@mui/icons-material/PersonAdd'
 import Settings from '@mui/icons-material/Settings'
 import Logout from '@mui/icons-material/Logout'
+import UploadProfilePic from './uploadProfile/UploadProfilePic'
 
 function Profiles() {
   const [anchorEl, setAnchorEl] = React.useState(null)
+  
   const open = Boolean(anchorEl)
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
@@ -32,7 +34,7 @@ function Profiles() {
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
         >
-          <Avatar
+          <Avatar 
             sx={{ width: 36, height: 36 }}
             alt="TrungQuanDev"
             src="https://trungquandev.com/wp-content/uploads/2023/05/main-avatar-circle-min-trungquandev-codetq.jpeg"
@@ -48,14 +50,16 @@ function Profiles() {
           'aria-labelledby': 'basic-button-profiles'
         }}
       >
-        <MenuItem>
-          <Avatar sx={{ width: 28, height: 28, mr: 2 }} /> Profile
+        <MenuItem onClick={handleClick}>
+          <Avatar sx={{ width: 28, height: 28, mr: 2 }}  /> Profile
         </MenuItem>
+        {open && <UploadProfilePic />}
+
         <MenuItem>
           <Avatar sx={{ width: 28, height: 28, mr: 2 }} /> My account
         </MenuItem>
         <Divider />
-        <MenuItem>
+        <MenuItem >
           <ListItemIcon>
             <PersonAdd fontSize="small" />
           </ListItemIcon>
