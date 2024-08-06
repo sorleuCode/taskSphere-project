@@ -18,7 +18,9 @@ import { BrowserRouter } from "react-router-dom";
 import firebase from "firebase/compat/app";
 import firebaseConfig from "./utils/cloudStorage";
 
-firebase.initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig);
+
+
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

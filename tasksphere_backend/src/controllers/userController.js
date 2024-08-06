@@ -91,18 +91,20 @@ const getUser = async (req, res) => {
 const uploadProfilePic = async (req, res) => {
   try {
     const {imageUrl} = req.body
-    const  user = User.findOne(req.params.id)
+    const  user = await User.findById(req.params.id)
     if (!user) {
       console.error(`User with ID ${req.params.id} not found`);
       return res.status(404).json({ error: "User not found" });
     }
 
+   
     if (imageUrl) {
 
         user.profileImage = imageUrl;
         user.fullname = user.fullname;
         user.email = user.email;
-        user.password = user.password
+        user.password = user.password;
+        user.createdAt = Date.now()
       } 
         
 
@@ -143,9 +145,12 @@ const updateUser = async (req, res) => {
 
     const { email, fullname, password } = req.body;
 
+    
+
     if (email) user.email = email;
     if (fullname) user.fullname = fullname;
     if (password) user.password = password;
+      user.createdAt = Date.now()
    
 
 
