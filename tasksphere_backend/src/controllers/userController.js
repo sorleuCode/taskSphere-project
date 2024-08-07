@@ -1,6 +1,7 @@
-const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
+const generateJWT = require("../utils/generateJWT")
+const passport = require("passport")
 
 // User registration
 const userRegister = async (req, res) => {
@@ -28,10 +29,8 @@ const userRegister = async (req, res) => {
       
     });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      algorithm: "HS256",
-      expiresIn: "1d",
-    });
+    const token = generateJWT(user);
+
     res.cookie("token", token, {
       httpOnly: true,
       expires: new Date(Date.now() + 1000 * 86400), // 1 day
@@ -51,10 +50,7 @@ const userLogin = async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (user && (await bcrypt.compare(password, user.password))) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        algorithm: "HS256",
-        expiresIn: "1d",
-      });
+      const token = generateJWT(user)
 
       // Set cookie
       res.cookie("token", token, {
@@ -63,7 +59,7 @@ const userLogin = async (req, res) => {
         sameSite: "none",
         secure: true,
       });
-      res.json({ token, user });
+      res.json({ user });
     } else {
       res.status(400).json({ message: "Invalid credentials" });
     }
@@ -181,6 +177,35 @@ const logoutUser = async (req, res) => {
   }
 };
 
+
+const googleAuth = passport.authenticate("google", {
+    scope: ["email", "profile"],
+  })
+
+const authCallback = async(req, res) => {
+
+     await passport.authenticate("google", { session: false}, (err, user) => {
+
+      // This function is called after authentication
+    if (err || !user) {
+      // Redirect to frontend login page with an error query
+      return res.redirect('http://localhost:5173/login');
+    }
+
+    // Generate a JWT and set it as a cookie
+    const token = generateJWT(user);
+    res.cookie("token", token, {
+      httpOnly: true,
+      expires: new Date(Date.now() + 1000 * 86400), // 1 day
+      sameSite: "none",
+      secure: true,
+    });
+
+    // Redirect to the frontend profile page or another route
+    res.redirect('http://localhost:5173/dashboard');
+  })(req, res);
+}
+
 module.exports = {
   userRegister,
   userLogin,
@@ -188,5 +213,7 @@ module.exports = {
   updateUser,
   uploadProfilePic,
   logoutUser,
-  getUser
+  getUser,
+  authCallback,
+  googleAuth
 };

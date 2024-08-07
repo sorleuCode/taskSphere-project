@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const { trim } = require("lodash");
 
 const UserSchema = new mongoose.Schema({
   fullname: { type: String, required: true },
   email: { type: String, required: true, unique: true, trim: true },
-  password: { type: String, required: true },
+  googleId: {type: String},
+  password: { type: String, required:  function() { return !this.googleId; } },
   role: { type: String, enum: ["user", "admin"], default: "admin" },
   profileImage: {type: String},
   createdAt: {

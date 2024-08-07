@@ -12,6 +12,7 @@ const cardRoute = require("./routes/cardRoute")
 const columnRoute = require("./routes/columnRoute")
 const userRoute = require("./routes/userRoute")
 const cookieParser = require("cookie-parser")
+require("./utils/passport")
 
 const app = express()
 const PORT = process.env.PORT || 3500;
@@ -20,6 +21,7 @@ const host = process.env.LOCAL_DEV_APP_HOST
 
 app.use(cors(corsOptions))
 app.use(bodyParser.json());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 

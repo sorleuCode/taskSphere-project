@@ -3,7 +3,6 @@ import { BOARD_TYPES } from '~/utils/constants'
 // Define Collection (Name & Schema)
 import mongoose from 'mongoose'
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
-import { types } from 'joi'
 
 
 const { Schema } = mongoose
