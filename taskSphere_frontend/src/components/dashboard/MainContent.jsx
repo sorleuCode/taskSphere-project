@@ -1,8 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FaPlus, FaSearch } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const MainContent = () => {
+    
+
+    useEffect(() => {
+        const login = async () => {
+            const response = await axios.post("http://localhost:3500/users/login", {}, {withCredentials: true})
+            console.log(response.data)
+        }
+
+        login()
+
+    }, [])
+
     return (
         <div className="flex-1 p-6 bg-white text-black">
             <button className="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg mb-6 flex items-center">
