@@ -5,6 +5,7 @@ import 'aos/dist/aos.css';
 import { Route, Routes } from 'react-router-dom';
 import Login from './components/login/Login';
 import Dashboard from './components/dashboard/Dashboard';
+import VerifyEmail from "./pages/verifyEmail/VerifyEmail";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Route path='/login' element={<Login/>}/>
       <Route path='/dashboard' element={<Dashboard/>}/>
       <Route path='/board' element={<Board/>}/>
+      <Route path='/user/verify/:token' element={<VerifyEmail/>}/>
 
 
     </Routes>

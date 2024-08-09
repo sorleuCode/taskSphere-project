@@ -19,6 +19,7 @@ passport.use(
             fullname: profile.displayName,
             googleId: profile.id,
             profileImage: profile.photos[0].value,
+            emailVerified: true
           });
         }
 

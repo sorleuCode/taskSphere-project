@@ -16,6 +16,7 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: null,
   },
+  emailVerified: {type: Boolean, default: false},
   _destroy: {
     type: Boolean,
     default: false,

@@ -2,6 +2,11 @@ const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const generateJWT = require("../utils/generateJWT");
 const passport = require("passport");
+const nodemailer = require("nodemailer")
+const jwt = require('jsonwebtoken');
+
+
+
 
 // User registration
 const userRegister = async (req, res) => {
@@ -11,9 +16,7 @@ const userRegister = async (req, res) => {
     const userExist = await User.findOne({ email });
 
     if (userExist) {
-      return res
-        .status(400)
-        .json({ message: "User with this email already exists" });
+      return res.status(400).json({ message: "User with this email already exists" });
     }
 
     const user = new User({
@@ -22,20 +25,58 @@ const userRegister = async (req, res) => {
       password,
     });
 
+    // Generate JWT token
     const token = generateJWT(user);
+    console.log("token", token, user)
 
+    // Set cookie with the token
     res.cookie("token", token, {
       httpOnly: true,
       expires: new Date(Date.now() + 1000 * 86400), // 1 day
       sameSite: "none",
-      secure: true,
+      secure: true // secure in production
     });
+
     await user.save();
-    res.status(201).json(user);
+
+
+    // Nodemailer configuration
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: "sorleu3@gmail.com",
+        pass: "iwfi ozbb cucb mlfr"
+      },
+    });
+
+    const mailConfigurations = {
+      from: 'sorleu3@gmail.com',
+      to: email,
+      subject: 'Email Verification',
+      text: `Hi! ${fullname}, You have recently visited 
+             our website and entered your email.
+             Please follow the given link to verify your email
+             http://localhost:5173/user/verify/${token}  
+             Thanks`
+    };
+
+    // Send email
+    transporter.sendMail(mailConfigurations, function (error, info) {
+      if (error) {
+        return res.status(400).json({ message: error.message });
+      }
+
+      return res.status(200).json({ message: "Email successfully sent" });
+    });
+
+
+
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: "An error occurred", error: error.message });
   }
 };
+
+
 
 // User login
 const userLogin = async (req, res) => {
@@ -50,8 +91,8 @@ const userLogin = async (req, res) => {
         res.cookie("token", token, {
           httpOnly: true,
           expires: new Date(Date.now() + 1000 * 86400), // 1 day
-          sameSite: "none",
-          secure: true,
+          sameSite: "strict",
+          secure: false,
         });
         res.json({ user });
       } else {
@@ -59,7 +100,7 @@ const userLogin = async (req, res) => {
       }
     }
 
-    const user = await User.findOne({googleId: req.user.googleId});
+    const user = await User.findOne({ googleId: req.user.googleId });
 
     user ? res.json({ user }) : res.status(400).json({ message: "Invalid credentials" });
 
@@ -122,7 +163,6 @@ const getAllUsers = async (req, res) => {
 const updateUser = async (req, res) => {
   try {
     const userId = req.params.id;
-    console.log(`Updating user with ID: ${userId}`);
 
     const user = await User.findById(userId);
 
@@ -153,8 +193,8 @@ const logoutUser = async (req, res) => {
       path: "/",
       httpOnly: true,
       expires: new Date(0),
-      sameSite: "none",
-      secure: true,
+      sameSite: "strict",
+      secure: false,
     });
     res.status(200).json({ message: "Logout successful" });
   } catch (error) {
@@ -168,6 +208,46 @@ const logoutUser = async (req, res) => {
 const googleAuth = passport.authenticate("google", {
   scope: ["email", "profile"],
 });
+
+
+const verifyEmail = async (req, res) => {
+  const { token } = req.params;
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] })
+
+    if (!decoded) {
+      res.status(400).json({ message: 'Email verification failed, possibly the link is invalid or expired' });
+    }
+
+
+    // Find the user by the email stored in the JWT payload
+    const user = await User.findOne({ email: decoded.email });
+
+    if (!user) {
+      res.status(404).json({ message: 'User not found' });
+    }
+
+    user.emailVerified = true;
+    await user.save();
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      expires: new Date(Date.now() + 1000 * 86400), // 1 day
+      sameSite: "strict", //set to none for production
+      secure: false,  //set to true for production
+    });
+
+    res.status(200).json({ message: 'Email verified successfully', user });
+
+    // Update the user's email verification status
+  } catch (dbError) {
+    // In case of an error while updating the user, delete the user
+    await User.deleteOne({ email: decoded.email });
+    res.status(500).json({ message: 'Error updating user and user has been deleted' });
+  }
+
+};
+
 
 const authCallback = async (req, res) => {
   await passport.authenticate(
@@ -187,7 +267,7 @@ const authCallback = async (req, res) => {
 
       // Generate a JWT and set it as a cookie
       const token = generateJWT(user);
-    
+
       res.cookie("token", token, {
         httpOnly: true,
         expires: new Date(Date.now() + 1000 * 86400), // 1 day
@@ -203,6 +283,7 @@ const authCallback = async (req, res) => {
 
 module.exports = {
   userRegister,
+  verifyEmail,
   userLogin,
   getAllUsers,
   updateUser,

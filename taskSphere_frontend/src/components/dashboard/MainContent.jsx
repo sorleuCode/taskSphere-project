@@ -36,8 +36,6 @@ const MainContent = () => {
                             <input type="text" className=" outline-none" placeholder="Search" />
                             <FaSearch className="ml-2" />
                         </div>
-
-
                     </div>
                 </div>
             </div>
