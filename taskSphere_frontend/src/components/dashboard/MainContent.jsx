@@ -6,15 +6,15 @@ import axios from 'axios';
 const MainContent = () => {
     
 
-    useEffect(() => {
-        const login = async () => {
-            const response = await axios.post("http://localhost:3500/users/login", {}, {withCredentials: true})
-            console.log(response.data)
-        }
+    // useEffect(() => {
+    //     const login = async () => {
+    //         const response = await axios.post("http://localhost:3500/users/login", {}, {withCredentials: true})
+    //         console.log(response.data)
+    //     }
 
-        login()
+    //     login()
 
-    }, [])
+    // }, [])
 
     return (
         <div className="flex-1 p-6 bg-white text-black">

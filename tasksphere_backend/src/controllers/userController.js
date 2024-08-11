@@ -13,63 +13,77 @@ const userRegister = async (req, res) => {
   const { fullname, email, password } = req.body;
 
   try {
-    const userExist = await User.findOne({ email });
+    if (!req?.user?.googleId) {
 
-    if (userExist) {
-      return res.status(400).json({ message: "User with this email already exists" });
-    }
+      const userExist = await User.findOne({ email });
 
-    const user = new User({
-      fullname,
-      email,
-      password,
-    });
+      if (userExist) {
+        return res.status(400).json({ message: "User with this email already exists" });
+      }
 
-    // Generate JWT token
-    const token = generateJWT(user);
-    console.log("token", token, user)
+      // Generate JWT token
+      const token = generateJWT({ email: email });
 
-    // Set cookie with the token
-    res.cookie("token", token, {
-      httpOnly: true,
-      expires: new Date(Date.now() + 1000 * 86400), // 1 day
-      sameSite: "none",
-      secure: true // secure in production
-    });
-
-    await user.save();
+      // Set cookie with the token
+      res.cookie("token", token, {
+        httpOnly: true,
+        expires: new Date(Date.now() + 1000 * 86400), // 1 day
+        sameSite: "strict",
+        secure: false // secure in production
+      });
 
 
-    // Nodemailer configuration
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: "sorleu3@gmail.com",
-        pass: "iwfi ozbb cucb mlfr"
-      },
-    });
 
-    const mailConfigurations = {
-      from: 'sorleu3@gmail.com',
-      to: email,
-      subject: 'Email Verification',
-      text: `Hi! ${fullname}, You have recently visited 
+      // Nodemailer configuration
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: "sorleu3@gmail.com",
+          pass: "iwfi ozbb cucb mlfr"
+        },
+      });
+
+      const mailConfigurations = {
+        from: 'sorleu3@gmail.com',
+        to: email,
+        subject: 'Email Verification',
+        text: `Hi! ${fullname}, You have recently visited 
              our website and entered your email.
              Please follow the given link to verify your email
              http://localhost:5173/user/verify/${token}  
              Thanks`
-    };
+      };
 
-    // Send email
-    transporter.sendMail(mailConfigurations, function (error, info) {
-      if (error) {
-        return res.status(400).json({ message: error.message });
-      }
+      transporter.sendMail(mailConfigurations, async function (error, info) {
+        if (error) {
+          return res.status(400).json({ message: `$Error Sending verification mail: ${error.message}` });
+        }
+       const  newUser = new User({
+          fullname,
+          email,
+          password,
+        });
 
-      return res.status(200).json({ message: "Email successfully sent" });
-    });
+        await newUser.save();
 
+        const user = await User.findById(newUser._id).select("-password")
 
+        
+        return res.status(200).json(user);
+      });
+
+    } else {
+
+      const user = await User.findOne({googleId: req?.user?.googleId }).select("-password");
+      console.log("finish here")
+      user ? res.status(200).json(user) : res.status(400).json({ message: "Registering with email failed" });
+      
+
+    }
+
+    
+
+   
 
   } catch (error) {
     res.status(500).json({ message: "An error occurred", error: error.message });
@@ -83,7 +97,7 @@ const userLogin = async (req, res) => {
   const { email, password } = req.body;
   try {
     if (!req?.user?.googleId) {
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ email }).select("-password");
       if (user && (await bcrypt.compare(password, user.password))) {
         const token = generateJWT(user);
 
@@ -94,15 +108,15 @@ const userLogin = async (req, res) => {
           sameSite: "strict",
           secure: false,
         });
-        res.json({ user });
+        res.status(200).json(user );
       } else {
         res.status(400).json({ message: "Invalid credentials" });
       }
     }
 
-    const user = await User.findOne({ googleId: req.user.googleId });
+    const user = await User.findOne({ googleId: req.user.googleId }).select("-password");
 
-    user ? res.json({ user }) : res.status(400).json({ message: "Invalid credentials" });
+    user ? res.status(200).json(user) : res.status(400).json({ message: "Invalid credentials" });
 
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -144,7 +158,7 @@ const uploadProfilePic = async (req, res) => {
 
     const updatedUser = await user.save();
 
-    res.status(200).json(updatedUser);
+    res.status(200).json({userProfile: updatedUser.profileImage});
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -182,7 +196,7 @@ const updateUser = async (req, res) => {
     res.status(200).json(updatedUserDetails);
   } catch (error) {
     console.error("Error updating user:", error);
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ message: "Error updating user" });
   }
 };
 
@@ -196,7 +210,7 @@ const logoutUser = async (req, res) => {
       sameSite: "strict",
       secure: false,
     });
-    res.status(200).json({ message: "Logout successful" });
+    res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     res.status(500).json({
       message: "An error occurred during logout",
@@ -221,7 +235,7 @@ const verifyEmail = async (req, res) => {
 
 
     // Find the user by the email stored in the JWT payload
-    const user = await User.findOne({ email: decoded.email });
+    const user = await User.findOne({ email: decoded.email }).select("-password");
 
     if (!user) {
       res.status(404).json({ message: 'User not found' });
@@ -237,7 +251,7 @@ const verifyEmail = async (req, res) => {
       secure: false,  //set to true for production
     });
 
-    res.status(200).json({ message: 'Email verified successfully', user });
+    res.status(200).json(user);
 
     // Update the user's email verification status
   } catch (dbError) {
@@ -276,7 +290,7 @@ const authCallback = async (req, res) => {
       });
 
       // Redirect to the frontend profile page or another route
-      res.redirect("http://localhost:5173/dashboard");
+      res.redirect("http://localhost:5173/user/verifyEmail");
     }
   )(req, res);
 };

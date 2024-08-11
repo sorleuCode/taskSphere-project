@@ -1,74 +1,33 @@
 import React, { useEffect, useState, useRef } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-import AOS from "aos";
-import { FaEye, FaEyeSlash, FaProjectDiagram, FaStream, FaFlag, FaComments, FaGoogle} from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaProjectDiagram, FaStream, FaFlag, FaComments, FaGoogle } from "react-icons/fa";
 import FAQ from "./FAQ";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Contact from "./Contact";
+import { useDispatch, useSelector } from "react-redux";
+import ProgressBar from "./ProgressBar";
+import "./registerLoader.css";
+import { toast } from "react-toastify";
+import { registerUser, setStatus } from "../../redux/reducers/userSlice";
 
 
 
 
-const ProgressBar = ({ label, percentage }) => {
-    const [width, setWidth] = useState(0);
-    const progressBarRef = useRef(null);
-
-    useEffect(() => {
-
-        AOS.init();
-
-    }, [])
-
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        setWidth(0); // Reset width to 0
-                        setTimeout(() => setWidth(percentage), 300);
-                    }
-                });
-            },
-            {
-                threshold: 0.1,
-            }
-        );
-
-        if (progressBarRef.current) {
-            observer.observe(progressBarRef.current);
-        }
-
-        return () => {
-            if (progressBarRef.current) {
-                observer.unobserve(progressBarRef.current);
-            }
-        };
-    }, [percentage]);
-
-    return (
-        <div ref={progressBarRef} className="mb-4">
-            <div className="flex justify-between mb-1">
-                <span>{label}</span>
-                <span>{percentage}%</span>
-            </div>
-            <div className="w-full bg-gray-700 rounded-full h-2.5">
-                <div
-                    className="bg-blue-700 h-2.5 rounded-full progress-bar"
-                    style={{ "--progress-width": `${width}%` }}
-                ></div>
-            </div>
-        </div>
-    );
-};
 
 const LandinPage = () => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-    const [password, setPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
-    const [fullname, setFullname] = useState("")
-    const [email, setEmail] = useState("")
+    const [formData, setFormData] = useState({ fullname: '', email: '', password: "" });
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const navigate = useNavigate()
+
+    const [shouldSubmit, setShouldSubmit] = useState(false);
+
+    const dispatch = useDispatch();
+    const {userDetail, status, error, loading } = useSelector((state) => state.user);
+    ;
+
 
 
 
@@ -80,7 +39,7 @@ const LandinPage = () => {
         setConfirmPasswordVisible(!confirmPasswordVisible);
     };
 
-    const notMatch = (password !== confirmPassword && confirmPassword !== "" ? true : false);
+    const notMatch = (formData.password !== confirmPassword && confirmPassword !== "" ? true : false);
 
 
     const progressData = [
@@ -90,7 +49,66 @@ const LandinPage = () => {
         { label: "Customizable workflows", percentage: 75 },
     ];
 
+
+    console.log("userDetail:", userDetail)
+
+
+    const handleChange = (e) => {
+
+        if (e.target.name !== "confirm-password"){
+
+            setFormData({
+                ...formData,
+                [e.target.name]: e.target.value,
+            });
+        }
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setShouldSubmit(true);
+
+    };
+
+    useEffect(() => {
+        if (shouldSubmit) {
+            dispatch(registerUser(formData));
+            setTimeout(() => {
+                setShouldSubmit(false);
+            }, 3000)
+            dispatch(setStatus(true))
+        }
+     
+
+    }, [shouldSubmit, dispatch, formData]);
+
+    useEffect(() => {
+        if(error){
+            toast.error(error)
+        
+        }
+        else
+        if(userDetail && status && !loading ){
+
+            dispatch(setStatus(false))
+            toast.success("Proceed to confirm your email address",  {position: "top-center"})
+            navigate("/user/verifyEmail")
+
+            
+        }
+        else{
+            null
+        }
+        
+
+
+
+    }, [error, status, navigate, userDetail])
+
+
     return (
+
+
         <div className="flex flex-col min-h-screen">
             <Header />
             <main className="flex-grow bg-blue-700 text-white p-8 pt-20 ">
@@ -142,15 +160,15 @@ const LandinPage = () => {
                                         <h3 className=" text-sm font-normal">Reinventing project management</h3>
                                     </div>
                                     <div className="flex flex-col items-center text-center">
-                                        <FaStream className="text-3xl mb-4  text-blue-700"/>
+                                        <FaStream className="text-3xl mb-4  text-blue-700" />
                                         <h3 className="text-sm font-normal">Streamlining the workflow</h3>
                                     </div>
                                     <div className="flex flex-col items-center text-center">
-                                        <FaFlag className="text-3xl mb-4  text-blue-700"/>
+                                        <FaFlag className="text-3xl mb-4  text-blue-700" />
                                         <h3 className="text-sm font-normal">Maximizing team productivity</h3>
                                     </div>
                                     <div className="flex flex-col items-center text-center">
-                                        <FaComments className="text-3xl mb-4  text-blue-700"/>
+                                        <FaComments className="text-3xl mb-4  text-blue-700" />
                                         <h3 className="text-sm font-normal">Enhancing team communication</h3>
                                     </div>
                                 </div>
@@ -164,7 +182,7 @@ const LandinPage = () => {
                                 <span>Sign up with Google</span>
                             </button>
                             <div className="text-center mb-4">OR</div>
-                            <form>
+                            <form onSubmit={handleSubmit}>
                                 <div className="mb-4">
                                     <label htmlFor="email" className="block text-sm font-medium">
                                         Work Email (required)
@@ -175,7 +193,7 @@ const LandinPage = () => {
                                         name="email"
                                         className="mt-1 p-2 w-full border rounded outline-none"
                                         placeholder="Enter your email"
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        onChange={handleChange}
                                         required
                                     />
                                 </div>
@@ -183,6 +201,7 @@ const LandinPage = () => {
                                     <label
                                         htmlFor="fullname"
                                         className="block text-sm font-medium"
+
                                     >
                                         Fullname
                                     </label>
@@ -192,7 +211,7 @@ const LandinPage = () => {
                                         name="fullname"
                                         className="mt-1 p-2 w-full border rounded outline-none"
                                         placeholder="Enter your fullname"
-                                        onChange={(e) => setFullname(e.target.value)}
+                                        onChange={handleChange}
                                         required
 
                                     />
@@ -210,7 +229,7 @@ const LandinPage = () => {
                                         name="password"
                                         className="mt-1 p-2 w-full border rounded outline-none pr-10"
                                         placeholder="Input your password"
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        onChange={handleChange}
                                         required
                                     />
                                     <span
@@ -230,6 +249,8 @@ const LandinPage = () => {
                                     <input
                                         type={confirmPasswordVisible ? "text" : "password"}
                                         id="confirm-password"
+                                        placeholder="Confirm your password"
+                                        name="confirm-password"
                                         className="mt-1 p-2 w-full border rounded outline-none pr-10"
                                         onChange={(e) => setConfirmPassword(e.target.value)}
                                         required
@@ -246,9 +267,13 @@ const LandinPage = () => {
 
                                 <button
                                     type="submit"
-                                    className="bg-blue-700 text-white py-2 px-4 rounded w-full"
+                                    className="bg-blue-700 text-white text-center py-2 px-4 rounded w-full submit-button"
                                 >
-                                    Get Started for Free
+                                    {loading ? (
+                                        <div className="spinner"></div>
+                                    ) : (
+                                        "Register for free"
+                                    )}
                                 </button>
                                 <p className="mt-4">
                                     By signing up, you agree to TaskSphere&apos;s terms of service
@@ -264,7 +289,7 @@ const LandinPage = () => {
                 </div>
 
                 <div className="mt-20">
-                    <Contact/>
+                    <Contact />
                 </div>
 
             </main>

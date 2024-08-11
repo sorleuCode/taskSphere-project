@@ -19,11 +19,8 @@ const verifyToken = async (req, res, next) => {
 
       const decoded =   jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
 
-      req.user = await User.findById(decoded.id).select("-password");
+      req.user = await User.findOne({email: decoded.email}).select("-password");
 
-      if (!req?.user?.role === "admin") {
-        return res.status(401).json({ message: "Not authorized, only Admin can perform this function" });
-      }
       next();
 
 
@@ -31,8 +28,7 @@ const verifyToken = async (req, res, next) => {
 
     catch (error) {
       console.log(error);
-      res.status(401);
-      throw new Error("Not authorized, token failed");
+      next(error)
     } 
     
   }
@@ -41,6 +37,13 @@ const verifyToken = async (req, res, next) => {
   }
 }
 
+const isAdmin = () => {
+  if (!req?.user?.role === "admin") {
+    return res.status(401).json({ message: "Not authorized, only Admin can perform this function" });
+  }
+  next();
+}
 
 
-module.exports = { verifyToken };
+
+module.exports = { verifyToken, isAdmin };

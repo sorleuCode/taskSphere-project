@@ -3,7 +3,7 @@ const Router = express.Router();
 const {verifyToken} = require("../middlewares/authMiddleware")
 const { userRegister, verifyEmail, authCallback, googleAuth, userLogin, uploadProfilePic, getAllUsers, updateUser,logoutUser, getUser } = require("../controllers/userController");
 
-Router.post("/register", userRegister);
+Router.post("/register", verifyToken, userRegister);
 Router.post("/login", verifyToken, userLogin);
 Router.get("/", getAllUsers);
 Router.get("/auth/google/callback", authCallback);
