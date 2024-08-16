@@ -3,28 +3,29 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const EmailVerificationNotice = () => {
-  const { userDetail, status } = useSelector((state) => state.user);
+  const { user, status } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
+
   useEffect(() => {
-    if (userDetail?.emailVerified && status) {
+    if (user?.emailVerified && status) {
 
      setTimeout(() => {
         navigate('/dashboard');
      }, 4000)
     }
-  }, [userDetail]);
+  }, [ status]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
       <div className="bg-white shadow-md rounded-lg p-6 md:p-8 lg:p-12 max-w-lg text-center">
         <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 mb-4">
-          {userDetail?.emailVerified ? 'Email Verified' : 'Email Verification'}
+          {user?.emailVerified  ? 'Email Verified' : 'Email Verification'}
         </h1>
 
-        {userDetail?.emailVerified ? (
+        {user?.emailVerified ? (
           <p className="text-gray-600 text-sm md:text-base lg:text-base">
-            Your email has been successfully verified. You will be redirected to your dashboard shortly.
+            Your email has been successfully verified..
           </p>
         ) : (
           <>

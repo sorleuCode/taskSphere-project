@@ -43,7 +43,7 @@ const cardSlice = createSlice({
         cards: [],
         card: {},
         loading: false,
-        error: ""
+        error: null
     },
 
     extraReducers: (builder) => {
@@ -52,10 +52,14 @@ const cardSlice = createSlice({
 
         builder.addCase(createNewCard.pending, (state) => {
             state.loading = true;
+            state.error = null
         })
         .addCase(createNewCard.fulfilled, (state, action) => {
             state.loading = false;
+            state.card = action.payload
             state.cards = state.cards.push(action.payload)
+            state.error = null
+
         })
         .addCase(createNewCard.rejected, (state, action) => {
             state.loading = false;
@@ -66,9 +70,13 @@ const cardSlice = createSlice({
 
         builder.addCase(updateCard.pending, (state) => {
             state.loading = true;
+            state.error = null;
+
         })
         .addCase(updateCard.fulfilled, (state, action) => {
             state.loading = false;
+            state.error = null;
+
             const { arg: {cardId}} = action.meta;
             if(cardId) {
                 
@@ -79,13 +87,16 @@ const cardSlice = createSlice({
         })
         .addCase(updateCard.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload.message
+            state.error = action.payload
+
         })
 
         // getSingleCard
 
         builder.addCase(fetchSingleCard.pending, (state) => {
             state.loading = true;
+            state.error = null
+
         })
         .addCase(fetchSingleCard.fulfilled, (state, action) => {
             state.loading = false;

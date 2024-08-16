@@ -11,7 +11,8 @@ export const registerUser = createAsyncThunk("user/registerUser", async (regData
             response = await API_ROOT.post("/users/register", regData, {withCredentials: true})
             return response.data
         } else {
-            response = await API_ROOT.post("/users/register")
+            response = await API_ROOT.post("/users/registerWithEmail", {withCredentials: true})
+
 
             return response.data
         }
@@ -29,10 +30,11 @@ export const loginUser = createAsyncThunk("user/loginUser", async (loginData, { 
         let response;
         if (loginData) {
 
-            response = await API_ROOT.post("/users/login", loginData)
+            response = await API_ROOT.post("/users/login", loginData, {withCredentials: true});
+
             return response.data
         } else {
-            response = await API_ROOT.post("/users/login")
+            response = await API_ROOT.post("/users/loginWithEmail", {withCredentials: true})
 
             return response.data
         }
@@ -115,131 +117,147 @@ export const logoutUser = createAsyncThunk("user/logoutUser", async ({ rejectWit
 
 
 const initialState = {
-    userDetail: {},
+    user: {},
     loading: false,
     error: null,
     userProfilePic: "",
     message: "", 
-    status: null
+    status: false
 };
 
 const userSlice = createSlice({
     name: "user",
     initialState,
-    reducers: {
-        setStatus (state, action) {
-            state.status = action.payload
-        }
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(registerUser.pending, (state) => {
                 state.loading = true;
                 state.error = null;
+                state.status = false
             })
             .addCase(registerUser.fulfilled, (state, action) => {
-                state.userDetail = action.payload;
+                state.user = action.payload;
                 state.loading = false;
+                state.status= true
 
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.status = false
 
             })
             .addCase(loginUser.pending, (state) => {
                 state.loading = true;
                 state.error = null;
+                state.status = false
 
             })
             .addCase(loginUser.fulfilled, (state, action) => {
-                state.userDetail = action.payload;
+                state.user = action.payload;
                 state.loading = false;
+                state.status = true
 
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.status = false
 
             })
             .addCase(verifyUserEmail.pending, (state) => {
                 state.loading = true;
                 state.error = null;
+                state.status = false
 
             })
             .addCase(verifyUserEmail.fulfilled, (state, action) => {
-                state.userDetail = action.payload;
+                state.user = action.payload;
                 state.loading = false;
+                state.status = true
 
             })
             .addCase(verifyUserEmail.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.status = false
 
             })
             .addCase(updateUserDetails.pending, (state) => {
                 state.loading = true;
                 state.error = null;
+                state.status = false
 
             })
             .addCase(updateUserDetails.fulfilled, (state, action) => {
                 state.loading = false;
-                state.userDetail = action.payload;
+                state.user = action.payload;
+                state.status = true
 
             })
             .addCase(updateUserDetails.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.status = false
 
             })
             .addCase(getUserDetail.pending, (state) => {
                 state.loading = true;
                 state.error = null;
+                state.status = false
 
             })
             .addCase(getUserDetail.fulfilled, (state, action) => {
                 state.loading = false;
-                state.userDetail = action.payload;
+                state.user = action.payload;
+                state.status = true;
 
             })
             .addCase(getUserDetail.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.status = false
 
             })
             .addCase(uploadProfilePicture.pending, (state) => {
                 state.loading = true;
                 state.error = null;
+                state.status = false
 
             })
             .addCase(uploadProfilePicture.fulfilled, (state, action) => {
                 state.loading = false;
                 state.userProfilePic = action.payload;
+                state.status = true
 
             })
             .addCase(uploadProfilePicture.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.status = false
 
             })
             .addCase(logoutUser.pending, (state) => {
                 state.loading = true;
                 state.error = null;
+                state.status = false
 
 
             })
             .addCase(logoutUser.fulfilled, (state, action) => {
                 state.loading = false;
                 state.message = action.payload;
+                state.status = true
 
             })
             .addCase(logoutUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+                state.status = false
 
             });
     },
 });
-export const {setStatus} = userSlice.actions
 
 export default userSlice.reducer;

@@ -13,8 +13,6 @@ const userRegister = async (req, res) => {
   const { fullname, email, password } = req.body;
 
   try {
-    if (!req?.user?.googleId) {
-
       const userExist = await User.findOne({ email });
 
       if (userExist) {
@@ -70,16 +68,7 @@ const userRegister = async (req, res) => {
 
         
         return res.status(200).json(user);
-      });
-
-    } else {
-
-      const user = await User.findOne({googleId: req?.user?.googleId }).select("-password");
-      console.log("finish here")
-      user ? res.status(200).json(user) : res.status(400).json({ message: "Registering with email failed" });
-      
-
-    }
+      })
 
     
 
@@ -91,13 +80,23 @@ const userRegister = async (req, res) => {
 };
 
 
+const registerWithEmail = async(req, res) => {
+
+  const user = await User.findOne({googleId: req?.user?.googleId }).select("-password");
+      user ? res.status(200).json(user) : res.status(400).json({ message: "Registering with email failed" });
+      
+
+}
+
+
 
 // User login
 const userLogin = async (req, res) => {
   const { email, password } = req.body;
   try {
-    if (!req?.user?.googleId) {
-      const user = await User.findOne({ email }).select("-password");
+  
+      const user = await User.findOne({ email });
+
       if (user && (await bcrypt.compare(password, user.password))) {
         const token = generateJWT(user);
 
@@ -108,20 +107,22 @@ const userLogin = async (req, res) => {
           sameSite: "strict",
           secure: false,
         });
-        res.status(200).json(user );
+        const userWithoutPassword = await User.findById(user._id).select("-password")
+        res.status(200).json(userWithoutPassword );
       } else {
         res.status(400).json({ message: "Invalid credentials" });
       }
-    }
-
-    const user = await User.findOne({ googleId: req.user.googleId }).select("-password");
-
-    user ? res.status(200).json(user) : res.status(400).json({ message: "Invalid credentials" });
 
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
+
+
+const loginWithEmail = async(req, res) => {
+  const user = await User.findOne({googleId: req?.user?.googleId }).select("-password");
+      user ? res.status(200).json(user) : res.status(400).json({ message: "Error Occured" });
+}
 
 // get all users
 
@@ -290,7 +291,7 @@ const authCallback = async (req, res) => {
       });
 
       // Redirect to the frontend profile page or another route
-      res.redirect("http://localhost:5173/user/verifyEmail");
+      res.redirect("http://localhost:5173/user/googlecbk");
     }
   )(req, res);
 };
@@ -305,5 +306,7 @@ module.exports = {
   logoutUser,
   getUser,
   authCallback,
+  registerWithEmail,
+  loginWithEmail,
   googleAuth,
 };

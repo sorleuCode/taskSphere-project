@@ -7,6 +7,7 @@ import Login from './components/login/Login';
 import Dashboard from './components/dashboard/Dashboard';
 import VerifyEmail from "./pages/verifyEmail/VerifyEmail";
 import EmailVerificationNotice from "./components/landingPage/EmailVerificationNotice";
+import GoogleCallback from "./components/landingPage/GoogleCallback";
 
 function App() {
   return (
@@ -19,8 +20,7 @@ function App() {
       <Route path='/board' element={<Board/>}/>
       <Route path='/user/verify/:token' element={<VerifyEmail/>}/>
       <Route path='/user/verifyEmail' element={<EmailVerificationNotice/>}/>
-
-
+      <Route path='/user/googlecbk' element={<GoogleCallback/>}/>
     </Routes>
     </>
   )

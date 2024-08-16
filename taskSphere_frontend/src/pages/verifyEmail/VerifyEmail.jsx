@@ -2,22 +2,22 @@ import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { verifyUserEmail, setStatus } from '../../redux/reducers/userSlice';
+import { verifyUserEmail} from '../../redux/reducers/userSlice';
 import './verifyEmail.css';
 
 const VerifyEmail = () => {
     const navigate = useNavigate();
     const { token } = useParams();
     const dispatch = useDispatch();
-    const { loading, userDetail, status, error } = useSelector((state) => state.user);
+    const { loading, user, status, error } = useSelector((state) => state.user);
 
     useEffect(() => {
         const verifyEmail = async () => {
-            await dispatch(verifyUserEmail(token));
+            dispatch(verifyUserEmail(token));
 
-            if (!loading && userDetail?.emailVerified) {
+            if (!loading && user?.emailVerified) {
                 setTimeout(() => {
-                    dispatch(setStatus(true));
+            
                     navigate('/user/verifyEmail');
                 }, 3000);
             }
@@ -29,7 +29,7 @@ const VerifyEmail = () => {
         };
 
         verifyEmail();
-    }, [token, userDetail, loading, error, status, dispatch, navigate]);
+    }, [token, user, loading, error, status, dispatch, navigate]);
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -40,7 +40,7 @@ const VerifyEmail = () => {
                         <p className="text-blue-700">Verifying your email...</p>
                     </div>
                 ) : (
-                    <p className="text-gray-800">Please wait...</p>
+                  (!loading && !user.emailVerified) && <p className="text-gray-800">Please wait...</p>
                 )}
             </div>
         </div>

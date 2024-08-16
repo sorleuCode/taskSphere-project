@@ -8,8 +8,8 @@ const Header = () => {
             <div className="text-white text-[25px] font-bold">TaskSphere</div>
             <nav className="space-x-4">
                 <p className=" cursor-pointer text-white transition transform duration-300 inline-block hover:text-gray-300   hover:scale-110 text-xl"><Link to="about" smooth duration={500}>About</Link></p>
-                <p className=" cursor-pointer text-white transition transform duration-300 inline-block hover:text-gray-300 hover:scale-110 text-xl"><Link to="about" smooth duration={500}>Contact</Link></p>
-                <p className=" cursor-pointer text-white transition transform duration-300 inline-block hover:text-gray-300 hover:scale-110 text-xl"><Link to="about" smooth duration={500}>FAQs</Link></p>
+                <p className=" cursor-pointer text-white transition transform duration-300 inline-block hover:text-gray-300 hover:scale-110 text-xl"><Link to="contact" smooth duration={500}>Contact</Link></p>
+                <p className=" cursor-pointer text-white transition transform duration-300 inline-block hover:text-gray-300 hover:scale-110 text-xl"><Link to="faq" smooth duration={500}>FAQs</Link></p>
                 <Loginbtn/>
             </nav>
         </header>

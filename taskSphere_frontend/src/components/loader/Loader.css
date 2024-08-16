@@ -1,0 +1,42 @@
+/* src/components/Loader.css */
+
+.loader-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+  
+  .loader {
+    width: 64px;
+    height: 64px;
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  /* Responsive sizes */
+  @media (min-width: 768px) {
+    .loader {
+      width: 96px;
+      height: 96px;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .loader {
+      width: 128px;
+      height: 128px;
+    }
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  

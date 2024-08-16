@@ -1,25 +1,73 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loginUser } from "../../redux/reducers/userSlice";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { status, user, error, loading } = useSelector((state) => state.user);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
-  }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handleSignInwithGoogle = () => {
+    window.location.href = `${import.meta.env.VITE_BASE_URL}/users/auth/google`;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const lowercaseEmail = formData.email.toLowerCase()
+    const newFormData = {...formData, email: lowercaseEmail}
+    dispatch(loginUser(newFormData));
+    setIsSubmitting(true);
+  
+
+  };
+
+  useEffect(() => {
+    if (!isSubmitting) return; 
+  
+    if (status) {
+      toast.success("Login successful!", {position: "top-right"});
+      console.log(user)
+      navigate("/dashboard");
+      setIsSubmitting(false);
+    } else if (!status && error) {
+      toast.error(error);
+      setIsSubmitting(false);
+    }
+  }, [isSubmitting, status, error, navigate]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-600">
       <div className="bg-white max-h-[100%] text-black rounded-lg p-6 shadow-lg w-full max-w-md">
-        <button className="bg-blue-700 text-white py-2 px-4 rounded mb-4 w-full flex items-center justify-start gap-28">
+        <button
+          onClick={handleSignInwithGoogle}
+          className="bg-blue-700 text-white py-2 px-4 rounded mb-4 w-full flex items-center justify-start gap-28"
+        >
           <FaGoogle />
           <span>Sign In with Google</span>
         </button>
         <div className="text-center mb-4">OR</div>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium">
               Work Email (required)
@@ -30,7 +78,7 @@ const Login = () => {
               name="email"
               className="mt-1 p-2 w-full border rounded outline-none"
               placeholder="Enter your email"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleChange}
               required
             />
           </div>
@@ -44,7 +92,7 @@ const Login = () => {
               name="password"
               className="mt-1 p-2 w-full border rounded outline-none pr-10"
               placeholder="Input your password"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handleChange}
               required
             />
             <span
@@ -58,11 +106,11 @@ const Login = () => {
             type="submit"
             className="bg-blue-700 text-white py-2 px-4 rounded w-full"
           >
-            Log In
+            {loading ? "Logging in..." : "Log In"}
           </button>
           <p className="mt-4">
             Do not have an account?{" "}
-            <Link className=" text-medium text-blue-700" to="/">
+            <Link className="text-medium text-blue-700" to="/">
               Register
             </Link>
           </p>
