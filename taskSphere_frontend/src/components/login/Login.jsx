@@ -45,16 +45,15 @@ const Login = () => {
   useEffect(() => {
     if (!isSubmitting) return; 
   
-    if (status) {
+    if (status && user) {
       toast.success("Login successful!", {position: "top-right"});
       console.log(user)
       navigate("/dashboard");
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     } else if (!status && error) {
       toast.error(error);
-      setIsSubmitting(false);
     }
-  }, [isSubmitting, status, error, navigate]);
+  }, [ status, error, navigate]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-600">

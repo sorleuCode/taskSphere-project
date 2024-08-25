@@ -26,12 +26,11 @@ const createNew = async (req, res, next) => {
   } catch (error) {
     next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, error.message));
   }
-}
+};
 
 const update = async (req, res, next) => {
-  // Note: Do not use the required() method in the Update case
   const correctCondition = new mongoose.Schema({
-    // If you need the feature to move Column to another Board, then add boardId validation
+    // Uncomment if needed
     // boardId: {
     //   type: String,
     //   match: [OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE]
@@ -49,13 +48,13 @@ const update = async (req, res, next) => {
   }, { strict: false }); // Allow unknown fields
 
   try {
-    const validation = new mongoose.model('Validation', correctCondition);
+    const validation = mongoose.models.Validation || mongoose.model('Validation', correctCondition);
     await validation.validate(req.body);
     next();
   } catch (error) {
     next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, error.message));
   }
-}
+};
 
 const deleteItem = async (req, res, next) => {
   const correctCondition = new mongoose.Schema({
@@ -67,16 +66,16 @@ const deleteItem = async (req, res, next) => {
   });
 
   try {
-    const validation = new mongoose.model('Validation', correctCondition);
+    const validation = mongoose.models.Validation || mongoose.model('Validation', correctCondition);
     await validation.validate(req.params);
     next();
   } catch (error) {
     next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, error.message));
   }
-}
+};
 
 export const columnValidation = {
   createNew,
   update,
   deleteItem
-}
+};

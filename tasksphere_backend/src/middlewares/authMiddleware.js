@@ -36,31 +36,33 @@ const verifyToken = async (req, res, next) => {
   }
 }
 
+
 const isAdmin = async (req, res, next) => {
-  const token = req.cookies.token;
-  if (token) {
+  try {
+    const token = req.cookies.token;
+    if (token) {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
 
-      const decoded =   jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
+      req.user = await User.findOne({ email: decoded.email }).select("-password");
 
-      req.user = await User.findOne({email: decoded.email}).select("-password");
-
-      if(!req.user) {
-        res.status(401);
-        throw new Error("You are not authorised");
-
+      if (req?.user?.role !== "admin") {
+        // Return here to prevent further execution
+        return res.status(401).json({ message: "Not authorized, only Admin can perform this function" });
       }
 
-    if (!req?.user?.role === "admin") {
-      return res.status(401).json({ message: "Not authorized, only Admin can perform this function" });
+      // Proceed to next middleware or route handler
+      return next();
+    } else {
+      // Return here to prevent further execution
+      return res.status(401).json({ message: "No token provided, authorization denied" });
     }
-    next();
-  }else {
-    res.status(401);
-        throw new Error("Not authorized, no token");
+  } catch (error) {
+    // Return here to prevent further execution
+    return res.status(403).json({ message: error});
   }
+};
 
-}
-
+module.exports = isAdmin;
 
 
 module.exports = { verifyToken, isAdmin };

@@ -35,7 +35,7 @@ const BoardForm = ({ onClose }) => {
     console.log(allBoards)
 
     useEffect(() => {
-        if (!shouldSubmit) return; // Early return if not submitting
+        if (!shouldSubmit) return;
 
         if (status && !loading) {
 
@@ -68,7 +68,7 @@ const BoardForm = ({ onClose }) => {
                     onClick={onClose}
                     className="absolute top-4 right-8 p-2 text-gray-500 hover:text-gray-700 focus:outline-none"
                 >
-                    <MdCancel className=' text-blue-700 hover:scale-80' size={24} />
+                    <MdCancel className=' text-blue-400 hover:scale-80' size={24} />
                 </button>
                 <div>
 
@@ -91,7 +91,7 @@ const BoardForm = ({ onClose }) => {
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
-                        className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        className="mt-2 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-400 focus:border-blue-400"
                         placeholder="Enter board description"
                         rows="4"
                         required
@@ -117,7 +117,7 @@ const BoardForm = ({ onClose }) => {
 
                 <button
                     type="submit"
-                    className="w-full py-3 px-4 bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="w-full py-3 px-4 bg-blue-400 text-white font-semibold rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                     {loading ? 'Creating...' : 'Create Board'}
                 </button>

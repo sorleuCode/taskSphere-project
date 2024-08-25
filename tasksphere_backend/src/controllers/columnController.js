@@ -4,6 +4,7 @@
  * "A bit of fragrance clings to the hand that gives flowers!"
  */
 import { StatusCodes } from 'http-status-codes'
+import { columnModel } from '~/models/columnModel'
 import { columnService } from '~/services/columnService'
 
 const createNew = async (req, res, next) => {
@@ -12,6 +13,26 @@ const createNew = async (req, res, next) => {
     res.status(StatusCodes.CREATED).json(createdColumn)
   } catch (error) { next(error) }
 }
+
+const getColumns = async (req, res) => {
+  try {
+
+      const columns = await columnModel.Column.find({boardId: req.params.boardId});
+
+      if(columns) {
+        res.status(StatusCodes.OK).json(columns)
+      }else {
+
+        res.status(500).json({message: "no columns found"})
+      }
+
+  } catch (error) {
+
+      res.json(error.message)
+  }
+}
+
+
 
 const update = async (req, res, next) => {
   try {
@@ -28,11 +49,14 @@ const deleteItem = async (req, res, next) => {
     const result = await columnService.deleteItem(columnId)
 
     res.status(StatusCodes.OK).json(result)
-  } catch (error) { next(error) }
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).json(error)
+  }
 }
 
 export const columnController = {
   createNew,
   update,
-  deleteItem
+  deleteItem,
+  getColumns
 }

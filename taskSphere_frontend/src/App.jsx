@@ -17,7 +17,7 @@ function App() {
       <Route path='/' element={<LandinPage/>}/>
       <Route path='/login' element={<Login/>}/>
       <Route path='/dashboard' element={<Dashboard/>}/>
-      <Route path='/board' element={<Board/>}/>
+      <Route path='/boards/board/:id' element={<Board/>}/>
       <Route path='/user/verify/:token' element={<VerifyEmail/>}/>
       <Route path='/user/verifyEmail' element={<EmailVerificationNotice/>}/>
       <Route path='/user/googlecbk' element={<GoogleCallback/>}/>

@@ -5,7 +5,6 @@
  */
 import { StatusCodes } from 'http-status-codes'
 import { cardModel } from '~/models/cardModel'
-import { columnModel } from '~/models/columnModel'
 import { cardService } from '~/services/cardService'
 
 const createNew = async (req, res, next) => {
@@ -30,7 +29,7 @@ const updateCard = async (req , res, next) => {
   }
 }
 
-const findOneById = async (req, res, next) => {
+const findOneById = async (req, res) => {
   try {
     const card = await cardModel.findOneById(req.params.id);
 
@@ -45,11 +44,15 @@ const findOneById = async (req, res, next) => {
 
 const getAllcardsDetails = async (req, res) => {
   try {
-      const cards = await columnModel.Card.find();
+
+      const cards = await cardModel.Card.find({boardId: req.params.boardId});
       if(cards) {
         res.status(StatusCodes.OK).json(cards)
       }
-      res.status(500).json({message: "no cards found"})
+      else {
+
+        res.status(500).json({message: "no cards found"})
+      }
   } catch (error) {
       res.json(error.message)
   }

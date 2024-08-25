@@ -27,9 +27,17 @@ export const updateCard = createAsyncThunk("card/updateCard", async ({cardId, up
     }
 })
 
-export const fetchSingleCard= createAsyncThunk("board/fetchSingleCard", async(cardId, {rejectWithValue}) => {
+export const fetchSingleCard= createAsyncThunk("card/fetchSingleCard", async(cardId, {rejectWithValue}) => {
     try {
         const response = await API_ROOT.get(`cards/${cardId}`)
+        return response.data
+    } catch (error) {
+        return rejectWithValue(error.response.data)
+    }
+})
+export const fetchAllCards= createAsyncThunk("card/fetchAllCards", async(boardId, {rejectWithValue}) => {
+    try {
+        const response = await API_ROOT.get(`cards/${boardId}`)
         return response.data
     } catch (error) {
         return rejectWithValue(error.response.data)
@@ -43,7 +51,8 @@ const cardSlice = createSlice({
         cards: [],
         card: {},
         loading: false,
-        error: null
+        error: "",
+        status: false
     },
 
     extraReducers: (builder) => {
@@ -52,30 +61,37 @@ const cardSlice = createSlice({
 
         builder.addCase(createNewCard.pending, (state) => {
             state.loading = true;
-            state.error = null
+            state.error = ""
+            state.status = false
+
         })
         .addCase(createNewCard.fulfilled, (state, action) => {
             state.loading = false;
             state.card = action.payload
-            state.cards = state.cards.push(action.payload)
-            state.error = null
+            state.error = ""
+            state.status = true
+
 
         })
         .addCase(createNewCard.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload.message
+            state.error = action.payload
+            state.status = false
+
         })
 
         // updateCard
 
-        builder.addCase(updateCard.pending, (state) => {
+        .addCase(updateCard.pending, (state) => {
             state.loading = true;
-            state.error = null;
+            state.error = "";
+            state.status = false
 
         })
         .addCase(updateCard.fulfilled, (state, action) => {
             state.loading = false;
-            state.error = null;
+            state.error = "";
+            state.status = true
 
             const { arg: {cardId}} = action.meta;
             if(cardId) {
@@ -88,23 +104,56 @@ const cardSlice = createSlice({
         .addCase(updateCard.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload
+            state.status = false
+
 
         })
 
         // getSingleCard
 
-        builder.addCase(fetchSingleCard.pending, (state) => {
+        .addCase(fetchSingleCard.pending, (state) => {
             state.loading = true;
-            state.error = null
+            state.error = ""
+            state.status = false
+
 
         })
         .addCase(fetchSingleCard.fulfilled, (state, action) => {
             state.loading = false;
             state.card = action.payload
+            state.status = true
+            state.error = "";
+
+
         })
         .addCase(fetchSingleCard.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload.message
+            state.error = action.payload
+            state.status = false
+
+
+        })
+
+        // fetchAllCards
+
+        .addCase(fetchAllCards.pending, (state) => {
+            state.loading = true;
+            state.error = ""
+            state.status = false
+
+
+        })
+        .addCase(fetchAllCards.fulfilled, (state, action) => {
+            state.loading = false;
+            state.cards = action.payload
+            state.status = true
+
+        })
+        .addCase(fetchAllCards.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload
+            state.status = false
+
         })
     }
 })

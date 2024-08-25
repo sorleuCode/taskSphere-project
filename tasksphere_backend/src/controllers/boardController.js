@@ -39,8 +39,11 @@ const getAllboardsDetails = async (req, res) => {
 
       if(boards) {
         res.status(StatusCodes.OK).json(boards)
+      }else {
+
+        res.status(500).json({message: "no boards found"})
       }
-      res.status(500).json({message: "no boards found"})
+
   } catch (error) {
 
       res.json(error.message)

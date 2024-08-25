@@ -23,6 +23,7 @@ import { CSS } from '@dnd-kit/utilities'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import { useConfirm } from 'material-ui-confirm'
+import { useSelector } from 'react-redux'
 
 function Column({ column, createNewCard, deleteColumnDetails }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -41,12 +42,13 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
   }
 
   const [anchorEl, setAnchorEl] = useState(null)
+  const {cards} = useSelector((state) => state.card)
   const open = Boolean(anchorEl)
   const handleClick = (event) => setAnchorEl(event.currentTarget)
   const handleClose = () => setAnchorEl(null)
 
   // Cards đã được sắp xếp ở component cha cao nhất (boards/_id.jsx) (Video 71 đã giải thích lý do)
-  const orderedCards = column.cards
+  const orderedCards =  cards.filter(card => card.columnId === column._id)
 
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
@@ -82,18 +84,17 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
   const confirmDeleteColumn = useConfirm()
   const handleDeleteColumn = () => {
     confirmDeleteColumn({
-      title: 'Delete Column?',
-      description: 'This action will permanently delete your Column and its Cards! Are you sure?',
+      // title: 'Delete Column?',
+      // description: 'This action will permanently delete your Column and its Cards! Are you sure?',
       confirmationText: 'Confirm',
-      cancellationText: 'Cancel'
-      // buttonOrder: ['confirm', 'cancel']
-      // content: 'test content hehe',
-      // allowClose: false,
-      // dialogProps: { maxWidth: 'lg' },
-      // cancellationButtonProps: { color: 'primary' },
-      // confirmationButtonProps: { color: 'success', variant: 'outlined' },
-      // description: 'Phải nhập chữ trungquandev thì mới được Confirm =))',
-      // confirmationKeyword: 'trungquandev'
+      // cancellationText: 'Cancel',
+      buttonOrder: ['confirm', 'cancel'],
+      content: 'Enter "delete" keyword',
+      allowClose: false,
+      dialogProps: { maxWidth: 'lg' },
+      cancellationButtonProps: { color: 'primary' },
+      confirmationButtonProps: { color: 'primary'},
+      confirmationKeyword: 'delete'
     }).then(() => {
       /**
        * Gọi lên props function deleteColumnDetails nằm ở component cha cao nhất (boards/_id.jsx)
