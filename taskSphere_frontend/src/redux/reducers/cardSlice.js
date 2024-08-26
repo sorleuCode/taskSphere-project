@@ -55,6 +55,16 @@ const cardSlice = createSlice({
         status: false
     },
 
+    reducers: {
+        setReoderedCards: (state, action) => {
+            state.cards = action.payload;
+            state.loading = false;
+            state.status = true
+            state.error = ""
+
+          },
+    },
+
     extraReducers: (builder) => {
 
         // createCard
@@ -157,5 +167,5 @@ const cardSlice = createSlice({
         })
     }
 })
-
+export const {setReoderedCards} = cardSlice.actions
 export default cardSlice.reducer;

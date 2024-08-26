@@ -6,7 +6,9 @@ import Typography from '@mui/material/Typography';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { isEmpty } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
+import { setReoderedCards } from '../../redux/reducers/cardSlice';
+
 
 
 import BoardBar from './BoardBar/BoardBar';
@@ -122,44 +124,47 @@ function Board() {
   };
 
   const moveCardInTheSameColumn = (dndOrderedCards, dndOrderedCardIds, columnId) => {
+
     try {
       // Get the current state for columns and cards from Redux
       
+      // // Create new arrays to avoid direct state mutation
+      // const clonedColumns = cloneDeep(columns)
+      // const updatedCards = cloneDeep(cards);
   
-      // Create new arrays to avoid direct state mutation
-      const updatedColumns = [...columns];
-      const updatedCards = [...cards];
+      // // Find the column to update
+      // const columnToUpdate = updatedColumns.find(column => column._id === columnId);
   
-      // Find the column to update
-      const columnToUpdate = updatedColumns.find(column => column._id === columnId);
-  
-      if (columnToUpdate) {
-        // Update the column's cardOrderIds
-        columnToUpdate.cardOrderIds = dndOrderedCardIds;
+      // if (columnToUpdate) {
+      //   // Update the column's cardOrderIds
+      //   columnToUpdate.cardOrderIds = dndOrderedCardIds;
         
-        // Update the cards in the column
-        const updatedColumnCards = dndOrderedCards.map(card => {
-          return { ...card };
-        });
+      //   // Update the cards in the column
+      //   const updatedColumnCards = dndOrderedCards.map(card => {
+      //     return { ...card };
+      //   });
   
-        // Update the corresponding cards in the global cards state
-        updatedColumnCards.forEach(updatedCard => {
-          const cardIndex = updatedCards.findIndex(card => card._id === updatedCard._id);
-          if (cardIndex > -1) {
-            updatedCards[cardIndex] = updatedCard;
-          }
-        });
+      //   // Update the corresponding cards in the global cards state
+      //   updatedColumnCards.forEach(updatedCard => {
+      //     const cardIndex = updatedCards.findIndex(card => card._id === updatedCard._id);
+      //     if (cardIndex > -1) {
+      //       updatedCards[cardIndex] = updatedCard;
+      //     }
+      //   });
+      // }
+
+      const clonedColumns = cloneDeep(columns)
+
+      console.log("columns", columns)
+
+      const columnToUpdate = clonedColumns.find(column => column._id === columnId)
+
+      if (columnToUpdate) {
+        dispatch(setReoderedCards(dndOrderedCards))
+
+        dispatch(updateColumn({columnId, data: {cardOrderIds: dndOrderedCardIds}}))
       }
-  
-      // Dispatch an action to update the column in the column slice
-       dispatch(updateColumn({
-        columnId,
-        data: { cardOrderIds: dndOrderedCardIds }
-      }));
-  
-      // Dispatch an action to update the cards in the card slice
-     dispatch(updateCardsInState(updatedCards)); // Assuming `updateCardsInState` is an action for updating cards
-  
+      
       // Show success notification
       toast.success('Card moved within column successfully');
     } catch (error) {
@@ -167,14 +172,22 @@ function Board() {
       toast.error('Failed to move card within column');
     }
   }
-  
 
-  const moveCardToDifferentColumn = async (currentCardId, prevColumnId, nextColumnId) => {
+  const moveCardToDifferentColumn = async (currentCardId, prevColumnId, nextColumnId, dndOrderedColumns) => {
+
+    let prevCardOrderIds = dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds
+    const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id)
+    const columnOrderIds = dndOrderedColumnsIds
+
     try {
-      await dispatch(moveCardToDifferentColumn({
+      dispatch(updateBoard({boardId, columnOrderIds}))
+      
+      dispatch(moveCardToDifferentColumn({
         currentCardId,
         prevColumnId,
-        nextColumnId
+        prevCardOrderIds,
+        nextColumnId,
+        nextCardOrderIds: dndOrderedColumns.find(c => c._id === nextColumnId)?.cardOrderIds
       }));
 
       toast.success('Card moved to different column successfully');

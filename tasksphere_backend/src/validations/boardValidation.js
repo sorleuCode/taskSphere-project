@@ -107,7 +107,7 @@ const moveCardToDifferentColumn = async (req, res, next) => {
   });
 
   try {
-    const validation = new mongoose.model('Validation', correctCondition);
+    const validation = mongoose.models.Validation || new mongoose.model('Validation', correctCondition);
     await validation.validate(req.body);
     next();
   } catch (error) {
