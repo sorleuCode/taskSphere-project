@@ -70,7 +70,6 @@ function BoardContent({
     return
   }, [columns, cards]);
 
-  console.log("orderedColumns", orderedColumns)
   // const findColumnByCardId = (cardId) => {
   //   return orderedColumns.find(column => column?.cardOrderIds?.includes(cardId));
   // }
@@ -295,7 +294,7 @@ function BoardContent({
         // Lấy vị trí cũ (từ thằng active)
         const oldColumnIndex = orderedColumns.findIndex(c => c._id === active.id)
         // Lấy vị trí mới (từ thằng over)
-        const newColumnIndex = orderedColumns.findIndex(c => c._id === over.id)
+        const newColumnIndex = orderedColumns.findIndex(c => c._id === over.id);
 
         // Dùng arrayMove của thằng dnd-kit để sắp xếp lại mảng Columns ban đầu
         // Code của arrayMove ở đây: dnd-kit/packages/sortable/src/utilities/arrayMove.ts

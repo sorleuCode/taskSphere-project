@@ -37,7 +37,7 @@ export const updateBoard = createAsyncThunk("board/updateBoard", async ({ boardI
     }
 });
 
-export const moveCardToDifferentColumn = createAsyncThunk("board/moveCardToDifferentColumn", async (moveCardData, { rejectWithValue }) => {
+export const moveCardToDifferentColumns = createAsyncThunk("board/moveCardToDifferentColumns", async (moveCardData, { rejectWithValue }) => {
     try {
         const response = await API_ROOT.put(`boards/moving-card`, moveCardData, { withCredentials: true });
         return response.data;
@@ -64,17 +64,21 @@ const boardSlice = createSlice({
                 state.loading = true;
                 state.error = null;
                 state.status = false;
+                state.moveCardStatus = null;
+
             })
             .addCase(fetchBoards.fulfilled, (state, action) => {
                 state.loading = false;
                 state.allBoards = action.payload;
                 state.error = null;
                 state.status = true;
+                state.moveCardStatus = null;
             })
             .addCase(fetchBoards.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
                 state.status = false;
+                state.moveCardStatus = null;
             })
 
             // createNewBoard
@@ -82,17 +86,20 @@ const boardSlice = createSlice({
                 state.loading = true;
                 state.error = null;
                 state.status = false;
+                state.moveCardStatus = null;
             })
             .addCase(createNewBoard.fulfilled, (state, action) => {
                 state.loading = false;
                 state.allBoards.push(action.payload);
                 state.error = null;
                 state.status = true;
+                state.moveCardStatus = null;
             })
             .addCase(createNewBoard.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
                 state.status = false;
+                state.moveCardStatus = null;
             })
 
             // fetchSingleBoard
@@ -100,17 +107,20 @@ const boardSlice = createSlice({
                 state.loading = true;
                 state.error = null;
                 state.status = false;
+                state.moveCardStatus = null;
             })
             .addCase(fetchSingleBoard.fulfilled, (state, action) => {
                 state.loading = false;
                 state.board = action.payload;
                 state.error = null;
                 state.status = true;
+                state.moveCardStatus = null;
             })
             .addCase(fetchSingleBoard.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
                 state.status = false;
+                state.moveCardStatus = null;
             })
 
             // updateBoard
@@ -118,11 +128,13 @@ const boardSlice = createSlice({
                 state.loading = true;
                 state.error = null;
                 state.status = false;
+                state.moveCardStatus = null;
             })
             .addCase(updateBoard.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
                 state.status = true;
+                state.moveCardStatus = null;
 
                 const { boardId } = action.meta.arg;
                 if (boardId) {
@@ -135,28 +147,29 @@ const boardSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
                 state.status = false;
+                state.moveCardStatus = null;
             })
 
             // moveCardToDifferentColumn
-            .addCase(moveCardToDifferentColumn.pending, (state) => {
+            .addCase(moveCardToDifferentColumns.pending, (state) => {
                 state.loading = true;
                 state.error = null;
                 state.status = false;
+                state.moveCardStatus = null;
             })
-            .addCase(moveCardToDifferentColumn.fulfilled, (state, action) => {
+            .addCase(moveCardToDifferentColumns.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
                 state.status = true;
+                state.moveCardStatus = action.payload
 
-                const { currentCardId } = action.meta.arg;
-                if (currentCardId) {
-                    state.moveCardStatus = action.payload;
-                }
+               
             })
-            .addCase(moveCardToDifferentColumn.rejected, (state, action) => {
+            .addCase(moveCardToDifferentColumns.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
                 state.status = false;
+                state.moveCardStatus = null;
             });
     },
 });

@@ -76,7 +76,15 @@ const initialState = {
 const columnSlice = createSlice({
   name: "column",
   initialState,
-  reducers: {},
+  reducers: {
+    setReoderedColumns: (state, action) => {
+      state.columns = action.payload.map((column) => state.columns.find((c) => c._id === column._id))
+      state.loading = false;
+      state.status = true
+      state.error = null
+
+    },
+  },
   extraReducers: (builder) => {
     builder
 
@@ -159,4 +167,5 @@ const columnSlice = createSlice({
   },
 });
 
+export const {setReoderedColumns} =columnSlice.actions;
 export default columnSlice.reducer;

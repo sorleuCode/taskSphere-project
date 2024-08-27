@@ -1,4 +1,4 @@
-import { useEffect} from 'react';
+import { useEffect } from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { cloneDeep, isEmpty } from 'lodash'
 import { setReoderedCards } from '../../redux/reducers/cardSlice';
+import { setReoderedColumns } from '../../redux/reducers/columnSlice';
 
 
 
@@ -15,30 +16,35 @@ import BoardBar from './BoardBar/BoardBar';
 import BoardContent from './BoardContent/BoardContent';
 import { mapOrder } from '../../utils/sorts';
 import { generatePlaceholderCard } from './../../utils/formatters';
-import { fetchSingleBoard, moveCardToDifferentColumn, updateBoard } from '../../redux/reducers/boardSlice';
+import { fetchSingleBoard, moveCardToDifferentColumns, updateBoard } from '../../redux/reducers/boardSlice';
 import { getColumns, deleteColumn, createColumn, updateColumn } from '../../redux/reducers/columnSlice';
-import { createNewCard, fetchAllCards} from '../../redux/reducers/cardSlice';
+import { createNewCard, fetchAllCards } from '../../redux/reducers/cardSlice';
 
 function Board() {
   const dispatch = useDispatch();
   const { id: boardId } = useParams();
 
-  const { board, loading, error} = useSelector((state) => state.board);
-  const { columns, column} = useSelector((state) => state.column);
-  const { card, cards} = useSelector((state) => state.card);
-  
-  console.log(columns)
+  const { board, loading, moveCardStatus, error } = useSelector((state) => state.board);
+  const { columns, column, status } = useSelector((state) => state.column);
+  const { card} = useSelector((state) => state.card);
+
 
   useEffect(() => {
     dispatch(fetchSingleBoard(boardId));
-    dispatch(getColumns(boardId));
+   
 
-  }, [dispatch]);
+  }, [dispatch, moveCardStatus]);
 
   useEffect(() => {
-      dispatch(fetchAllCards(boardId))
+    dispatch(getColumns(boardId));
+  }, [column])
 
-  }, [dispatch, card])
+  
+
+  useEffect(() => {
+    dispatch(fetchAllCards(boardId))
+
+  }, [dispatch, moveCardStatus, card])
 
 
 
@@ -51,18 +57,18 @@ function Board() {
   //       // Handle empty columns
   //       const columnCards = cards.filter((card) => card.columnId === column._id);
   //       if (isEmpty(columnCards)) {
-          
+
   //         const placeholderCard = generatePlaceholderCard(column);
 
   //         console.log("aiki", placeholderCard)
   //         console.log(column)
-  
+
   //         // Create a copy of the column object and update cardOrderIds
   //         const updatedColumn = {
   //           ...column,
   //           cardOrderIds: [placeholderCard._id]
   //         };
-  
+
   //         // Now you can use updatedColumn as needed, for example, updating the Redux state
   //         dispatch(updateColumn({
   //           columnId: updatedColumn._id,
@@ -75,13 +81,13 @@ function Board() {
   //     });
   //   }
   // }, [ cards, dispatch]);
-  
+
 
   const createNewColumn = async (newColumnData) => {
     try {
-     await dispatch(createColumn({ ...newColumnData, boardId })).unwrap();
-      
-      if(column) {
+      await dispatch(createColumn({ ...newColumnData, boardId })).unwrap();
+
+      if (column) {
 
         toast.success('Column created successfully');
       }
@@ -112,9 +118,12 @@ function Board() {
     try {
       const dndOrderedColumnsIds = dndOrderedColumns.map((c) => c._id);
 
-      await dispatch(updateBoard({
+
+       dispatch(setReoderedColumns(dndOrderedColumns))
+
+       dispatch(updateBoard({
         boardId: board._id,
-        data: { columnOrderIds: dndOrderedColumnsIds }
+        updatedBoardData: { columnOrderIds: dndOrderedColumnsIds }
       }));
 
       toast.success('Columns reordered successfully');
@@ -126,45 +135,20 @@ function Board() {
   const moveCardInTheSameColumn = (dndOrderedCards, dndOrderedCardIds, columnId) => {
 
     try {
-      // Get the current state for columns and cards from Redux
-      
-      // // Create new arrays to avoid direct state mutation
-      // const clonedColumns = cloneDeep(columns)
-      // const updatedCards = cloneDeep(cards);
-  
-      // // Find the column to update
-      // const columnToUpdate = updatedColumns.find(column => column._id === columnId);
-  
-      // if (columnToUpdate) {
-      //   // Update the column's cardOrderIds
-      //   columnToUpdate.cardOrderIds = dndOrderedCardIds;
-        
-      //   // Update the cards in the column
-      //   const updatedColumnCards = dndOrderedCards.map(card => {
-      //     return { ...card };
-      //   });
-  
-      //   // Update the corresponding cards in the global cards state
-      //   updatedColumnCards.forEach(updatedCard => {
-      //     const cardIndex = updatedCards.findIndex(card => card._id === updatedCard._id);
-      //     if (cardIndex > -1) {
-      //       updatedCards[cardIndex] = updatedCard;
-      //     }
-      //   });
-      // }
 
       const clonedColumns = cloneDeep(columns)
 
-      console.log("columns", columns)
 
       const columnToUpdate = clonedColumns.find(column => column._id === columnId)
 
       if (columnToUpdate) {
+        console.log("dndOrderedCards", dndOrderedCards)
+
         dispatch(setReoderedCards(dndOrderedCards))
 
-        dispatch(updateColumn({columnId, data: {cardOrderIds: dndOrderedCardIds}}))
+        dispatch(updateColumn({ columnId, updatedData: { cardOrderIds: dndOrderedCardIds } }))
       }
-      
+
       // Show success notification
       toast.success('Card moved within column successfully');
     } catch (error) {
@@ -173,28 +157,35 @@ function Board() {
     }
   }
 
-  const moveCardToDifferentColumn = async (currentCardId, prevColumnId, nextColumnId, dndOrderedColumns) => {
-
-    let prevCardOrderIds = dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds
+  const moveCardToDifferentColumn = (currentCardId, prevColumnId, nextColumnId, dndOrderedColumns) => {
     const dndOrderedColumnsIds = dndOrderedColumns.map(c => c._id)
-    const columnOrderIds = dndOrderedColumnsIds
 
-    try {
-      dispatch(updateBoard({boardId, columnOrderIds}))
-      
-      dispatch(moveCardToDifferentColumn({
+    delete dndOrderedColumns.cards
+
+
+    if (dndOrderedColumnsIds) {
+      dispatch(setReoderedColumns(dndOrderedColumns))
+      dispatch(updateBoard({ boardId, updatedBoardData: { columnOrderIds: dndOrderedColumnsIds } }))
+
+      const prevCardOrderIds = dndOrderedColumns.find(c => c._id === prevColumnId)?.cardOrderIds
+
+
+      dispatch(moveCardToDifferentColumns({
         currentCardId,
         prevColumnId,
         prevCardOrderIds,
         nextColumnId,
         nextCardOrderIds: dndOrderedColumns.find(c => c._id === nextColumnId)?.cardOrderIds
-      }));
+      }))
 
-      toast.success('Card moved to different column successfully');
-    } catch (error) {
-      toast.error('Failed to move card to different column');
+    
+
     }
-  };
+
+
+
+
+  }
 
   const deleteColumnDetails = async (columnId) => {
     try {

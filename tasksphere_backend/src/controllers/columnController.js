@@ -37,6 +37,8 @@ const getColumns = async (req, res) => {
 const update = async (req, res, next) => {
   try {
     const columnId = req.params.id
+
+    console.log(req.body)
     const updatedColumn = await columnService.update(columnId, req.body)
 
     res.status(StatusCodes.OK).json(updatedColumn)

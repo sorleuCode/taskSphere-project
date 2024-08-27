@@ -69,7 +69,7 @@ const update = async (req, res, next) => {
   }, { strict: false }); // Allow unknown fields
 
   try {
-    const validation = new mongoose.model('Validation', correctCondition);
+    const validation =  mongoose.models.Validation || new mongoose.model('Validation', correctCondition);
     await validation.validate(req.body);
     next();
   } catch (error) {

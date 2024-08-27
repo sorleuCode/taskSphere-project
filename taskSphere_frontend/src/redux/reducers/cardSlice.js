@@ -57,7 +57,7 @@ const cardSlice = createSlice({
 
     reducers: {
         setReoderedCards: (state, action) => {
-            state.cards = action.payload;
+            state.cards = action.payload
             state.loading = false;
             state.status = true
             state.error = ""
