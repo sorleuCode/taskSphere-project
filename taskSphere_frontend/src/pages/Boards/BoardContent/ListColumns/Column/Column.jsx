@@ -42,13 +42,15 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
   }
 
   const [anchorEl, setAnchorEl] = useState(null)
-  const {cards} = useSelector((state) => state.card)
+  const {cards, dndOrderedCards} = useSelector((state) => state.card)
   const open = Boolean(anchorEl)
   const handleClick = (event) => setAnchorEl(event.currentTarget)
   const handleClose = () => setAnchorEl(null)
 
-  // Cards đã được sắp xếp ở component cha cao nhất (boards/_id.jsx) (Video 71 đã giải thích lý do)
-  const orderedCards =  cards.filter(card => card.columnId === column._id)
+  let orderedCards;
+  // console.log("dndOrderedCards", dndOrderedCards)
+  dndOrderedCards[0] ? orderedCards = cards.filter(card => card.columnId === column._id): orderedCards = cards.filter(card => card.columnId === column._id)
+
 
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm)

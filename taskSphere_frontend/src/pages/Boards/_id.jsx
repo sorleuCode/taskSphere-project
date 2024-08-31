@@ -33,7 +33,7 @@ function Board() {
     dispatch(fetchSingleBoard(boardId));
    
 
-  }, [dispatch, moveCardStatus]);
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getColumns(boardId));

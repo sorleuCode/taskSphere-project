@@ -110,6 +110,8 @@ const update = async (columnId, updateData) => {
       { $set: updateData },
       { new: true }
     ).exec();
+
+    
     return result;
   } catch (error) {
     throw new Error(error.message);

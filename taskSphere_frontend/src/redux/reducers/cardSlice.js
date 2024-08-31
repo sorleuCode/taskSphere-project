@@ -49,6 +49,7 @@ const cardSlice = createSlice({
     name: "card",
     initialState: {
         cards: [],
+        dndOrderedCards: [],
         card: {},
         loading: false,
         error: "",
@@ -57,7 +58,7 @@ const cardSlice = createSlice({
 
     reducers: {
         setReoderedCards: (state, action) => {
-            state.cards = action.payload
+            state.dndOrderedCards = action.payload
             state.loading = false;
             state.status = true
             state.error = ""

@@ -70,6 +70,7 @@ const initialState = {
   loading: false,
   error: null,
   status: false,
+  movecrdIntheSameColumnSatus: false
 };
 
 // Column slice with extra reducers to handle async thunk actions
@@ -80,8 +81,9 @@ const columnSlice = createSlice({
     setReoderedColumns: (state, action) => {
       state.columns = action.payload.map((column) => state.columns.find((c) => c._id === column._id))
       state.loading = false;
-      state.status = true
+      state.movecrdIntheSameColumnSatus = true
       state.error = null
+
 
     },
   },

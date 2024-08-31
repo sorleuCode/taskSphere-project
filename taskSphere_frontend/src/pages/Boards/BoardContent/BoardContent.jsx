@@ -24,7 +24,6 @@ import { MouseSensor, TouchSensor } from "./../../../customLibraries/DndKitSenso
 import { arrayMove } from '@dnd-kit/sortable'
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { cloneDeep, isEmpty } from 'lodash'
-import { generatePlaceholderCard } from './../../../utils/formatters'
 
 import Column from './ListColumns/Column/Column'
 import Card from './ListColumns/Column/ListCards/Card/Card'
@@ -54,20 +53,24 @@ function BoardContent({
   const [activeDragItemData, setActiveDragItemData] = useState(null);
   const [oldColumnWhenDraggingCard, setOldColumnWhenDraggingCard] = useState(null);
 
-  const { cards } = useSelector((state) => state.card);
+  const { cards, status } = useSelector((state) => state.card);
 
   const lastOverId = useRef(null);
 
   useEffect(() => {
 
     const clonedCards = cloneDeep(cards)
-    const clonedColumns = cloneDeep(columns)
-    if (clonedColumns) {
+    if (!columns?.card) {
+
+      const clonedColumns = cloneDeep(columns)
 
       const organizedColumns = clonedColumns.map((column) => ({...column, cards: clonedCards.filter((card) => card.columnId === column._id )}))
       setOrderedColumns(organizedColumns);
+    }else {
+
+      setOrderedColumns(columns);
     }
-    return
+    
   }, [columns, cards]);
 
   // const findColumnByCardId = (cardId) => {
@@ -111,10 +114,7 @@ function BoardContent({
         // Xóa card ở cái column active (cũng có thể hiểu là column cũ, cái lúc mà kéo card ra khỏi nó để sang column khác)
         nextActiveColumn.cards = nextActiveColumn.cards.filter(card => card._id !== activeDraggingCardId)
 
-        // Thêm Placeholder Card nếu Column rỗng: Bị kéo hết Card đi, không còn cái nào nữa. (Video 37.2)
-        if (isEmpty(nextActiveColumn.cards)) {
-          nextActiveColumn.cards = [generatePlaceholderCard(nextActiveColumn)]
-        }
+
 
         // Cập nhật lại mảng cardOrderIds cho chuẩn dữ liệu
         nextActiveColumn.cardOrderIds = nextActiveColumn.cards.map(card => card._id)

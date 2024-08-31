@@ -74,6 +74,7 @@ const update = async (boardId, reqBody) => {
 }
 
 const moveCardToDifferentColumn = async (reqBody) => {
+
   try {
     // B1: Cập nhật mảng cardOrderIds của Column ban đầu chứa nó (Hiểu bản chất là xóa cái _id của Card ra khỏi mảng)
     await columnModel.update(reqBody.prevColumnId, {

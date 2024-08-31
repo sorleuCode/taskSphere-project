@@ -39,7 +39,8 @@ const update = async (req, res, next) => {
       type: String,
       minlength: 3,
       maxlength: 50,
-      trim: true
+      trim: true,
+      require: false
     },
     cardOrderIds: [{
       type: String,

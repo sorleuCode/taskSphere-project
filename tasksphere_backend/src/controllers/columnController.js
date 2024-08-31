@@ -4,6 +4,7 @@
  * "A bit of fragrance clings to the hand that gives flowers!"
  */
 import { StatusCodes } from 'http-status-codes'
+import { cardModel } from '~/models/cardModel'
 import { columnModel } from '~/models/columnModel'
 import { columnService } from '~/services/columnService'
 
@@ -40,6 +41,8 @@ const update = async (req, res, next) => {
 
     console.log(req.body)
     const updatedColumn = await columnService.update(columnId, req.body)
+
+    await cardModel.Card.
 
     res.status(StatusCodes.OK).json(updatedColumn)
   } catch (error) { next(error) }
