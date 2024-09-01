@@ -33,6 +33,20 @@ const boardSchema = new Schema({
     required: true,
     enum: Object.values(BOARD_TYPES)
   },
+  ownerIds:[
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
+
+  memberIds: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
+
   columnOrderIds: {
     type: [String],
     default: [],

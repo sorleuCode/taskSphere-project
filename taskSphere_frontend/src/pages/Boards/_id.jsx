@@ -33,7 +33,7 @@ function Board() {
     dispatch(fetchSingleBoard(boardId));
    
 
-  }, [dispatch]);
+  }, [dispatch, card]);
 
   useEffect(() => {
     dispatch(getColumns(boardId));
@@ -142,7 +142,6 @@ function Board() {
       const columnToUpdate = clonedColumns.find(column => column._id === columnId)
 
       if (columnToUpdate) {
-        console.log("dndOrderedCards", dndOrderedCards)
 
         dispatch(setReoderedCards(dndOrderedCards))
 

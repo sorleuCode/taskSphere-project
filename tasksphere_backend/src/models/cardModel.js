@@ -4,6 +4,38 @@ import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+
+const CommentSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  text: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+const AttachmentSchema = new mongoose.Schema({
+  filename: {
+    type: String,
+    required: true,
+  },
+  url: {
+    type: String,
+    required: true,
+  },
+  uploadedAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const cardSchema = new Schema({
   boardId: {
     type: String,
@@ -24,7 +56,23 @@ const cardSchema = new Schema({
   },
   description: {
     type: String,
-    required: false
+    require: false
+  },
+  cover: {type: String, required: false},
+  memberIds: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
+  comments: [CommentSchema],
+  attachments: [AttachmentSchema], 
+  dueDate: {
+    type: Date,
+  },
+  completed: {
+    type: Boolean,
+    default: false,
   },
   createdAt: {
     type: Date,

@@ -39,10 +39,7 @@ const update = async (req, res, next) => {
   try {
     const columnId = req.params.id
 
-    console.log(req.body)
     const updatedColumn = await columnService.update(columnId, req.body)
-
-    await cardModel.Card.
 
     res.status(StatusCodes.OK).json(updatedColumn)
   } catch (error) { next(error) }
