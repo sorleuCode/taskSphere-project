@@ -64,13 +64,13 @@ function BoardContent({
 
       const clonedColumns = cloneDeep(columns)
 
-      const organizedColumns = clonedColumns.map((column) => ({...column, cards: clonedCards.filter((card) => card.columnId === column._id )}))
+      const organizedColumns = clonedColumns.map((column) => ({ ...column, cards: clonedCards.filter((card) => card.columnId === column._id) }))
       setOrderedColumns(organizedColumns);
-    }else {
+    } else {
 
       setOrderedColumns(columns);
     }
-    
+
   }, [columns, cards]);
 
   // const findColumnByCardId = (cardId) => {
@@ -375,40 +375,49 @@ function BoardContent({
   }, [activeDragItemType, orderedColumns])
 
   return (
-    <DndContext
-      // Cảm biến (đã giải thích kỹ ở video số 30)
-      sensors={sensors}
-      // Thuật toán phát hiện va chạm (nếu không có nó thì card với cover lớn sẽ không kéo qua Column được vì lúc này nó đang bị conflict giữa card và column), chúng ta sẽ dùng closestCorners thay vì closestCenter
-      // https://docs.dndkit.com/api-documentation/context-provider/collision-detection-algorithms
-      // Update video 37: nếu chỉ dùng closestCorners sẽ có bug flickering + sai lệch dữ liệu (vui lòng xem video 37 sẽ rõ)
-      // collisionDetection={closestCorners}
+    <Box sx={
+      {
+        position: "relative"
+      }
+    } >
 
-      // Tự custom nâng cao thuật toán phát hiện va chạm (video fix bug số 37)
-      collisionDetection={collisionDetectionStrategy}
+      <DndContext
+        // Cảm biến (đã giải thích kỹ ở video số 30)
+        sensors={sensors}
+        // Thuật toán phát hiện va chạm (nếu không có nó thì card với cover lớn sẽ không kéo qua Column được vì lúc này nó đang bị conflict giữa card và column), chúng ta sẽ dùng closestCorners thay vì closestCenter
+        // https://docs.dndkit.com/api-documentation/context-provider/collision-detection-algorithms
+        // Update video 37: nếu chỉ dùng closestCorners sẽ có bug flickering + sai lệch dữ liệu (vui lòng xem video 37 sẽ rõ)
+        // collisionDetection={closestCorners}
 
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDragEnd={handleDragEnd}
-    >
-      <Box sx={{
-        bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#34495e' : '#1976d2'),
-        width: '100%',
-        height: (theme) => theme.tasksphere.boardContentHeight,
-        p: '10px 0'
-      }}>
-        <ListColumns
-          columns={orderedColumns}
-          createNewColumn={createNewColumn}
-          createNewCard={createNewCard}
-          deleteColumnDetails={deleteColumnDetails}
-        />
-        <DragOverlay dropAnimation={customDropAnimation}>
-          {!activeDragItemType && null}
-          {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) && <Column column={activeDragItemData} />}
-          {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) && <Card card={activeDragItemData} />}
-        </DragOverlay>
-      </Box>
-    </DndContext>
+        // Tự custom nâng cao thuật toán phát hiện va chạm (video fix bug số 37)
+        collisionDetection={collisionDetectionStrategy}
+
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+      >
+        <Box sx={{
+          bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#34495e' : '#1976d2'),
+          width: '100%',
+          height: (theme) => theme.tasksphere.boardContentHeight,
+          p: '10px 0'
+        }}>
+          <ListColumns
+            columns={orderedColumns}
+            createNewColumn={createNewColumn}
+            createNewCard={createNewCard}
+            deleteColumnDetails={deleteColumnDetails}
+          />
+          <DragOverlay dropAnimation={customDropAnimation}>
+            {!activeDragItemType && null}
+            {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.COLUMN) && <Column column={activeDragItemData} />}
+            {(activeDragItemType === ACTIVE_DRAG_ITEM_TYPE.CARD) && <Card card={activeDragItemData} />}
+          </DragOverlay>
+        </Box>
+      </DndContext>
+
+    </Box>
+
   )
 }
 

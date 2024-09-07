@@ -13,8 +13,8 @@ Router.get("/auth/google/callback", authCallback);
 Router.get("/auth/google", googleAuth);
 Router.get("/verifyEmail/:token", verifyEmail)
 
-Router.get("/:userId", getUser)
-Router.put("/update/:id", updateUser)
-Router.put("/uploadProfile/:id", uploadProfilePic)
+Router.get("/user", verifyToken, getUser)
+Router.put("/update", verifyToken, updateUser)
+Router.put("/uploadProfile", verifyToken, uploadProfilePic)
 Router.post("/logout", logoutUser)
 module.exports = Router;

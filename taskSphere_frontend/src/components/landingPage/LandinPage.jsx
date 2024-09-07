@@ -11,11 +11,10 @@ import {
   FaGoogle,
 } from "react-icons/fa";
 import FAQ from "./FAQ";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate,  } from "react-router-dom";
 import Contact from "./Contact";
 import { useDispatch, useSelector } from "react-redux";
 import ProgressBar from "./ProgressBar";
-import "./registerLoader.css";
 import { toast } from "react-toastify";
 import { registerUser } from "../../redux/reducers/userSlice";
 
@@ -33,6 +32,9 @@ const LandinPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { error, loading, status, user } = useSelector((state) => state.user);
+
+  const queryParams = new URLSearchParams(window.location.search);
+  const invitationId = queryParams.get('invitationId');
 
   const notMatch =
     formData.password !== confirmPassword && confirmPassword !== "";
@@ -59,7 +61,7 @@ const LandinPage = () => {
     e.preventDefault();
     const lowercaseEmail = formData.email.toLowerCase()
     const newFormData = {...formData, email: lowercaseEmail}
-    dispatch(registerUser(newFormData));
+    dispatch(registerUser({...newFormData, invitationId: invitationId ? invitationId : null}));
     setShouldSubmit(true)
 
     

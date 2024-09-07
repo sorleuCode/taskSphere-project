@@ -6,12 +6,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link} from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { fetchBoards } from '../../redux/reducers/boardSlice';
+import { getUserDetail } from '../../redux/reducers/userSlice';
 
 const MainContent = () => { 
     const [showForm, setShowForm] = useState(false);
     const dispatch = useDispatch();
+    const {user, status } = useSelector((state) => state.user)
+    const { allBoards, loading, error } = useSelector((state) => state.board);
 
-    const { allBoards, status, loading, error } = useSelector((state) => state.board);
+    useEffect(() => {
+
+            dispatch(getUserDetail())
+    
+    },[dispatch])
 
     const handleCreateBoardClick = () => {
         setShowForm(true);
@@ -21,18 +28,27 @@ const MainContent = () => {
         setShowForm(false);
     };
 
-    useEffect(() => {
-        dispatch(fetchBoards());
-    }, [dispatch]);
+
 
     useEffect(() => {
-        if(status && allBoards.length === 0) {
-            toast.error("No boards to display", {position: "top-right"})
+        if (!allBoards.length) {
+          dispatch(fetchBoards());
         }
-    }, [allBoards, status])
+      }, [dispatch, allBoards]);
+
+    
+    
+      const nameSplit = () => {
+        if (user && user?.fullname) {
+            const username = user?.fullname;
+            return `${username.split(" ")[0]}`;
+        }
+        return '';
+    };
 
     return (
         <div className="flex-1 p-6 overflow-y-auto bg-white text-black">
+        <h1 className='pt-3 pb-4'> { user?.fullname &&<span> Welcome! <em className='text-blue-500 text-'>{ ` ${nameSplit()}`}</em></span>}</h1>
             {!showForm ? (
                 <button
                     onClick={handleCreateBoardClick}
@@ -76,7 +92,9 @@ const MainContent = () => {
                             <p className=' text-blue-500'>Fetching boards...</p>
                         ) : error ? toast.error("Error fetching boards", { position: "top-right" }):(
                             <div className="flex flex-wrap gap-6">
-                                {allBoards.map((board) => (
+                            { allBoards.length > 0 ?
+
+                                (allBoards.map((board) => (
                                     <Link key={board._id} to={`/boards/board/${board._id}`}>
                                         <BoardCards
                                             title={board.title}
@@ -84,7 +102,11 @@ const MainContent = () => {
                                             type={board.type}
                                         />
                                     </Link>
-                                ))}
+                                ))) :
+
+                                <p>No boards to display</p>
+                            }
+                                
                             </div>
                         )}
                     </div>

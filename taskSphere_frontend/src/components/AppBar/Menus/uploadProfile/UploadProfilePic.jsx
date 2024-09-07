@@ -1,11 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextField } from "@mui/material";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { uploadProfilePicture } from "../../../../redux/reducers/userSlice";
 
-const UploadProfilePic = () => {
-  const [imageUrl, setImageUrl] = useState("");
+const UploadProfilePic = ({handleClose}) => {
+  const dispatch = useDispatch()
+  const {loading, error, userProfilePic} = useSelector((state) => state.user)
+
+  
+  useEffect(() => {
+    if(error && !loading) {
+      toast.error(`${error}`, {position: "top-right"})
+    }
+    if(userProfilePic && !loading) {
+      toast.success("profile image uploaded successfully!", {position: "top-right"});
+      handleClose()
+    }
+  }, [loading, userProfilePic, error])
+  const handleImageUrlUpload = (downloadedUrl) => {
+    if(downloadedUrl) {
+
+      const imageLink = {imageUrl: downloadedUrl}
+      console.log("imageUrl", downloadedUrl)
+          dispatch(uploadProfilePicture({imageLink}))
+
+    }
+  }
 
   const handleFileUpload = async (event) => {
     try {
@@ -17,11 +40,18 @@ const UploadProfilePic = () => {
 
         const snapshot = await fileRef.put(selectedFile);
         const downloadedUrl = await snapshot.ref.getDownloadURL();
+        console.log("downloadedUrl", downloadedUrl)
 
-        setImageUrl(downloadedUrl);
-        console.log("File uploaded successfully. Download URL:", downloadedUrl);
+        if(downloadedUrl) {
+          handleImageUrlUpload(downloadedUrl)
+        }else{
+          toast.error("Error uploading file", {position: "top-right"})
+        }
+
+        
+        
       } else {
-        toast.error("No file selected");
+        toast.error("No file selected", {position: "top-right"});
       }
     } catch (error) {
       toast.error(`Error uploading file: ${error.message}`);
@@ -36,6 +66,7 @@ const UploadProfilePic = () => {
         name="imageUrl"
         id="imageUrl"
       />
+      
     </form>
   );
 };

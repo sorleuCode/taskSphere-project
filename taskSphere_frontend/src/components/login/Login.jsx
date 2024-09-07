@@ -47,11 +47,13 @@ const Login = () => {
   
     if (status && user) {
       toast.success("Login successful!", {position: "top-right"});
-      console.log(user)
-      navigate("/dashboard");
+      navigate(`/dashboard`);
       setIsSubmitting(false)
     } else if (!status && error) {
-      toast.error(error);
+      toast.error(error, {position: "top-right"});
+    }
+    else{
+      toast.error("Server error", {position: "top-right"});
     }
   }, [ status, error, navigate]);
 

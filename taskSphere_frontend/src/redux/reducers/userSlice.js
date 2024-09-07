@@ -57,9 +57,9 @@ export const verifyUserEmail = createAsyncThunk("user/verifyUserEmail", async (t
 })
 
 
-export const getUserDetail = createAsyncThunk("user/getUserDetail", async (userId, { rejectWithValue }) => {
+export const getUserDetail = createAsyncThunk("user/getUserDetail", async (_, { rejectWithValue }) => {
     try {
-        const response = await API_ROOT.get(`/users/${userId}`);
+        const response = await API_ROOT.get(`/users/user`,  {withCredentials: true});
 
         return response.data
 
@@ -72,10 +72,10 @@ export const getUserDetail = createAsyncThunk("user/getUserDetail", async (userI
 
 
 
-export const updateUserDetails = createAsyncThunk("user/updateUserDetails", async ({ updatedData, userId }, { rejectWithValue }) => {
+export const updateUserDetails = createAsyncThunk("user/updateUserDetails", async ({ updatedData}, { rejectWithValue }) => {
 
     try {
-        const response = await API_ROOT.put(`/users/update/${userId}`, updatedData)
+        const response = await API_ROOT.put(`/users/update`, updatedData, {withCredentials: true})
         return response.data
     } catch (error) {
 
@@ -85,10 +85,10 @@ export const updateUserDetails = createAsyncThunk("user/updateUserDetails", asyn
 })
 
 
-export const uploadProfilePicture = createAsyncThunk("user/uploadProfilePicture", async ({ imageUrl, userId }, { rejectWithValue }) => {
+export const uploadProfilePicture = createAsyncThunk("user/uploadProfilePicture", async ({ imageLink }, { rejectWithValue }) => {
 
     try {
-        const response = await API_ROOT.put(`/users//uploadProfile/${userId}`, imageUrl)
+        const response = await API_ROOT.put(`/users/uploadProfile`, imageLink,  {withCredentials: true})
         return response.data
     } catch (error) {
         return rejectWithValue(error.response.data);
@@ -101,7 +101,7 @@ export const logoutUser = createAsyncThunk("user/logoutUser", async ({ rejectWit
     try {
 
 
-        const response = await API_ROOT.post("/users/logout");
+        const response = await API_ROOT.post("/users/logout",  {withCredentials: true});
 
         return response.data;
 
@@ -117,7 +117,7 @@ export const logoutUser = createAsyncThunk("user/logoutUser", async ({ rejectWit
 
 
 const initialState = {
-    user: {},
+    user: JSON.parse(localStorage.getItem('user')) || null,
     loading: false,
     error: null,
     userProfilePic: "",
@@ -212,6 +212,7 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.user = action.payload;
                 state.status = true;
+                localStorage.setItem('user', JSON.stringify(action.payload));
 
             })
             .addCase(getUserDetail.rejected, (state, action) => {
@@ -228,13 +229,14 @@ const userSlice = createSlice({
             })
             .addCase(uploadProfilePicture.fulfilled, (state, action) => {
                 state.loading = false;
-                state.userProfilePic = action.payload;
+                state.userProfilePic = action.payload.userProfile;
                 state.status = true
+                state.user = {...state.user, profileImage: action.payload.userProfile}
 
             })
             .addCase(uploadProfilePicture.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.error = action.payload.message;
                 state.status = false
 
             })

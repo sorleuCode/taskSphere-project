@@ -30,7 +30,7 @@ app.use("/boards", boardRoute)
 app.use("/cards", cardRoute)
 app.use("/columns", columnRoute)
 app.use("/users", userRoute)
-app.use("/api/invitations/", invitationRoute)
+app.use("/api/invitations", invitationRoute)
 
 console.log('1. Connecting to MongoDB Cloud Atlas...')
 connectDB()

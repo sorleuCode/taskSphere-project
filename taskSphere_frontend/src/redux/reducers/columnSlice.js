@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { API_ROOT } from "../../apis";
+import { API_ROOT } from "../../apis/index";
 
 // Async thunk to create a column
 export const createColumn = createAsyncThunk(

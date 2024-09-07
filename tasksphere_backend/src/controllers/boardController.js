@@ -16,7 +16,6 @@ const createNew = async (req, res, next) => {
 
     console.log("controller", createdBoard)
 
-    // Có kết quả thì trả về phía Client
     res.status(StatusCodes.CREATED).json(createdBoard)
   } catch (error) { next(error) }
 }
@@ -24,7 +23,7 @@ const createNew = async (req, res, next) => {
 const getDetails = async (req, res, next) => {
   try {
     const boardId = req.params.id
-    // Sau này ở khóa MERN Stack Advance nâng cao học trực tiếp sẽ có thêm userId nữa để chỉ lấy board thuộc về user đó thôi chẳng hạn...vv
+    
     const board = await boardService.getDetails(boardId)
     res.status(StatusCodes.OK).json(board)
   } catch (error) { next(error) }
@@ -51,7 +50,98 @@ const getAllboardsDetails = async (req, res) => {
 }
 
 
+const getAllMembersByUser = async (req, res) => {
+  try {
+    const userId = req.user._id;
 
+    // Find all boards created by the specific user and populate the 'members' field
+    const boards = await boardModel.Board.find({ creatorId: userId }).populate('memberIds', 'fullname email');
+
+    if (!boards || boards.length === 0) {
+      return res.status(404).json({ message: 'No boards found for this user' });
+    }
+
+    // Map to track unique members and the boards they belong to
+    const membersMap = new Map();
+
+    // Iterate over each board to collect members and the board titles
+    boards.forEach(board => {
+      board.memberIds.forEach(member => {
+        const memberId = member._id.toString();
+
+        // If the member already exists in the map, just add the board object to their list of boards
+        if (membersMap.has(memberId)) {
+          membersMap.get(memberId).boards.push({
+            _id: board._id,
+            title: board.title,
+            slug: board.slug,
+            description: board.description,
+            type: board.type
+          });
+        } else {
+          // If the member is not yet in the map, add them with their details and the current board object
+          membersMap.set(memberId, {
+            _id: member._id,
+            name: member.fullname,
+            email: member.email,
+            boards: [{
+              _id: board._id,
+              title: board.title,
+              slug: board.slug,
+              description: board.description,
+              type: board.type
+            }] // Start with the current board object
+          });
+        }
+      });
+    });
+
+    // Convert the Map to an array of members with their associated boards
+    const membersList = Array.from(membersMap.values());
+
+    // Return the result with members and their associated boards
+    res.status(200).json({
+      success: true,
+      members: membersList
+    });
+  } catch (error) {
+    console.error('Error fetching members and board titles:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+const updateMemberRole = async(req, res) =>{
+  try {
+    const {member, role} = req.body
+      
+    // Find all boards created by the specific user and populate the 'members' field
+    const board = await boardModel.Board.findById(req.params.id)
+
+    
+      if (board) {
+
+        if (role === "admin") {
+          const isMember = board.memberIds.find((id) => id === member._id)
+          // if(isMember) {
+
+          // }
+          board.ownerIds.push(member._id)
+          await board.save()
+          return res.status(200).json({status: true, message: "Admin role assigned"})
+        } else if (role === "member") {
+          board.memberIds.push(member._id)
+          await board.save()
+         return res.status(200).json({status: true,  message: "Member role assigned"})
+        }
+      }
+
+  } catch (error) {
+      console.log("error", error)
+     return  res.status(500).json({message: "Server Error"})
+  }
+
+}
 
 const update = async (req, res, next) => {
   try {
@@ -75,5 +165,7 @@ export const boardController = {
   getDetails,
   getAllboardsDetails,
   update,
-  moveCardToDifferentColumn
+  moveCardToDifferentColumn,
+  getAllMembersByUser,
+  updateMemberRole
 }

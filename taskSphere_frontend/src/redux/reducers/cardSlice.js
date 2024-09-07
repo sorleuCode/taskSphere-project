@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { API_ROOT } from "../../apis";
+import { API_ROOT } from "../../apis/index";
 
 export const createNewCard = createAsyncThunk("card/createNewCard", async(cardData, {rejectWithValue}) => {
 

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { API_ROOT } from "../../apis";
+import { API_ROOT } from "../../apis/index";
 
 export const fetchBoards = createAsyncThunk("board/fetchBoards", async (_, { rejectWithValue }) => {
     try {
@@ -28,9 +28,30 @@ export const fetchSingleBoard = createAsyncThunk("board/fetchSingleBoard", async
     }
 });
 
+export const fetchAllboardMembers = createAsyncThunk("board/fetchAllboardMembers", async (_, { rejectWithValue }) => {
+    try {
+        const response = await API_ROOT.get(`boards/members`, { withCredentials: true });
+        return response.data;
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+});
+
+
+
+
 export const updateBoard = createAsyncThunk("board/updateBoard", async ({ boardId, updatedBoardData }, { rejectWithValue }) => {
     try {
         const response = await API_ROOT.put(`boards/update/${boardId}`, updatedBoardData, { withCredentials: true });
+        return response.data;
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+});
+
+export const updateBoardMemberRole = createAsyncThunk("board/updateBoardMemberRole", async ({ boardId, updatedBoardData }, { rejectWithValue }) => {
+    try {
+        const response = await API_ROOT.put(`boards/update/role/${boardId}`, updatedBoardData, { withCredentials: true });
         return response.data;
     } catch (error) {
         return rejectWithValue(error.response.data);
@@ -51,6 +72,7 @@ const boardSlice = createSlice({
     initialState: {
         board: {},
         allBoards: [],
+        boardsMembers: [],
         loading: false,
         moveCardStatus: null,
         error: null,
@@ -170,6 +192,46 @@ const boardSlice = createSlice({
                 state.error = action.payload;
                 state.status = false;
                 state.moveCardStatus = null;
+            })
+
+            // fetchAllboardMembers
+
+            .addCase(fetchAllboardMembers.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+                state.status = false;
+            })
+            .addCase(fetchAllboardMembers.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = null;
+                state.status = action.payload.success;
+                state.boardsMembers = action.payload.members
+
+               
+            })
+            .addCase(fetchAllboardMembers.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                state.status = false;
+            })
+
+            // updateBoardMemberRole
+
+            .addCase(updateBoardMemberRole.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+                state.status = false;
+            })
+            .addCase(updateBoardMemberRole.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = null;
+                state.status = action.payload.status;
+               
+            })
+            .addCase(updateBoardMemberRole.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload.message;
+                state.status = false;
             });
     },
 });

@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { FaTh, FaUsers, FaCog, FaTable, FaCalendarAlt, FaBell, FaInfoCircle } from 'react-icons/fa';
 
-const Sidebar = () => {
-  const [activeItem, setActiveItem] = useState('Boards');
+const Sidebar = ({ setSelectedMenu }) => {
+  const [activeItem, setActiveItem] = useState('');
+
+  const handleClick = (target) => {
+    setActiveItem(target);
+    setSelectedMenu(target); // Pass the selected menu item to parent
+  };
 
   const menuItems = [
     { name: 'Boards', icon: <FaTh /> },
@@ -26,11 +31,11 @@ const Sidebar = () => {
             <li
               key={item.name}
               className="mb-4 flex flex-col justify-center items-center text-gray-700 cursor-pointer"
-              onClick={() => setActiveItem(item.name)}
+              onClick={() => handleClick(item.name)}
             >
               <div className="flex gap-1 flex-col items-center">
                 <span className={`mr-3 ${activeItem === item.name ? 'text-blue-500' : ''}`}>{item.icon}</span>
-                <span className={` px-2 hover:bg-gray-200 rounded-md ${activeItem === item.name ? 'bg-blue-100 text-blue-500' : ''}`}>{item.name}</span>
+                <span className={`px-2 hover:bg-gray-200 rounded-md ${activeItem === item.name ? 'bg-blue-100 text-blue-500' : ''}`}>{item.name}</span>
               </div>
             </li>
           ))}

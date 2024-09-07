@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -9,9 +9,6 @@ import { useParams } from 'react-router-dom';
 import { cloneDeep, isEmpty } from 'lodash'
 import { setReoderedCards } from '../../redux/reducers/cardSlice';
 import { setReoderedColumns } from '../../redux/reducers/columnSlice';
-
-
-
 import BoardBar from './BoardBar/BoardBar';
 import BoardContent from './BoardContent/BoardContent';
 import { mapOrder } from '../../utils/sorts';
@@ -19,6 +16,7 @@ import { generatePlaceholderCard } from './../../utils/formatters';
 import { fetchSingleBoard, moveCardToDifferentColumns, updateBoard } from '../../redux/reducers/boardSlice';
 import { getColumns, deleteColumn, createColumn, updateColumn } from '../../redux/reducers/columnSlice';
 import { createNewCard, fetchAllCards } from '../../redux/reducers/cardSlice';
+import BoardInvitation from './BoardBar/BoardBarItems/BoardInvitation';
 
 function Board() {
   const dispatch = useDispatch();
@@ -27,12 +25,13 @@ function Board() {
   const { board, loading, moveCardStatus, error } = useSelector((state) => state.board);
   const { columns, column, status } = useSelector((state) => state.column);
   const { card} = useSelector((state) => state.card);
+  const [inviteBtnClicked, setInviteBtnClicked] = useState(false)
 
+  
 
   useEffect(() => {
     dispatch(fetchSingleBoard(boardId));
-   
-
+  
   }, [dispatch, card]);
 
   useEffect(() => {
@@ -45,7 +44,11 @@ function Board() {
     dispatch(fetchAllCards(boardId))
 
   }, [dispatch, moveCardStatus, card])
+  
 
+  const handleInviteBtn = (action) => {
+    setInviteBtnClicked(action)
+}
 
 
 
@@ -232,7 +235,9 @@ function Board() {
 
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
-      <BoardBar board={board} />
+      <BoardBar board={board} handleInviteBtn = {handleInviteBtn} />
+      {inviteBtnClicked && (<BoardInvitation handleInviteBtn ={handleInviteBtn} board={board}/>)}
+
       <BoardContent
         board={board}
         columns={columns}

@@ -12,13 +12,9 @@ const InvitationSchema = new mongoose.Schema({
     invitedUserId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
     },
-    invitationMessage: {
-        type: String,
-        default: ''
-      },
-      expirationDate: {
+
+    expirationDate: {
         type: Date,
         required: true,
       },
@@ -36,5 +32,5 @@ const InvitationSchema = new mongoose.Schema({
   
   const Invitation = mongoose.model('Invitation', InvitationSchema);
 
-  exports.module = Invitation
+  module.exports = Invitation
   

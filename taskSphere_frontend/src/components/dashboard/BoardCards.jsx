@@ -1,5 +1,4 @@
 import React from "react";
-import { CiEdit } from "react-icons/ci";
 
 const BoardCards = ({ title, description, type }) => {
   return (

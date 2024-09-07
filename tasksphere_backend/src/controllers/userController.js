@@ -3,6 +3,10 @@ const bcrypt = require("bcryptjs");
 const generateJWT = require("../utils/generateJWT");
 const passport = require("passport");
 const nodemailer = require("nodemailer")
+import { boardModel } from "~/models/boardModel";
+const Invitation = require("../models/invitationModel");
+
+
 const jwt = require('jsonwebtoken');
 
 
@@ -10,7 +14,7 @@ const jwt = require('jsonwebtoken');
 
 // User registration
 const userRegister = async (req, res) => {
-  const { fullname, email, password } = req.body;
+  const { fullname, email, password, invitationId } = req.body;
 
   try {
       const userExist = await User.findOne({ email });
@@ -52,6 +56,7 @@ const userRegister = async (req, res) => {
              Thanks`
       };
 
+
       transporter.sendMail(mailConfigurations, async function (error, info) {
         if (error) {
           return res.status(400).json({ message: `$Error Sending verification mail: ${error.message}` });
@@ -63,6 +68,23 @@ const userRegister = async (req, res) => {
         });
 
         await newUser.save();
+
+
+        if (invitationId) {
+          // Find the invitation
+          const invitation = await Invitation.findById(invitationId);
+          if (invitation) {
+            // Add the user to the board's members
+            const board = await boardModel.Board.findById(invitation.boardId);
+            board.memberIds.push(user._id);
+            await board.save();
+    
+            // Mark the invitation as accepted
+            invitation.invitedUserId = user._id;
+            invitation.status = 'accepted';
+            await invitation.save();
+          }
+        }
 
         const user = await User.findById(newUser._id).select("-password")
 
@@ -127,14 +149,13 @@ const loginWithEmail = async(req, res) => {
 // get all users
 
 const getUser = async (req, res) => {
-  const { userId } = req.params;
 
-  const user = await User.findById(userId);
+  
+  const user = await User.findById(req.user._id);
 
   if (user) {
-    const { _id, fullname, email, role } = admin;
 
-    res.status(200).json({ _id, fullname, email, role });
+    res.status(200).json(user);
   } else {
     res.status(404).json({ message: "user not found" });
   }
@@ -143,9 +164,10 @@ const getUser = async (req, res) => {
 const uploadProfilePic = async (req, res) => {
   try {
     const { imageUrl } = req.body;
-    const user = await User.findById(req.params.id);
+    
+    const user = await User.findById(req.user._id);
     if (!user) {
-      console.error(`User with ID ${req.params.id} not found`);
+      console.error(`User with ID ${req.user._id} not found`);
       return res.status(404).json({ error: "User not found" });
     }
 
@@ -154,12 +176,18 @@ const uploadProfilePic = async (req, res) => {
       user.fullname = user.fullname;
       user.email = user.email;
       user.password = user.password;
-      user.createdAt = Date.now();
+      user.updatedAt = Date.now();
+     const updateduser = await user.save();
+
+      res.status(200).json({userProfile: updateduser.profileImage});
+
+    }else {
+      res.status(400).json({message: "profile not uploaded"})
     }
 
-    const updatedUser = await user.save();
 
-    res.status(200).json({userProfile: updatedUser.profileImage});
+
+
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -177,7 +205,7 @@ const getAllUsers = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user._id
 
     const user = await User.findById(userId);
 

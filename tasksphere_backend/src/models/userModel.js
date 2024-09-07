@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
   googleId: {type: String},
   password: { type: String, required:  function() { return !this.googleId; } },
   role: { type: String, enum: ["user", "admin"], default: "admin" },
-  profileImage: {type: String},
+  profileImage: {type: String, default: null},
   createdAt: {
     type: Date,
     default: Date.now,

@@ -3,13 +3,15 @@ import boardReducer from "../reducers/boardSlice"
 import cardReducer from "../reducers/cardSlice"
 import userReduder from "../reducers/userSlice"
 import columnReducer from "../reducers/columnSlice"
+import inviteReducer from "../reducers/inviteSlice"
 
 export const store = configureStore({
     reducer: {
         board: boardReducer,
         card: cardReducer,
         user: userReduder,
-        column: columnReducer
+        column: columnReducer,
+        invitation: inviteReducer
 
     }
 })

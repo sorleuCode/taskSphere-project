@@ -16,6 +16,8 @@ import Tooltip from '@mui/material/Tooltip'
 import ModeSelect from '../../../components/ModeSelect/ModeSelect'
 
 
+
+
 const MENU_STYLES = {
   color: 'white',
   bgcolor: 'transparent',
@@ -30,7 +32,8 @@ const MENU_STYLES = {
   }
 }
 
-function BoardBar({ board }) {
+function BoardBar({ board, handleInviteBtn}) {
+  
   return (
     <Box sx={{
       width: '100%',
@@ -41,11 +44,11 @@ function BoardBar({ board }) {
       gap: 2,
       paddingX: 2,
       overflowX: 'auto',
-      bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#34495e' : '#1976d2')
+      bgcolor: (theme) => (theme.palette.mode === 'dark' ? '#34495e' : '#1976d2'),
     }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <Tooltip title={board?.description}>
-          <Link to="/dashboard">
+          <Link to={`/dashboard`}>
             <Chip
               sx={MENU_STYLES}
               label={board?.title}
@@ -72,7 +75,7 @@ function BoardBar({ board }) {
         />
 
         <Button
-          variant="outlined"
+          onClick={() => handleInviteBtn(true)}
           startIcon={<PersonAddIcon />}
           sx={{
             color: 'white',
@@ -82,6 +85,7 @@ function BoardBar({ board }) {
         >
           Invite
         </Button>
+
       </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

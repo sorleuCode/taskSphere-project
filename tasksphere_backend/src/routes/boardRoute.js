@@ -3,7 +3,7 @@ import express from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { boardValidation } from '~/validations/boardValidation'
 import { boardController } from '~/controllers/boardController'
-import { isAdmin } from '~/middlewares/authMiddleware'
+import { isAdmin, verifyToken } from '~/middlewares/authMiddleware'
 
 const Router = express.Router()
 
@@ -14,10 +14,12 @@ Router.get("/", (req, res) => {
 Router.get("/myboards",isAdmin, boardController.getAllboardsDetails)
 
 Router.post("/create", isAdmin, boardValidation.createNew, boardController.createNew)
+Router.get("/members", isAdmin, verifyToken, boardController.getAllMembersByUser, boardController.createNew)
 
 
 Router.get("/:id", isAdmin, boardController.getDetails)
 Router.put("/update/:id", isAdmin, boardValidation.update, boardController.update)
+Router.put("/update/role/:id", isAdmin, boardController.updateMemberRole)
 
 
 Router.put('/moving-card', isAdmin, boardValidation.moveCardToDifferentColumn, boardController.moveCardToDifferentColumn)

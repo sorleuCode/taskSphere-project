@@ -11,7 +11,7 @@ const EmailVerificationNotice = () => {
     if (user?.emailVerified && status) {
 
      setTimeout(() => {
-        navigate('/dashboard');
+        navigate(`/dashboard`);
      }, 4000)
     }
   }, [ status]);
