@@ -92,7 +92,7 @@ const EditCard = ({ card, closeEdit, members }) => {
         ? (updatedCard.completed = true)
         : (updatedCard.completed = false);
 
-        
+
       updatedCard.checklist = checklist;
       updatedCard.startDate = startDate;
       updatedCard.dueDate = dueDate;
@@ -197,7 +197,7 @@ const EditCard = ({ card, closeEdit, members }) => {
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-2 border rounded-md"
+            className="w-full p-2 border rounded-md focus: outline-none  focus:border-blue-500"
           />
         </div>
 
@@ -354,7 +354,7 @@ const EditCard = ({ card, closeEdit, members }) => {
                 onChange={(e) =>
                   updateChecklistItem(index, { ...item, text: e.target.value })
                 }
-                className="w-full px-2 py-1 border rounded-md"
+                className="w-full px-2 py-1 border rounded-md focus: outline-none  focus:border-blue-500"
               />
               <button
                 onClick={() => removeChecklistItem(index)}
@@ -409,7 +409,7 @@ const EditCard = ({ card, closeEdit, members }) => {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full p-2 border rounded-md mb-2"
+                className="w-full p-2 border rounded-md mb-2 focus: outline-none  focus:border-blue-500"
                 placeholder="Search Members"
               />
               {filteredMembers.map((member) => (
@@ -418,7 +418,7 @@ const EditCard = ({ card, closeEdit, members }) => {
                     type="checkbox"
                     checked={selectedMembers.includes(member._id)}
                     onChange={() => handleMemberSelect(member._id)}
-                    className="mr-2"
+                    className="mr-2 "
                   />
                   <span>{member.fullname}</span>
                 </div>
@@ -469,7 +469,7 @@ const EditCard = ({ card, closeEdit, members }) => {
             <div>
               <input
                 name="filename"
-                className="w-full p-2 border focus:outline-none rounded-md text-sm"
+                className="w-full p-2 border rounded-md text-sm focus: outline-none  focus:border-blue-500"
                 type="text"
                 placeholder="filename"
                 onChange={(e) =>
@@ -508,7 +508,7 @@ const EditCard = ({ card, closeEdit, members }) => {
           <textarea
             value={comments.join("\n")}
             onChange={(e) => setComments(e.target.value.split("\n"))}
-            className="w-full p-2 border rounded-md text-sm"
+            className="w-full p-2 border rounded-md text-sm focus: outline-none  focus:border-blue-500"
             placeholder="Add comments"
           />
         </div>
@@ -520,7 +520,7 @@ const EditCard = ({ card, closeEdit, members }) => {
             type="text"
             value={cover}
             onChange={(e) => setCover(e.target.value)}
-            className="w-full p-2 border rounded-md"
+            className="w-full p-2 border rounded-md focus: outline-none  focus:border-blue-500"
             placeholder="Cover URL"
           />
         </div>
