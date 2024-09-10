@@ -58,6 +58,23 @@ const completedChecklistLength = completedChecklist?.length
     return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length || !!card?.checklist?.length
   }
 
+  const handleCardCompletion = () => {
+    if(card?.checklist?.length) {
+
+      if(card?.completed) {
+        return "completed"
+      }else {
+        return  `${completedChecklistLength}/${card?.checklist?.length}`
+
+      }
+    }else {
+
+      return null
+    }
+
+    
+  }
+
   return (
     <MuiCard
       ref={setNodeRef} style={dndKitCardStyles} {...attributes} {...listeners}
@@ -104,7 +121,7 @@ const completedChecklistLength = completedChecklist?.length
             <Button size="small" startIcon={<AttachmentIcon />}>{card?.attachments?.length}</Button>
           }
           {!!card?.checklist?.length &&
-            <Button size="small" startIcon={<PlaylistAddCheckIcon/>}>{`${completedChecklistLength}/${card?.checklist?.length}`}</Button>
+            <Button size="small" startIcon={<PlaylistAddCheckIcon/>}>{handleCardCompletion()}</Button>
           }
         </CardActions>
       }

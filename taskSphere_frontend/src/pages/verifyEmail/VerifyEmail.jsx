@@ -15,21 +15,26 @@ const VerifyEmail = () => {
         const verifyEmail = async () => {
             dispatch(verifyUserEmail(token));
 
-            if (!loading && user?.emailVerified) {
-                setTimeout(() => {
             
-                    navigate('/user/verifyEmail');
-                }, 3000);
-            }
-
-            if (error && !loading) {
-                toast.error("Verification not successful", { position: "top-right" });
-                navigate('/');
-            }
         };
 
         verifyEmail();
-    }, [token, user, loading, error, status, dispatch, navigate]);
+    }, [token, dispatch]);
+
+    useEffect(() => {
+
+        if (!loading && user?.emailVerified) {
+            setTimeout(() => {
+        
+                navigate('/user/verifyEmail');
+            }, 3000);
+        }
+
+        if (error && !loading) {
+            toast.error("Verification not successful", { position: "top-right" });
+            navigate('/');
+        }
+    }, [ loading, error, status, dispatch, navigate])
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -40,7 +45,7 @@ const VerifyEmail = () => {
                         <p className="text-blue-700">Verifying your email...</p>
                     </div>
                 ) : (
-                  (!loading && !user.emailVerified) && <p className="text-gray-800">Please wait...</p>
+                  (!loading && !user?.emailVerified) && <p className="text-gray-800">Please wait...</p>
                 )}
             </div>
         </div>

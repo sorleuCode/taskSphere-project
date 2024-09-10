@@ -3,38 +3,35 @@ require('dotenv')
 const User = require("../models/userModel")
 
 const verifyToken = async (req, res, next) => {
-
-
-
   const token = req.cookies.token;
-  if (token) {
 
-    try {
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized, no token" });
+  }
 
-      if (!token) {
-        res.status(401);
-        throw new Error("Not authorized, no token");
-      }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
 
-      const decoded =   jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
+    // If decoded is successful, find the user in the database
+    req.user = await User.findOne({ email: decoded.email }).select("-password");
 
-      req.user = await User.findOne({email: decoded.email}).select("-password");
-
-      next();
-
-
+    // If no user is found, return an error
+    if (!req.user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    catch (error) {
-      console.log(error);
-      next(error)
-    } 
-    
-  }
-    else {
     next();
+  } catch (error) {
+    // Handle token expiry
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Session expired, please log in again." });
+    }
+
+    // Handle other errors
+    return res.status(403).json({ message: "Invalid token" });
   }
-}
+};
+
 
 
 const isAdmin = async (req, res, next) => {

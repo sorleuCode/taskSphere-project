@@ -34,7 +34,7 @@ const MainContent = () => {
         if (!allBoards.length) {
           dispatch(fetchBoards());
         }
-      }, [dispatch, allBoards]);
+      }, [dispatch]);
 
     
     

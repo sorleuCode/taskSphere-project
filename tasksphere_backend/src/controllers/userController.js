@@ -24,7 +24,7 @@ const userRegister = async (req, res) => {
       }
 
       // Generate JWT token
-      const token = generateJWT({ email: email });
+      const token = generateJWT({ email: userExist.email });
 
       // Set cookie with the token
       res.cookie("token", token, {
@@ -60,36 +60,40 @@ const userRegister = async (req, res) => {
       transporter.sendMail(mailConfigurations, async function (error, info) {
         if (error) {
           return res.status(400).json({ message: `$Error Sending verification mail: ${error.message}` });
-        }
-       const  newUser = new User({
-          fullname,
-          email,
-          password,
-        });
+        }else {
 
-        await newUser.save();
-
-
-        if (invitationId) {
-          // Find the invitation
-          const invitation = await Invitation.findById(invitationId);
-          if (invitation) {
-            // Add the user to the board's members
-            const board = await boardModel.Board.findById(invitation.boardId);
-            board.memberIds.push(user._id);
-            await board.save();
-    
-            // Mark the invitation as accepted
-            invitation.invitedUserId = user._id;
-            invitation.status = 'accepted';
-            await invitation.save();
+          const  newUser = new User({
+            fullname,
+            email,
+            password,
+          });
+  
+          await newUser.save();
+  
+  
+          if (invitationId) {
+            // Find the invitation
+            const invitation = await Invitation.findById(invitationId);
+            if (invitation) {
+              // Add the user to the board's members
+              const board = await boardModel.Board.findById(invitation.boardId);
+              board.memberIds.push(newUser?._id);
+              await board.save();
+      
+              // Mark the invitation as accepted
+              invitation.invitedUserId = newUser?._id;
+              invitation.status = 'accepted';
+              await invitation.save();
+            }
           }
+  
+          const user = await User.findById(newUser?._id).select("-password")
+  
+          
+          return res.status(200).json(user);
+          
         }
-
-        const user = await User.findById(newUser._id).select("-password")
-
-        
-        return res.status(200).json(user);
+       
       })
 
     
@@ -105,7 +109,21 @@ const userRegister = async (req, res) => {
 const registerWithEmail = async(req, res) => {
 
   const user = await User.findOne({googleId: req?.user?.googleId }).select("-password");
-      user ? res.status(200).json(user) : res.status(400).json({ message: "Registering with email failed" });
+
+if(user) {
+  const token = generateJWT(user);
+
+      // Set cookie with the token
+      res.cookie("token", token, {
+        httpOnly: true,
+        expires: new Date(Date.now() + 1000 * 86400), // 1 day
+        sameSite: "strict",
+        secure: false // secure in production
+      });
+      return res.status(200).json(user)
+}else{
+  return res.status(400).json({ message: "Registering with email failed" });
+}
       
 
 }
@@ -142,16 +160,37 @@ const userLogin = async (req, res) => {
 
 
 const loginWithEmail = async(req, res) => {
+
   const user = await User.findOne({googleId: req?.user?.googleId }).select("-password");
-      user ? res.status(200).json(user) : res.status(400).json({ message: "Error Occured" });
+
+  if (user) {
+
+    const token = generateJWT(user);
+
+        // Set cookie
+        res.cookie("token", token, {
+          httpOnly: true,
+          expires: new Date(Date.now() + 1000 * 86400), // 1 day
+          sameSite: "strict",
+          secure: false,
+        });
+     return res.status(200).json(user)
+  }else {
+
+    return res.status(400).json({ message: "Error Occured" });
+  }
+  
+      
+      
 }
 
 // get all users
 
 const getUser = async (req, res) => {
 
+  console.log("req.user", req.user)
   
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req?.user?._id);
 
   if (user) {
 
@@ -165,9 +204,9 @@ const uploadProfilePic = async (req, res) => {
   try {
     const { imageUrl } = req.body;
     
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req?.user?._id);
     if (!user) {
-      console.error(`User with ID ${req.user._id} not found`);
+      console.error(`User with ID ${req?.user?._id} not found`);
       return res.status(404).json({ error: "User not found" });
     }
 

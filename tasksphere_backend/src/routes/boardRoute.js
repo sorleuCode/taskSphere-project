@@ -11,10 +11,10 @@ Router.get("/", (req, res) => {
     res.status(StatusCodes.OK).json({ message: 'GET: API get list boards' })
   })
 
-Router.get("/myboards",isAdmin, boardController.getAllboardsDetails)
+Router.get("/myboards", isAdmin, boardController.getAllboardsDetails)
 
 Router.post("/create", isAdmin, boardValidation.createNew, boardController.createNew)
-Router.get("/members", isAdmin, verifyToken, boardController.getAllMembersByUser, boardController.createNew)
+Router.get("/members", verifyToken, isAdmin,  boardController.getAllMembersByUser, boardController.createNew)
 
 
 Router.get("/:id", isAdmin, boardController.getDetails)

@@ -115,6 +115,7 @@ const invitationAcceptance =  async (req, res) => {
       }
 
       // Mark the invitation as accepted
+      
       invitation.status = 'accepted';
       await invitation.save();
 
