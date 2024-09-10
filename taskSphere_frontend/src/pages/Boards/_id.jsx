@@ -32,7 +32,7 @@ function Board() {
   useEffect(() => {
     dispatch(fetchSingleBoard(boardId));
   
-  }, [dispatch, card]);
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getColumns(boardId));

@@ -14,10 +14,10 @@ export const createNewCard = createAsyncThunk("card/createNewCard", async(cardDa
         }
 })
 
-export const updateCard = createAsyncThunk("card/updateCard", async ({cardId, updatedData}, {rejectWithValue}) => {
+export const updateCard = createAsyncThunk("card/updateCard", async ({cardId, updatedCard}, {rejectWithValue}) => {
     try {
         
-        const response =  await API_ROOT.put(`/cards/update/${cardId}`, updatedData);
+        const response =  await API_ROOT.put(`/cards/update/${cardId}`, updatedCard);
 
             return response.data;
 
@@ -67,6 +67,8 @@ const cardSlice = createSlice({
            state.status = true;
            state.error = "";
         },
+
+        
     },
 
     extraReducers: (builder) => {
@@ -156,4 +158,5 @@ const cardSlice = createSlice({
     }
 });
 export const { setReoderedCards } = cardSlice.actions;
+
 export default cardSlice.reducer;

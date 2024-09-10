@@ -58,7 +58,7 @@ const cardSchema = new Schema({
     type: String,
     require: false
   },
-  cover: {type: String, required: false},
+  cover: { type: String, required: false },
   memberIds: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -66,10 +66,19 @@ const cardSchema = new Schema({
     },
   ],
   comments: [CommentSchema],
-  attachments: [AttachmentSchema], 
+  attachments: [AttachmentSchema],
   dueDate: {
     type: Date,
   },
+  startDate: {
+    type: Date,
+  },
+ checklist: [
+  {
+    text: { type: String },
+    completed: { type: Boolean, default: false }
+  }
+],
   completed: {
     type: Boolean,
     default: false,
@@ -132,12 +141,13 @@ const update = async (cardId, updateData) => {
       }
     });
 
+    console.log("updateData", updateData)
     if (updateData.columnId) updateData.columnId = new mongoose.Types.ObjectId(updateData.columnId);
 
     const result = await Card.findByIdAndUpdate(
       cardId,
       { $set: updateData },
-      { new: true } 
+      { new: true }
     ).exec();
     return result;
   } catch (error) {

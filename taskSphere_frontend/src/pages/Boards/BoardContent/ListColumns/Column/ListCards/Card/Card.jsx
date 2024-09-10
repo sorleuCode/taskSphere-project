@@ -9,16 +9,45 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { Edit } from '@mui/icons-material'
+import { Box } from '@mui/material'
+import EditCard from './EditCard'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchAllboardMembers} from '../../../../../../../redux/reducers/boardSlice';
+import { useParams } from 'react-router-dom'
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+
 
 function Card({ card }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: card._id,
     data: { ...card }
   })
+  const {id} = useParams()
+  const { boardsMembers, status} = useSelector((state) => state.board);
+
+  const membersOFaBoard = boardsMembers?.filter((member) => {
+    member.boards.some(board => board._id === id)
+  })
+
+const dispatch = useDispatch()
+
+
+const completedChecklist = card?.checklist.filter((item) => item.completed === true)
+const completedChecklistLength = completedChecklist?.length
+
+  useEffect(() => {
+    if (boardsMembers.length === 0 && !status)
+    dispatch(fetchAllboardMembers());
+  }, [dispatch, status])
+
+  const [isEditing, setIsEditing] = useState(false);
+
+  const openEditCard = () => setIsEditing(true);
+  const closeEditCard = () => setIsEditing(false);
+
   const dndKitCardStyles = {
-    // touchAction: 'none', // Dành cho sensor default dạng PointerSensor
-    // Nếu sử dụng CSS.Transform như docs sẽ lỗi kiểu stretch
-    // https://github.com/clauderic/dnd-kit/issues/117
     transform: CSS.Translate.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : undefined,
@@ -26,7 +55,7 @@ function Card({ card }) {
   }
 
   const shouldShowCardActions = () => {
-    return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length
+    return !!card?.memberIds?.length || !!card?.comments?.length || !!card?.attachments?.length || !!card?.checklist?.length
   }
 
   return (
@@ -38,15 +67,31 @@ function Card({ card }) {
         overflow: 'unset',
         display: card?.FE_PlaceholderCard ? 'none' : 'block',
         border: '1px solid transparent',
-        '&:hover': { borderColor: (theme) => theme.palette.primary.main }
-        // overflow: card?.FE_PlaceholderCard ? 'hidden' : 'unset',
-        // height: card?.FE_PlaceholderCard ? '0px' : 'unset'
+        '&:hover': {
+          borderColor: (theme) => theme.palette.primary.main,
+          '.edit-button': { display: 'inline-flex' }  // Show the Edit button on hover
+        },
+        position: 'relative'
       }}
     >
-      {card?.cover && <CardMedia sx={{ height: 140 }} image={card?.cover} /> }
+      {card?.cover && <CardMedia sx={{ height: 140 }} image={card?.cover} />}
+
       <CardContent sx={{ p: 1.5, '&:last-child': { p: 1.5 } }}>
-        <Typography>{card?.title}</Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography>{card?.title}</Typography>
+          <Button
+            onClick={openEditCard}
+            size="small"
+            startIcon={<Edit />}
+            className="edit-button"
+            sx={{ display: 'none' }}  // Hidden by default, shown only on hover
+          />
+          {isEditing && (
+            <EditCard card={card} closeEdit={closeEditCard}  members ={membersOFaBoard}/>
+          )}
+        </Box>
       </CardContent>
+
       {shouldShowCardActions() &&
         <CardActions sx={{ p: '0 4px 8px 4px' }}>
           {!!card?.memberIds?.length &&
@@ -57,6 +102,9 @@ function Card({ card }) {
           }
           {!!card?.attachments?.length &&
             <Button size="small" startIcon={<AttachmentIcon />}>{card?.attachments?.length}</Button>
+          }
+          {!!card?.checklist?.length &&
+            <Button size="small" startIcon={<PlaylistAddCheckIcon/>}>{`${completedChecklistLength}/${card?.checklist?.length}`}</Button>
           }
         </CardActions>
       }
