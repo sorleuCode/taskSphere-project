@@ -3,8 +3,11 @@ const bcrypt = require("bcryptjs");
 const generateJWT = require("../utils/generateJWT");
 const passport = require("passport");
 const nodemailer = require("nodemailer")
-import { boardModel } from "~/models/boardModel";
 const Invitation = require("../models/invitationModel");
+const path = require('path');
+const fs = require('fs');
+const handlebars = require('handlebars');
+import { boardModel } from "~/models/boardModel";
 
 
 const jwt = require('jsonwebtoken');
@@ -17,94 +20,88 @@ const userRegister = async (req, res) => {
   const { fullname, email, password, invitationId } = req.body;
 
   try {
-      const userExist = await User.findOne({ email });
+    const userExist = await User.findOne({ email });
 
-      if (userExist) {
-        return res.status(400).json({ message: "User with this email already exists" });
-      }
+    if (userExist) {
+      return res.status(400).json({ message: "User with this email already exists" });
+    }
 
-      // Generate JWT token
-      const token = generateJWT({ email: userExist.email });
+    // Generate JWT token
+    const token = generateJWT({ email });
 
-      // Set cookie with the token
-      res.cookie("token", token, {
-        httpOnly: true,
-        expires: new Date(Date.now() + 1000 * 86400), // 1 day
-        sameSite: "strict",
-        secure: false // secure in production
-      });
+    // Set cookie with the token
+    res.cookie("token", token, {
+      httpOnly: true,
+      expires: new Date(Date.now() + 1000 * 86400), // 1 day
+      sameSite: "strict",
+      secure: false // secure in production
+    });
 
+    // Load the HTML template
+    const filePath = path.join(__dirname, 'EmailViews', 'emailVerification.html');
+    const source = fs.readFileSync(filePath, 'utf-8').toString();
 
+    // Compile the template with Handlebars
+    const template = handlebars.compile(source);
+    const replacements = {
+      fullname,
+      token,
+    };
+    const htmlToSend = template(replacements);
 
-      // Nodemailer configuration
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: "sorleu3@gmail.com",
-          pass: "iwfi ozbb cucb mlfr"
-        },
-      });
+    // Nodemailer configuration
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: "sorleu3@gmail.com",
+        pass: "iwfi ozbb cucb mlfr"
+      },
+    });
 
-      const mailConfigurations = {
-        from: 'sorleu3@gmail.com',
-        to: email,
-        subject: 'Email Verification',
-        text: `Hi! ${fullname}, You have recently visited 
-             our website and entered your email.
-             Please follow the given link to verify your email
-             http://localhost:5173/user/verify/${token}  
-             Thanks`
-      };
+    const mailConfigurations = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Email Verification',
+      html: htmlToSend, // Use HTML template
+    };
 
+    transporter.sendMail(mailConfigurations, async function (error, info) {
+      if (error) {
+        return res.status(400).json({ message: `Error Sending verification mail: ${error.message}` });
+      } else {
+        const newUser = new User({
+          fullname,
+          email,
+          password,
+        });
 
-      transporter.sendMail(mailConfigurations, async function (error, info) {
-        if (error) {
-          return res.status(400).json({ message: `$Error Sending verification mail: ${error.message}` });
-        }else {
+        await newUser.save();
 
-          const  newUser = new User({
-            fullname,
-            email,
-            password,
-          });
-  
-          await newUser.save();
-  
-  
-          if (invitationId) {
-            // Find the invitation
-            const invitation = await Invitation.findById(invitationId);
-            if (invitation) {
-              // Add the user to the board's members
-              const board = await boardModel.Board.findById(invitation.boardId);
-              board.memberIds.push(newUser?._id);
-              await board.save();
-      
-              // Mark the invitation as accepted
-              invitation.invitedUserId = newUser?._id;
-              invitation.status = 'accepted';
-              await invitation.save();
-            }
+        if (invitationId) {
+          // Find the invitation
+          const invitation = await Invitation.findById(invitationId);
+          if (invitation) {
+            // Add the user to the board's members
+            const board = await boardModel.Board.findById(invitation.boardId);
+            board.memberIds.push(newUser._id);
+            await board.save();
+
+            // Mark the invitation as accepted
+            invitation.invitedUserId = newUser._id;
+            invitation.status = 'accepted';
+            await invitation.save();
           }
-  
-          const user = await User.findById(newUser?._id).select("-password")
-  
-          
-          return res.status(200).json(user);
-          
         }
-       
-      })
 
-    
+        const user = await User.findById(newUser._id).select("-password");
 
-   
-
+        return res.status(200).json(user);
+      }
+    });
   } catch (error) {
     res.status(500).json({ message: "An error occurred", error: error.message });
   }
 };
-
 
 const registerWithEmail = async(req, res) => {
 
@@ -188,7 +185,6 @@ const loginWithEmail = async(req, res) => {
 
 const getUser = async (req, res) => {
 
-  console.log("req.user", req.user)
   
   const user = await User.findById(req?.user?._id);
 

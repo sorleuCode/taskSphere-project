@@ -1,25 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { FaEdit, FaTrash } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux';
+import {useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { fetchAllboardMembers } from '../../redux/reducers/boardSlice';
 import BoardMemberActionsModal from './dashModals/BoardMemberActionsModal'; // Adjust the import path as necessary
 import { updateBoard, updateBoardMemberRole } from '../../redux/reducers/boardSlice';
 
 
 const BoardMembershipTable = () => {
-  const dispatch = useDispatch();
-  const { boardsMembers, status, loading, error } = useSelector((state) => state.board);
+  const { boardsMembers, loading, error } = useSelector((state) => state.board);
 
   const [selectedMember, setSelectedMember] = useState(null);
   const [selectedBoard, setSelectedBoard] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    if (boardsMembers.length === 0) {
-      dispatch(fetchAllboardMembers());
-    }
-  }, [dispatch, boardsMembers.length]);
+ 
 
   useEffect(() => {
     if (error) {
@@ -99,7 +92,7 @@ const BoardMembershipTable = () => {
           {boardsMembers.map((member, index) => (
             <tr key={index} className="border-t">
               <td className="py-4 px-6 text-sm text-gray-700">
-                {member.name}
+                {member.fullname}
               </td>
               <td className="py-4 px-6 text-sm text-gray-700">
                 {member.email}

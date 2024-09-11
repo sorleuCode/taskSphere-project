@@ -3,15 +3,20 @@
 import { boardModel } from "~/models/boardModel";
 const User = require("../models/userModel");
 const nodemailer = require("nodemailer");
+const fs = require('fs');
+const path = require('path');
+const handlebars = require('handlebars'); 
 
 const Invitation = require("../models/invitationModel");
+
+
 
 const boardInvitation = async (req, res) => {
   const { boardId } = req.params;
   const { email } = req.body;
 
   const expirationDate = new Date();
-  expirationDate.setDate(expirationDate.getDate() + 7); // Set expiration date to 7 days from now
+  expirationDate.setDate(expirationDate.getDate() + 7); 
 
   try {
     const board = await boardModel.Board.findById(boardId);
@@ -45,7 +50,6 @@ const boardInvitation = async (req, res) => {
     });
     await invitation.save();
 
-    // Generate a sign-up or invitation acceptance link
     let inviteLink;
     if (!user._id) {
       inviteLink = `${process.env.CLIENT_BASE_URL}/?invitationId=${invitation._id}`;
@@ -53,37 +57,44 @@ const boardInvitation = async (req, res) => {
       inviteLink = `${process.env.CLIENT_BASE_URL}/accept-invite/${invitation._id}`;
     }
 
-    // Send the invitation email
+    const filePath = path.join(__dirname, 'EmailViews', 'inviteEmailTemplate.html');
+    const source = fs.readFileSync(filePath, 'utf-8').toString();
+    
+    const template = handlebars.compile(source);
+    const replacements = {
+      inviteeName: user.fullname.split(' ')[0], // Extracting name from email
+      inviterName: inviter.fullname,
+      boardTitle: board.title,
+      inviteLink,
+    };
+    const htmlToSend = template(replacements);
 
+    // Send the invitation email
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: "sorleu3@gmail.com",
-        pass: "iwfi ozbb cucb mlfr",
+        pass: "iwfi ozbb cucb mlfr"
       },
     });
 
     const mailConfigurations = {
-      from: "sorleu3@gmail.com",
+      from: process.env.EMAIL_USER,
       to: user.email,
-      subject: "Invitation request",
-      text: `Hi! You have been invited by ${inviter.fullname} to join the board "${board.title}". Click the following link to accept the invitation: ${inviteLink}`,
+      subject: `Invitation to join ${board.title}`,
+      html: htmlToSend, // Sending the HTML template
     };
 
     transporter.sendMail(mailConfigurations, async function (error, info) {
       if (error) {
         return res
           .status(400)
-          .json({
-            message: `Error occured: ${error.message}`,
-          });
+          .json({ message: `Error occurred: ${error.message}` });
       }
-      
 
       return res.status(200).json({ message: "Invitation sent", invitation });
     });
 
-    
   } catch (error) {
     console.error("Error in createInvitation:", error);
     res.status(500).json({ message: "Server error", error });
@@ -91,7 +102,7 @@ const boardInvitation = async (req, res) => {
 };
 
 
-const invitationAcceptance =  async (req, res) => {
+const invitationAcceptance = async (req, res) => {
   const { invitationId } = req.params;
   const { action } = req.body; // 'accept' or 'reject'
 
@@ -115,58 +126,62 @@ const invitationAcceptance =  async (req, res) => {
       }
 
       // Mark the invitation as accepted
-      
       invitation.status = 'accepted';
       await invitation.save();
 
-      const inviter = await User.findById(board.creatorId)
+      const inviter = await User.findById(board.creatorId);
+      const invitedUser = await User.findById(invitation.invitedUserId);
 
-      const invitedUser = await User.findById(invitation.invitedUserId)
-      // Send the invitation email
+      // Load the HTML template
+      const filePath = path.join(__dirname, 'EmailViews', 'inviteResponseTemplate.html');
+      const source = fs.readFileSync(filePath, 'utf-8').toString();
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
+      // Compile the template with Handlebars
+      const template = handlebars.compile(source);
+      const replacements = {
+        inviterName: inviter.fullname,
+        invitedUserName: invitedUser.fullname,
+        boardTitle: board.title,
+      };
+      const htmlToSend = template(replacements);
+
+      // Set up Nodemailer transporter
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
         user: "sorleu3@gmail.com",
-        pass: "iwfi ozbb cucb mlfr",
-      },
-    });
+        pass: "iwfi ozbb cucb mlfr"
+        },
+      });
 
-    const inviterName = inviter.fullname
-    const mailConfigurations = {
-      from: "sorleu3@gmail.com",
-      to: inviter.email,
-      subject: "Invitation response",
-      text: `Hi ${inviterName}! This is to tell you that ${invitedUser.fullname} has accepted the invitation to join the board "${board.title}".`,
-    };
+      // Email configurations
+      const mailConfigurations = {
+        from: process.env.EMAIL_USER,
+        to: inviter.email,
+        subject: 'Invitation response',
+        html: htmlToSend, // Send the compiled HTML
+      };
 
-    transporter.sendMail(mailConfigurations, async function (error, info) {
-      if (error) {
-        return res
-          .status(400)
-          .json({
-            message: `Error occured: ${error.message}`,
-          });
-      }
-      
+      // Send the email
+      transporter.sendMail(mailConfigurations, function (error, info) {
+        if (error) {
+          return res.status(400).json({ message: `Error occurred: ${error.message}` });
+        }
 
-      return res.status(200).json({ message: 'Invitation accepted', boardId: board._id });
-    });
-
-
+        return res.status(200).json({ message: 'Invitation accepted', boardId: board._id });
+      });
     } else if (action === 'reject') {
       // Mark the invitation as rejected
       invitation.status = 'rejected';
       await invitation.save();
-      
+
       return res.status(400).json({ message: 'Invitation rejected' });
     } else {
       return res.status(400).json({ message: 'Invalid action' });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ message: 'Server error', error });
   }
-}
-
+};
 module.exports = { boardInvitation, invitationAcceptance};

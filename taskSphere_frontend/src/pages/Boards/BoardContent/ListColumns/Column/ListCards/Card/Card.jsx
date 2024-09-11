@@ -12,9 +12,8 @@ import { CSS } from '@dnd-kit/utilities'
 import { Edit } from '@mui/icons-material'
 import { Box } from '@mui/material'
 import EditCard from './EditCard'
-import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchAllboardMembers} from '../../../../../../../redux/reducers/boardSlice';
+import {  useState } from 'react'
+import {  useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 
@@ -25,22 +24,18 @@ function Card({ card }) {
     data: { ...card }
   })
   const {id} = useParams()
-  const { boardsMembers, status} = useSelector((state) => state.board);
+  const { boardsMembers} = useSelector((state) => state.board);
 
-  const membersOFaBoard = boardsMembers?.filter((member) => {
+  const membersOFaBoard = boardsMembers?.filter((member) => 
     member.boards.some(board => board._id === id)
-  })
+  )
+console.log("boardmembers", boardsMembers)
+  console.log("membersOFaBoard", membersOFaBoard)
 
-const dispatch = useDispatch()
 
 
 const completedChecklist = card?.checklist.filter((item) => item.completed === true)
 const completedChecklistLength = completedChecklist?.length
-
-  useEffect(() => {
-    if (boardsMembers.length === 0 && !status)
-    dispatch(fetchAllboardMembers());
-  }, [dispatch, status])
 
   const [isEditing, setIsEditing] = useState(false);
 

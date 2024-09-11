@@ -6,7 +6,6 @@ const BoardMemberActionsModal = ({ member, board, onRemove, onChangeRole, closeM
 
   const handleRemove = () => {
 
-    console.log("memBoa", member, board)
     onRemove(member, board);
     closeModal(); // Close modal after action
   };

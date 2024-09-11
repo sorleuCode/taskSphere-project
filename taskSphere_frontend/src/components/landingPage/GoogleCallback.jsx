@@ -11,10 +11,6 @@ const GoogleCallback = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // Dispatch the registration action
-        dispatch(registerUser({}));
-
-        // Monitor user and error state to handle navigation
         if (!loading) {
             if (user && !error) {
                     navigate('/dashboard');

@@ -90,7 +90,7 @@ const MainContent = () => {
                     <div className='flex h-[100%] items-center justify-center'>
                         {loading && !error ? (
                             <p className=' text-blue-500'>Fetching boards...</p>
-                        ) : error ? toast.error("Error fetching boards", { position: "top-right" }):(
+                        ) : error? toast.error("No boards", { position: "top-right" }):(
                             <div className="flex flex-wrap gap-6">
                             { allBoards.length > 0 ?
 

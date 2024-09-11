@@ -3,13 +3,23 @@ import Sidebar from './Sidebar';
 import DashHeader from './DashHeader';
 import BoardMembershipTable from './BoardMembershipTable';
 import MainContent from "./MainContent"
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllboardMembers } from '../../redux/reducers/boardSlice';
+
+
 
 const Dashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState('Boards'); // Initialize with 'Boards'
+  const { boardsMembers} = useSelector((state) => state.board);
+
+  const dispatch = useDispatch();
+
 
   useEffect(() => {
-    // Optional: Any side-effects or data fetching when the component mounts
-  }, []);
+    dispatch(fetchAllboardMembers());
+  
+}, [dispatch, boardsMembers.length]);
+
 
   return (
     <div className="flex h-screen">

@@ -1,8 +1,4 @@
-/**
- * Updated by trungquandev.com's author on August 17 2023
- * YouTube: https://youtube.com/@trungquandev
- * "A bit of fragrance clings to the hand that gives flowers!"
- */
+
 import { StatusCodes } from 'http-status-codes'
 import { boardService } from '~/services/boardService'
 import { boardModel } from '~/models/boardModel'
@@ -82,7 +78,7 @@ const getAllMembersByUser = async (req, res) => {
           // If the member is not yet in the map, add them with their details and the current board object
           membersMap.set(memberId, {
             _id: member._id,
-            name: member.fullname,
+            fullname: member.fullname,
             email: member.email,
             boards: [{
               _id: board._id,
@@ -111,37 +107,57 @@ const getAllMembersByUser = async (req, res) => {
 };
 
 
-const updateMemberRole = async(req, res) =>{
+const updateMemberRole = async (req, res) => {
   try {
-    const {member, role} = req.body
-      
-    // Find all boards created by the specific user and populate the 'members' field
-    const board = await boardModel.Board.findById(req.params.id)
+    const { member, role } = req.body;
 
-    
-      if (board) {
+    // Find the board by ID
+    const board = await boardModel.Board.findById(req.params.id);
 
-        if (role === "admin") {
-          const isMember = board.memberIds.find((id) => id === member._id)
-          // if(isMember) {
-
-          // }
-          board.ownerIds.push(member._id)
-          await board.save()
-          return res.status(200).json({status: true, message: "Admin role assigned"})
-        } else if (role === "member") {
-          board.memberIds.push(member._id)
-          await board.save()
-         return res.status(200).json({status: true,  message: "Member role assigned"})
+    if (board) {
+      if (role === "admin") {
+        // Check if the user is a member
+        const isMember = board.memberIds.find((id) => id.equals(member._id));
+        if (isMember) {
+          // Remove the user from the members array
+          board.memberIds = board.memberIds.filter((id) => !id.equals(member._id));
         }
+
+        // Add the user to the owners array
+        if (!board.ownerIds.includes(member._id)) {
+          board.ownerIds.push(member._id);
+        }
+
+        await board.save();
+        return res.status(200).json({ status: true, message: "Admin role assigned" });
+
+      } else if (role === "member") {
+        // Check if the user is an admin
+        const isAdmin = board.ownerIds.find((id) => id.equals(member._id));
+
+        if (isAdmin) {
+          // Remove the user from the owners array
+          board.ownerIds = board.ownerIds.filter((id) => !id.equals(member._id));
+        }
+
+        // Add the user to the members array
+        if (!board.memberIds.includes(member._id)) {
+          board.memberIds.push(member._id);
+        }
+
+        await board.save();
+        return res.status(200).json({ status: true, message: "Member role assigned" });
       }
+    } else {
+      return res.status(404).json({ status: false, message: "Board not found" });
+    }
 
   } catch (error) {
-      console.log("error", error)
-     return  res.status(500).json({message: "Server Error"})
+    console.log("error", error);
+    return res.status(500).json({ message: "Server Error" });
   }
+};
 
-}
 
 const update = async (req, res, next) => {
   try {

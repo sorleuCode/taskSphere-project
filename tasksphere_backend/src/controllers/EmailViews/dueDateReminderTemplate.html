@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Due Date Reminder</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .email-container {
+            background-color: #ffffff;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        h3 {
+            color: #333333;
+        }
+        p {
+            color: #555555;
+            line-height: 1.6;
+        }
+        .task-title {
+            font-weight: bold;
+            color: #007BFF;
+        }
+        .due-date {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <h3>Hello {{userName}},</h3>
+        <p>This is a reminder that the task <span class="task-title">"{{cardTitle}}"</span> is due soon.</p>
+        <p><strong>Due Date:</strong> <span class="due-date">{{dueDate}}</span></p>
+        <p>Please ensure the task is completed before the deadline.</p>
+        <p>Best regards,<br>Your Project Team</p>
+        <div class="footer">
+            <p>If you have any questions or need assistance, feel free to contact us.</p>
+        </div>
+    </div>
+</body>
+</html>

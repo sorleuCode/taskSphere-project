@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import { Editor } from "@tinymce/tinymce-react";
 import DOMPurify from "dompurify";
-import { FaTimes } from "react-icons/fa";
+import { FaGalacticSenate, FaTimes } from "react-icons/fa";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
 
@@ -116,7 +116,7 @@ const EditCard = ({ card, closeEdit, members }) => {
             body: JSON.stringify({ dueDate }),
           });
         }
-
+        setShowMemberPanel((prev) => !prev)
         toast.success("Card updated successfully!", { autoClose: 3000 });
         closeEdit();
       } catch (error) {
@@ -139,8 +139,18 @@ const EditCard = ({ card, closeEdit, members }) => {
   }, [dueDate]);
 
   const filteredMembers = members.filter((member) =>
-    member.fullname.toLowerCase().includes(searchQuery.toLowerCase())
+    member?.fullname?.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleMemberToggle = (memberId) => {
+    if (selectedMembers.includes(memberId)) {
+      // Remove member from selectedMembers
+      setSelectedMembers(selectedMembers.filter((id) => id !== memberId));
+    } else {
+      // Add member to selectedMembers
+      setSelectedMembers([...selectedMembers, memberId]);
+    }
+  };
 
   const handleMemberSelect = (memberId) => {
     if (!selectedMembers.includes(memberId)) {
@@ -378,7 +388,7 @@ const EditCard = ({ card, closeEdit, members }) => {
           <DatePicker
             selected={startDate}
             onChange={(date) => setStartDate(date)}
-            className="w-full p-2 border rounded-md text-sm"
+            className="w-full p-2 border rounded-md text-sm focus: outline-none  focus:border-blue-500"
             dateFormat="MM/dd/yyyy"
             placeholderText="mm/dd/yyyy"
           />
@@ -388,58 +398,74 @@ const EditCard = ({ card, closeEdit, members }) => {
           <DatePicker
             selected={dueDate}
             onChange={(date) => setDueDate(date)}
-            className="w-full p-2 border rounded-md text-sm"
+            className="w-full p-2 border rounded-md text-sm focus: outline-none  focus:border-blue-500"
             dateFormat="MM/dd/yyyy"
             placeholderText="mm/dd/yyyy"
           />
         </div>
 
-        {/* Members */}
-        <div className="mb-4">
-          <label className="block text-base font-medium mb-1">Members</label>
-          <button
-            onClick={() => setShowMemberPanel(!showMemberPanel)}
-            className="text-sm text-blue-500 hover:underline"
-          >
-            {showMemberPanel ? "Hide members" : "Show members"}
-          </button>
-          {showMemberPanel && (
-            <div className="mt-2">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full p-2 border rounded-md mb-2 focus: outline-none  focus:border-blue-500"
-                placeholder="Search Members"
-              />
-              {filteredMembers.map((member) => (
-                <div key={member._id} className="flex items-center mb-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedMembers.includes(member._id)}
-                    onChange={() => handleMemberSelect(member._id)}
-                    className="mr-2 "
-                  />
-                  <span>{member.fullname}</span>
-                </div>
-              ))}
-              {selectedMembers.map((memberId) => {
-                const member = members.find((m) => m._id === memberId);
-                return member ? (
-                  <div key={memberId} className="flex items-center mb-2">
-                    <button
-                      onClick={() => handleMemberDeselect(memberId)}
-                      className="text-red-500 hover:underline mr-2"
-                    >
-                      &times;
-                    </button>
-                    <span>{member.fullname}</span>
+        
+          {/* Members */}
+          <div className="mb-4">
+            <label className="block text-base font-medium mb-1">Members</label>
+
+            {/* Display current card members */}
+            {selectedMembers?.length > 0 ? (
+              <div className="flex flex-col mb-2">
+                {selectedMembers.map((memberId) => {
+                  const member = members.find((m) => m._id === memberId);
+                  return member ? (
+                    <div key={memberId} className="flex items-center text-sm mb-2">
+                      <button
+                        onClick={() => handleMemberDeselect(memberId)}
+                        className="text-red-500 hover:underline mr-2"
+                      >
+                        <FaTimes/>
+                      </button>
+                      <span>{member.fullname}</span>
+                    </div>
+                  ) : null;
+                })}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500 mb-2">No members assigned.</p>
+            )}
+
+            {/* Button to Show/Hide Add Members Panel */}
+            <button
+              onClick={() => setShowMemberPanel(!showMemberPanel)}
+              className="text-sm text-blue-500 hover:underline"
+            >
+              {showMemberPanel ? null : "Add members"}
+            </button>
+
+            {/* Add Members Panel */}
+            {showMemberPanel && (
+              <div className="mt-2">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full p-2 border rounded-md mb-2 focus:outline-none focus:border-blue-500"
+                  placeholder="Search Board Members"
+                />
+                {/* Display filtered board members */}
+                {filteredMembers.length ?  (filteredMembers.map((member) => (
+                  <div key={member._id} className="flex  items-center mb-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedMembers.includes(member._id)}
+                      onChange={() => handleMemberToggle(member._id)}
+                      className="mr-2 text-sm"
+                    />
+                    <span className="text-sm" onClick={() => handleMemberSelect(member._id)}>{member.fullname}</span>
                   </div>
-                ) : null;
-              })}
-            </div>
-          )}
-        </div>
+                ))) : (<p className="text-sm text-blue-500">no match!</p>)}
+                {/* Save Members Button */}
+                
+              </div>
+            )}
+          </div>
 
         {/* Attachments */}
         <div className="mb-4">
@@ -493,9 +519,15 @@ const EditCard = ({ card, closeEdit, members }) => {
               {attachments?.map((file, index) => (
                 <li
                   key={index}
-                  className="mb-2 text-sm bg-blue-100 w-fit rounded cursor-pointer px-2"
-                >
-                  {file.filename}
+                  className="mb-2 text-sm bg-blue-100 w-fit hover:bg-inherit rounded cursor-pointer px-2"
+                > <a href={file.url}
+                  download={file.filename}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500">
+                    {file.filename}
+                  </a>
+
                 </li>
               ))}
             </ul>
