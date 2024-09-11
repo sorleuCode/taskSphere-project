@@ -44,7 +44,6 @@ const createNew = async (req, res, next) => {
 }
 
 const update = async (req, res, next) => {
-  // Note: Do not use the required() method in the Update case
   const correctCondition = new mongoose.Schema({
     title: {
       type: String,

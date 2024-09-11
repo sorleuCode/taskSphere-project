@@ -1,8 +1,3 @@
-/**
- * Updated by trungquandev.com's author on August 17 2023
- * YouTube: https://youtube.com/@trungquandev
- * "A bit of fragrance clings to the hand that gives flowers!"
- */
 
 import {columnModel} from '~/models/columnModel'
 import { boardModel } from '~/models/boardModel'
@@ -12,7 +7,6 @@ import ApiError from '~/utils/ApiError'
 
 const createNew = async (reqBody) => {
   try {
-    // Xử lý logic dữ liệu tùy đặc thù dự án
     const newColumn = {
       ...reqBody
     }
@@ -20,10 +14,7 @@ const createNew = async (reqBody) => {
     const createdColumn = await columnModel.createNew(newColumn)
 
     if (createdColumn) {
-      // Xử lý cấu trúc data ở đây trước khi trả dữ liệu về
-      createdColumn.cardOrderIds = []
 
-      // Cập nhật mảng columnOrderIds trong collection boards
       await boardModel.pushColumnOrderIds(createdColumn)
     }
 
@@ -51,13 +42,10 @@ const deleteItem = async (columnId) => {
       throw new ApiError(StatusCodes.NOT_FOUND, 'Column not found!')
     }
     
-    // Xóa Column
     await columnModel.deleteOneById(columnId)
 
-    // Xóa toàn bộ Cards thuộc cái Column trên
     await cardModel.deleteManyByColumnId(columnId)
 
-    // Xoá columnId trong mảng columnOrderIds của cái Board chứa nó
     await boardModel.pullColumnOrderIds(targetColumn)
 
     return { deleteResult: 'Column and its Cards deleted successfully!' }

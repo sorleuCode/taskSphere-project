@@ -30,7 +30,6 @@ const createNew = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   const correctCondition = new mongoose.Schema({
-    // Uncomment if needed
     // boardId: {
     //   type: String,
     //   match: [OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE]

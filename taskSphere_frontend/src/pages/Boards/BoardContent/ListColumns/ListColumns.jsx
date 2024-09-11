@@ -23,29 +23,18 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
       return
     }
 
-    // Tạo dữ liệu Column để gọi API
     const newColumnData = {
       title: newColumnTitle
     }
 
-    /**
-     * Gọi lên props function createNewColumn nằm ở component cha cao nhất (boards/_id.jsx)
-     * Lưu ý: Về sau ở học phần MERN Stack Advance nâng cao học trực tiếp mình sẽ với mình thì chúng ta sẽ đưa dữ liệu Board ra ngoài Redux Global Store,
-     * Thì lúc này chúng ta có thể gọi luôn API ở đây là xong thay vì phải lần lượt gọi ngược lên những component cha phía bên trên. (Đối với component con nằm càng sâu thì càng khổ :D)
-     * - Với việc sử dụng Redux như vậy thì code sẽ Clean chuẩn chỉnh hơn rất nhiều.
-     */
+  
     createNewColumn(newColumnData)
 
-    // Đóng trạng thái thêm Column mới & Clear Input
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
   }
 
-  /**
-   * Thằng SortableContext yêu cầu items là một mảng dạng ['id-1', 'id-2'] chứ không phải [{id: 'id-1'}, {id: 'id-2'}]
-   * Nếu không đúng thì vẫn kéo thả được nhưng không có animation
-   * https://github.com/clauderic/dnd-kit/issues/183#issuecomment-812569512
-   */
+ 
   return (
     <SortableContext items={columns?.map(c => c._id)} strategy={horizontalListSortingStrategy}>
       <Box sx={{
