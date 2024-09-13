@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 import { Editor } from "@tinymce/tinymce-react";
 import DOMPurify from "dompurify";
-import { FaGalacticSenate, FaTimes } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
 
@@ -23,12 +23,13 @@ const EditCard = ({ card, closeEdit, members }) => {
     filename: "",
     url: "",
   });
-  const [comments, setComments] = useState([]);
   const [cover, setCover] = useState("");
   const [showMemberPanel, setShowMemberPanel] = useState(false);
   const [showDescriptionEditor, setShowDescriptionEditor] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [addAttachments, setAddAttachments] = useState(false);
+  const [addCover, setAddCover] = useState(false)
+  const [coverUrl, setCoverUrl] = useState("")
 
   let cardId;
 
@@ -45,7 +46,6 @@ const EditCard = ({ card, closeEdit, members }) => {
       setDueDate(card.dueDate ? new Date(card.dueDate) : null);
       setSelectedMembers(card.memberIds || []);
       setAttachments(card.attachments || []); // Initialize attachments
-      setComments(card.comments || []); // Initialize comments
       setCover(card.cover || ""); // Initialize cover
     }
   }, [card]);
@@ -97,8 +97,7 @@ const EditCard = ({ card, closeEdit, members }) => {
       updatedCard.startDate = startDate;
       updatedCard.dueDate = dueDate;
       updatedCard.memberIds = selectedMembers;
-      updatedCard.comments = comments; // Add comments
-      updatedCard.cover = cover.trim(); // Add cover
+      coverUrl ? updatedCard.cover = coverUrl.trim() : updatedCard.cover = cover.trim() 
     } else {
       return toast.error("Title is required", { position: "top-right" });
     }
@@ -172,12 +171,20 @@ const EditCard = ({ card, closeEdit, members }) => {
 
         const snapshot = await fileRef.put(selectedFile);
         const downloadedUrl = await snapshot.ref.getDownloadURL();
-        console.log("downloadedUrl", downloadedUrl);
 
-        if (downloadedUrl) {
-          setSingleAttachment((prev) => ({ ...prev, url: downloadedUrl }));
-        } else {
-          toast.error("Error uploading file", { position: "top-right" });
+        if (event.target.name === "url") {
+          if (downloadedUrl) {
+            setSingleAttachment((prev) => ({ ...prev, url: downloadedUrl }));
+          } else {
+            toast.error("Error uploading file", { position: "top-right" });
+          }
+        }else if(event.target.name === "cover"){
+
+          if (downloadedUrl) {
+            setCoverUrl(downloadedUrl);
+          } else {
+            toast.error("Error uploading file", { position: "top-right" });
+          }
         }
       } else {
         toast.error("No file selected", { position: "top-right" });
@@ -534,27 +541,26 @@ const EditCard = ({ card, closeEdit, members }) => {
           )}
         </div>
 
-        {/* Comments */}
-        <div className="mb-4">
-          <label className="block text-base font-medium mb-1">Comments</label>
-          <textarea
-            value={comments.join("\n")}
-            onChange={(e) => setComments(e.target.value.split("\n"))}
-            className="w-full p-2 border rounded-md text-sm focus: outline-none  focus:border-blue-500"
-            placeholder="Add comments"
-          />
-        </div>
-
         {/* Cover */}
         <div className="mb-4">
           <label className="block text-base font-medium mb-1">Cover</label>
-          <input
-            type="text"
-            value={cover}
-            onChange={(e) => setCover(e.target.value)}
-            className="w-full p-2 border rounded-md focus: outline-none  focus:border-blue-500"
-            placeholder="Cover URL"
-          />
+          <span onClick={() => setAddCover(!addCover)} className="text-blue-500 text-sm  hover:underline px-2 py-1 hover:bg-gray-200 hover: rounded-md "
+          >Add</span>
+          <div>
+            
+            {cover && (<div className=" w-[50%] flex flex-row justify-start gap-2 items-center">
+              <span className=" text-blue-500 text-sm">My cover</span>
+              <span className="text-red-500 hover:bg-gray-200 hover:rounded-sm p-1 text-base hover:underline"
+                  onClick={() => setCover("")}><FaTimes/></span>
+            </div>)}
+          </div>
+
+         {addCover && (<input
+            type="file"
+            name="cover"
+            onChange={handleFileUpload}
+            className=" p-2  rounded-md text-sm"
+          />)} 
         </div>
 
         {/* Buttons */}

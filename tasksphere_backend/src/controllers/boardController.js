@@ -80,6 +80,7 @@ const getAllMembersByUser = async (req, res) => {
             _id: member._id,
             fullname: member.fullname,
             email: member.email,
+            profileImage: member.profileImage,
             boards: [{
               _id: board._id,
               title: board.title,
@@ -162,6 +163,7 @@ const updateMemberRole = async (req, res) => {
 const update = async (req, res, next) => {
   try {
     const boardId = req.params.id
+
     const updatedBoard = await boardService.update(boardId, req.body)
 
     res.status(StatusCodes.OK).json(updatedBoard)

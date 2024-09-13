@@ -27,6 +27,12 @@ function Board() {
   const { card} = useSelector((state) => state.card);
   const [inviteBtnClicked, setInviteBtnClicked] = useState(false)
 
+  const { boardsMembers} = useSelector((state) => state.board);
+
+  const membersOFaBoard = boardsMembers?.filter((member) => 
+    member.boards.some(item => item._id === board._id)
+  )
+
   
 
   useEffect(() => {
@@ -235,7 +241,7 @@ function Board() {
 
   return (
     <Container disableGutters maxWidth={false} sx={{ height: '100vh' }}>
-      <BoardBar board={board} handleInviteBtn = {handleInviteBtn} />
+      <BoardBar boardsMembers = {membersOFaBoard} board={board} handleInviteBtn = {handleInviteBtn} />
       {inviteBtnClicked && (<BoardInvitation handleInviteBtn ={handleInviteBtn} board={board}/>)}
 
       <BoardContent

@@ -32,7 +32,10 @@ const MENU_STYLES = {
   }
 }
 
-function BoardBar({ board, handleInviteBtn}) {
+function BoardBar({ board, boardsMembers, handleInviteBtn}) {
+
+
+
   
   return (
     <Box sx={{
@@ -109,27 +112,17 @@ function BoardBar({ board, handleInviteBtn}) {
           }}
         >
           
-          <Tooltip title="trungquandev">
-            <Avatar alt="trungquandev"
-              src="https://trungquandev.com/wp-content/uploads/2017/03/aboutme.jpg"
-            />
-          </Tooltip>
-          <Tooltip title="trungquandev">
-            <Avatar alt="trungquandev"
-              src="https://trungquandev.com/wp-content/uploads/2019/06/trungquandev-cat-avatar.png"
+          {boardsMembers?.map((member) => (
+
+          <Tooltip title={member.fullname}>
+            <Avatar alt="name"
+              src={member.profileImage}
             />
           </Tooltip>
 
-          <Tooltip title="trungquandev">
-            <Avatar alt="trungquandev"
-              src="https://trungquandev.com/wp-content/uploads/2023/05/main-avatar-circle-min-trungquandev-codetq.jpeg"
-            />
-          </Tooltip>
-          <Tooltip title="trungquandev">
-            <Avatar alt="trungquandev"
-              src="https://trungquandev.com/wp-content/uploads/2021/01/trungquandev-avatar-2021.jpg"
-            />
-          </Tooltip>
+          ))}
+          
+
         </AvatarGroup>
       </Box>
     </Box>

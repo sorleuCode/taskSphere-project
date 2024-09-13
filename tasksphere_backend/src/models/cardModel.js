@@ -5,21 +5,21 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
-const CommentSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  text: {
-    type: String,
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+// const CommentSchema = new mongoose.Schema({
+//   userId: {
+//     type: mongoose.Schema.Types.ObjectId,
+//     ref: 'User',
+//     required: true,
+//   },
+//   text: {
+//     type: String,
+//     required: true,
+//   },
+//   createdAt: {
+//     type: Date,
+//     default: Date.now,
+//   },
+// });
 
 const AttachmentSchema = new mongoose.Schema({
   filename: {
@@ -67,7 +67,6 @@ const cardSchema = new Schema({
       ref: 'User',
     },
   ],
-  comments: [CommentSchema],
   attachments: [AttachmentSchema],
   dueDate: {
     type: Date,

@@ -5,12 +5,10 @@ import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/s
 import theme from "./theme";
 import { store } from "./redux/store/store";
 import { Provider } from "react-redux";
-// Cấu hình react-toastify
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
-// Cấu hình MUI Dialog
 import { ConfirmProvider } from "material-ui-confirm";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";

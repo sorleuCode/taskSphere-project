@@ -31,12 +31,9 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
     data: { ...column }
   })
   const dndKitColumnStyles = {
-    // touchAction: 'none', // Dành cho sensor default dạng PointerSensor
-    // Nếu sử dụng CSS.Transform như docs sẽ lỗi kiểu stretch
-    // https://github.com/clauderic/dnd-kit/issues/117
+    
     transform: CSS.Translate.toString(transform),
     transition,
-    // Chiều cao phải luôn max 100% vì nếu không sẽ lỗi lúc kéo column ngắn qua một cái column dài thì phải kéo ở khu vực giữa giữa rất khó chịu (demo ở video 32). Lưu ý lúc này phải kết hợp với {...listeners} nằm ở Box chứ không phải ở div ngoài cùng để tránh trường hợp kéo vào vùng xanh.
     height: '100%',
     opacity: isDragging ? 0.5 : undefined
   }
@@ -62,33 +59,22 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
       return
     }
 
-    // Tạo dữ liệu Card để gọi API
     const newCardData = {
       title: newCardTitle,
       columnId: column._id
     }
 
-    /**
-     * Gọi lên props function createNewCard nằm ở component cha cao nhất (boards/_id.jsx)
-     * Lưu ý: Về sau ở học phần MERN Stack Advance nâng cao học trực tiếp mình sẽ với mình thì chúng ta sẽ đưa dữ liệu Board ra ngoài Redux Global Store,
-     * và lúc này chúng ta có thể gọi luôn API ở đây là xong thay vì phải lần lượt gọi ngược lên những component cha phía bên trên. (Đối với component con nằm càng sâu thì càng khổ :D)
-     * - Với việc sử dụng Redux như vậy thì code sẽ Clean chuẩn chỉnh hơn rất nhiều.
-     */
+   
     createNewCard(newCardData)
 
-    // Đóng trạng thái thêm Card mới & Clear Input
     toggleOpenNewCardForm()
     setNewCardTitle('')
   }
 
-  // Xử lý xóa một Column và Cards bên trong nó
   const confirmDeleteColumn = useConfirm()
   const handleDeleteColumn = () => {
     confirmDeleteColumn({
-      // title: 'Delete Column?',
-      // description: 'This action will permanently delete your Column and its Cards! Are you sure?',
       confirmationText: 'Confirm',
-      // cancellationText: 'Cancel',
       buttonOrder: ['confirm', 'cancel'],
       content: 'Enter "delete" keyword',
       allowClose: false,
@@ -97,17 +83,11 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
       confirmationButtonProps: { color: 'primary'},
       confirmationKeyword: 'delete'
     }).then(() => {
-      /**
-       * Gọi lên props function deleteColumnDetails nằm ở component cha cao nhất (boards/_id.jsx)
-       * Lưu ý: Về sau ở học phần MERN Stack Advance nâng cao học trực tiếp mình sẽ với mình thì chúng ta sẽ đưa dữ liệu Board ra ngoài Redux Global Store,
-       * và lúc này chúng ta có thể gọi luôn API ở đây là xong thay vì phải lần lượt gọi ngược lên những component cha phía bên trên. (Đối với component con nằm càng sâu thì càng khổ :D)
-       * - Với việc sử dụng Redux như vậy thì code sẽ Clean chuẩn chỉnh hơn rất nhiều.
-       */
+     
       deleteColumnDetails(column._id)
     }).catch(() => {})
   }
 
-  // Phải bọc div ở đây vì vấn đề chiều cao của column khi kéo thả sẽ có bug kiểu kiểu flickering (video 32)
   return (
     <div ref={setNodeRef} style={dndKitColumnStyles} {...attributes}>
       <Box
@@ -170,18 +150,7 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
                 <ListItemIcon><AddCardIcon className="add-card-icon" fontSize="small" /></ListItemIcon>
                 <ListItemText>Add new card</ListItemText>
               </MenuItem>
-              <MenuItem>
-                <ListItemIcon><ContentCut fontSize="small" /></ListItemIcon>
-                <ListItemText>Cut</ListItemText>
-              </MenuItem>
-              <MenuItem>
-                <ListItemIcon><ContentCopy fontSize="small" /></ListItemIcon>
-                <ListItemText>Copy</ListItemText>
-              </MenuItem>
-              <MenuItem>
-                <ListItemIcon><ContentPaste fontSize="small" /></ListItemIcon>
-                <ListItemText>Paste</ListItemText>
-              </MenuItem>
+             
               <Divider />
               <MenuItem
                 onClick={handleDeleteColumn}
@@ -194,10 +163,6 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
               >
                 <ListItemIcon><DeleteForeverIcon className="delete-forever-icon" fontSize="small" /></ListItemIcon>
                 <ListItemText>Delete this column</ListItemText>
-              </MenuItem>
-              <MenuItem>
-                <ListItemIcon><Cloud fontSize="small" /></ListItemIcon>
-                <ListItemText>Archive this column</ListItemText>
               </MenuItem>
             </Menu>
           </Box>

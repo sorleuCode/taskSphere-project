@@ -142,6 +142,7 @@ const invitationAcceptance = async (req, res) => {
         inviterName: inviter.fullname,
         invitedUserName: invitedUser.fullname,
         boardTitle: board.title,
+        accepted: true, // Mark as accepted
       };
       const htmlToSend = template(replacements);
 
@@ -175,7 +176,44 @@ const invitationAcceptance = async (req, res) => {
       invitation.status = 'rejected';
       await invitation.save();
 
-      return res.status(400).json({ message: 'Invitation rejected' });
+      // Load the HTML template
+      const filePath = path.join(__dirname, 'EmailViews', 'inviteResponseTemplate.html');
+      const source = fs.readFileSync(filePath, 'utf-8').toString();
+
+      // Compile the template with Handlebars
+      const template = handlebars.compile(source);
+      const replacements = {
+        inviterName: inviter.fullname,
+        invitedUserName: invitedUser.fullname,
+        boardTitle: board.title,
+        accepted: false, // Mark as rejected
+      };
+      const htmlToSend = template(replacements);
+
+      // Set up Nodemailer transporter
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+        user: "sorleu3@gmail.com",
+        pass: "iwfi ozbb cucb mlfr"
+        },
+      });
+
+      // Email configurations
+      const mailConfigurations = {
+        from: process.env.EMAIL_USER,
+        to: inviter.email,
+        subject: 'Invitation response',
+        html: htmlToSend, // Send the compiled HTML
+      };
+
+      transporter.sendMail(mailConfigurations, function (error, info) {
+        if (error) {
+          return res.status(400).json({ message: `Error occurred: ${error.message}` });
+        }
+
+        return res.status(400).json({ message: 'Invitation rejected' });
+      });
     } else {
       return res.status(400).json({ message: 'Invalid action' });
     }
@@ -184,4 +222,5 @@ const invitationAcceptance = async (req, res) => {
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
 module.exports = { boardInvitation, invitationAcceptance};

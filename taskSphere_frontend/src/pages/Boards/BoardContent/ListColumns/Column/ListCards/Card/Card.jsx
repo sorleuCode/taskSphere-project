@@ -29,8 +29,6 @@ function Card({ card }) {
   const membersOFaBoard = boardsMembers?.filter((member) => 
     member.boards.some(board => board._id === id)
   )
-console.log("boardmembers", boardsMembers)
-  console.log("membersOFaBoard", membersOFaBoard)
 
 
 
