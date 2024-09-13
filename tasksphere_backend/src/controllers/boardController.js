@@ -2,6 +2,7 @@
 import { StatusCodes } from 'http-status-codes'
 import { boardService } from '~/services/boardService'
 import { boardModel } from '~/models/boardModel'
+const User = require("../models/userModel")
 
 
 const createNew = async (req, res, next) => {
@@ -46,66 +47,107 @@ const getAllboardsDetails = async (req, res) => {
 }
 
 
-const getAllMembersByUser = async (req, res) => {
+
+const getAllMembersAndOwnersByUser = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    // Find all boards created by the specific user and populate the 'members' field
-    const boards = await boardModel.Board.find({ creatorId: userId }).populate('memberIds', 'fullname email');
+    // Step 1: Find all boards created by the user (using creatorId)
+    const boards = await boardModel.Board.find({
+      creatorId: userId
+    }).select('_id title slug description type memberIds ownerIds');
 
     if (!boards || boards.length === 0) {
-      return res.status(404).json({ message: 'No boards found for this user' });
+      return res.status(404).json({ message: 'No boards found created by this user' });
     }
 
-    // Map to track unique members and the boards they belong to
-    const membersMap = new Map();
+    // Step 2: Extract all memberIds and ownerIds from the boards
+    const memberIds = new Set();
+    const ownerIds = new Set();
 
-    // Iterate over each board to collect members and the board titles
     boards.forEach(board => {
-      board.memberIds.forEach(member => {
-        const memberId = member._id.toString();
+      board.memberIds.forEach(memberId => memberIds.add(memberId.toString()));
+      board.ownerIds.forEach(ownerId => ownerIds.add(ownerId.toString()));
+    });
 
-        // If the member already exists in the map, just add the board object to their list of boards
-        if (membersMap.has(memberId)) {
-          membersMap.get(memberId).boards.push({
+    // Convert Sets to Arrays to use in MongoDB queries
+    const allMemberIds = Array.from(memberIds);
+    const allOwnerIds = Array.from(ownerIds);
+
+    // Step 3: Fetch details of all members and owners
+    const members = await User.find({ _id: { $in: allMemberIds } })
+      .select('fullname email profileImage');
+    const owners = await User.find({ _id: { $in: allOwnerIds } })
+      .select('fullname email profileImage');
+
+    // Step 4: Map members and owners by their ID for easier lookup
+    const userMap = new Map();
+
+    // Helper function to process a user and assign them to the map if not already there
+    const processUser = (user) => {
+      const userIdStr = user._id.toString();
+      if (!userMap.has(userIdStr)) {
+        userMap.set(userIdStr, {
+          _id: user._id,
+          fullname: user.fullname,
+          email: user.email,
+          profileImage: user.profileImage,
+          boards: [] // Initialize empty array to store boards for this user
+        });
+      }
+    };
+
+    // Add all members and owners to the userMap
+    members.forEach(member => processUser(member));
+    owners.forEach(owner => processUser(owner));
+
+    // Step 5: For each board, link members and owners to the board and assign roles
+    boards.forEach(board => {
+      // Add board to each member with role 'member'
+      board.memberIds.forEach(memberId => {
+        const userIdStr = memberId.toString();
+        if (userMap.has(userIdStr)) {
+          userMap.get(userIdStr).boards.push({
             _id: board._id,
             title: board.title,
             slug: board.slug,
             description: board.description,
-            type: board.type
+            type: board.type,
+            role: 'member' // Role is 'member' for memberIds
           });
-        } else {
-          // If the member is not yet in the map, add them with their details and the current board object
-          membersMap.set(memberId, {
-            _id: member._id,
-            fullname: member.fullname,
-            email: member.email,
-            profileImage: member.profileImage,
-            boards: [{
-              _id: board._id,
-              title: board.title,
-              slug: board.slug,
-              description: board.description,
-              type: board.type
-            }] // Start with the current board object
+        }
+      });
+
+      // Add board to each owner with role 'admin'
+      board.ownerIds.forEach(ownerId => {
+        const userIdStr = ownerId.toString();
+        if (userMap.has(userIdStr)) {
+          userMap.get(userIdStr).boards.push({
+            _id: board._id,
+            title: board.title,
+            slug: board.slug,
+            description: board.description,
+            type: board.type,
+            role: 'admin' // Role is 'admin' for ownerIds
           });
         }
       });
     });
 
-    // Convert the Map to an array of members with their associated boards
-    const membersList = Array.from(membersMap.values());
+    // Step 6: Convert the userMap to an array of users
+    const usersList = Array.from(userMap.values());
 
-    // Return the result with members and their associated boards
+    // Return the result with users and their associated boards and roles
     res.status(200).json({
       success: true,
-      members: membersList
+      users: usersList
     });
   } catch (error) {
-    console.error('Error fetching members and board titles:', error);
+    console.error('Error fetching members and owners:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 
 const updateMemberRole = async (req, res) => {
@@ -184,6 +226,6 @@ export const boardController = {
   getAllboardsDetails,
   update,
   moveCardToDifferentColumn,
-  getAllMembersByUser,
+  getAllMembersAndOwnersByUser,
   updateMemberRole
 }

@@ -108,13 +108,7 @@ const EditCard = ({ card, closeEdit, members }) => {
         await dispatch(updateCard({ cardId, updatedCard })).unwrap();
 
         // Set reminder if a due date is present
-        if (dueDate) {
-          await fetch(`/cards/${cardId}/setReminder`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ dueDate }),
-          });
-        }
+      
         setShowMemberPanel((prev) => !prev)
         toast.success("Card updated successfully!", { autoClose: 3000 });
         closeEdit();
@@ -195,8 +189,8 @@ const EditCard = ({ card, closeEdit, members }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-md w-full max-w-lg relative max-h-[90vh] overflow-auto">
+    <div  className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+      <div  className="bg-white p-6 rounded-md w-full max-w-lg relative max-h-[90vh] overflow-auto">
         <h2 className="text-2xl font-semibold mb-4">{card.title}</h2>
         <button
           onClick={closeEdit}

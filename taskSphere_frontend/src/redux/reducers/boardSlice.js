@@ -205,7 +205,7 @@ const boardSlice = createSlice({
                 state.loading = false;
                 state.error = null;
                 state.status = action.payload.success;
-                state.boardsMembers = action.payload.members
+                state.boardsMembers = action.payload.users
 
                
             })

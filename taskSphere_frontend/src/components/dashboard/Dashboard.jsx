@@ -10,15 +10,8 @@ import { fetchAllboardMembers } from '../../redux/reducers/boardSlice';
 
 const Dashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState('Boards'); // Initialize with 'Boards'
-  const { boardsMembers} = useSelector((state) => state.board);
 
-  const dispatch = useDispatch();
-
-
-  useEffect(() => {
-    dispatch(fetchAllboardMembers());
   
-}, [dispatch, boardsMembers.length]);
 
 
   return (

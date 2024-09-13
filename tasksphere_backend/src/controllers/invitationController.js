@@ -29,6 +29,8 @@ const boardInvitation = async (req, res) => {
     let user = await User.findOne({ email });
     const inviter = await User.findById(board.creatorId);
 
+    let isNewUser = false; // Initialize as false for existing users
+
     if (user) {
       // If the user is already a member
       if (board.memberIds.includes(user._id)) {
@@ -39,6 +41,7 @@ const boardInvitation = async (req, res) => {
     } else {
       // If the user doesn't exist, create a temporary invitation with the email
       user = { email }; // Placeholder for email
+      isNewUser = true; // New user flag set to true
     }
 
     // Create an invitation
@@ -50,22 +53,20 @@ const boardInvitation = async (req, res) => {
     });
     await invitation.save();
 
-    let inviteLink;
-    if (!user._id) {
-      inviteLink = `${process.env.CLIENT_BASE_URL}/?invitationId=${invitation._id}`;
-    } else {
-      inviteLink = `${process.env.CLIENT_BASE_URL}/accept-invite/${invitation._id}`;
-    }
+    let newUserLink = `${process.env.CLIENT_BASE_URL}/?invitationId=${invitation._id}`;
+    let existingUserLink = `${process.env.CLIENT_BASE_URL}/accept-invite/${invitation._id}`;
 
     const filePath = path.join(__dirname, 'EmailViews', 'inviteEmailTemplate.html');
     const source = fs.readFileSync(filePath, 'utf-8').toString();
     
     const template = handlebars.compile(source);
     const replacements = {
-      inviteeName: user.fullname.split(' ')[0], // Extracting name from email
+      inviteeName: user.fullname?.split(' ')[0] || email.split('@')[0], // Extracting name from email
       inviterName: inviter.fullname,
       boardTitle: board.title,
-      inviteLink,
+      newUserLink,
+      existingUserLink,
+      isNewUser, // Pass the flag to the template
     };
     const htmlToSend = template(replacements);
 
@@ -75,11 +76,12 @@ const boardInvitation = async (req, res) => {
       auth: {
         user: "sorleu3@gmail.com",
         pass: "iwfi ozbb cucb mlfr"
+        
       },
     });
 
     const mailConfigurations = {
-      from: process.env.EMAIL_USER,
+      from: "sorleu3@gmail.com",
       to: user.email,
       subject: `Invitation to join ${board.title}`,
       html: htmlToSend, // Sending the HTML template

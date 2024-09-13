@@ -14,7 +14,7 @@ Router.get("/", (req, res) => {
 Router.get("/myboards", isAdmin, boardController.getAllboardsDetails)
 
 Router.post("/create", isAdmin, boardValidation.createNew, boardController.createNew)
-Router.get("/members", verifyToken, isAdmin,  boardController.getAllMembersByUser, boardController.createNew)
+Router.get("/members", verifyToken, isAdmin,  boardController.getAllMembersAndOwnersByUser, boardController.createNew)
 
 
 Router.get("/:id", isAdmin, boardController.getDetails)

@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 function Profiles() {
   const [anchorEl, setAnchorEl] = useState(null)
   const [uploadOpen, setUploadOpen] = useState(false)
-  const {userProfilePic, user} = useSelector((state) => state.user)
+  const {user} = useSelector((state) => state.user)
 
    
   const open = Boolean(anchorEl)
@@ -57,7 +57,7 @@ function Profiles() {
           <Avatar 
             sx={{ width: 36, height: 36 }}
             alt="profile pic"
-            src={userProfilePic || user?.profileImage ? user?.profileImage : null}
+            src={user?.profileImage ? user?.profileImage : null}
           />
         </IconButton>
       </Tooltip>

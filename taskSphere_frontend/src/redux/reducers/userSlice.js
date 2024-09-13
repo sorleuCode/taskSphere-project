@@ -117,10 +117,9 @@ export const logoutUser = createAsyncThunk("user/logoutUser", async ({ rejectWit
 
 
 const initialState = {
-    user: JSON.parse(localStorage.getItem('user')) || null,
+    user: {},
     loading: false,
     error: null,
-    userProfilePic: "",
     message: "", 
     status: false
 };
@@ -212,8 +211,6 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.user = action.payload;
                 state.status = true;
-                localStorage.setItem('user', JSON.stringify(action.payload));
-
             })
             .addCase(getUserDetail.rejected, (state, action) => {
                 state.loading = false;
@@ -229,9 +226,8 @@ const userSlice = createSlice({
             })
             .addCase(uploadProfilePicture.fulfilled, (state, action) => {
                 state.loading = false;
-                state.userProfilePic = action.payload.userProfile;
+                state.user = action.payload;
                 state.status = true
-                state.user = {...state.user, profileImage: action.payload.userProfile}
 
             })
             .addCase(uploadProfilePicture.rejected, (state, action) => {

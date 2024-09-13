@@ -15,10 +15,11 @@ const MainContent = () => {
     const { allBoards, loading, error } = useSelector((state) => state.board);
 
     useEffect(() => {
-
-            dispatch(getUserDetail())
+        if (!user || Object.keys(user).length === 0) {
+            dispatch(getUserDetail());
+        }
+    }, [dispatch, user]);
     
-    },[dispatch])
 
     const handleCreateBoardClick = () => {
         setShowForm(true);
@@ -32,10 +33,17 @@ const MainContent = () => {
 
     useEffect(() => {
         if (!allBoards.length) {
-          dispatch(fetchBoards());
+            dispatch(fetchBoards());
         }
-      }, [dispatch]);
+    }, [dispatch, allBoards.length]);
+    
 
+    useEffect(() => {
+        if (error) {
+            toast.error("No boards", { position: "top-right" });
+        }
+    }, [error]);
+    
     
     
       const nameSplit = () => {
@@ -48,7 +56,12 @@ const MainContent = () => {
 
     return (
         <div className="flex-1 p-6 overflow-y-auto bg-white text-black">
-        <h1 className='pt-3 pb-4'> { user?.fullname &&<span> Welcome! <em className='text-blue-500 text-'>{ ` ${nameSplit()}`}</em></span>}</h1>
+        <h1 className='pt-3 pb-4'>{status === "loading" ? (
+    <p>Loading user...</p>
+) : (
+    user?.fullname && <span> Welcome! <em className='text-blue-500'>{nameSplit()}</em></span>
+)}
+</h1>
             {!showForm ? (
                 <button
                     onClick={handleCreateBoardClick}

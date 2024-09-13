@@ -214,7 +214,7 @@ const uploadProfilePic = async (req, res) => {
       user.updatedAt = Date.now();
      const updateduser = await user.save();
 
-      res.status(200).json({userProfile: updateduser.profileImage});
+      res.status(200).json(updateduser);
 
     }else {
       res.status(400).json({message: "profile not uploaded"})

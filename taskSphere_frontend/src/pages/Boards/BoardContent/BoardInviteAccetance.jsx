@@ -48,22 +48,32 @@ const BoardInviteAcceptance = () => {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
             <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-                <h2 className="text-2xl font-bold mb-4 text-center">Invitation to Join Board</h2>
-                <p className="text-gray-700 mb-6 text-center">Would you like to accept or reject this invitation?</p>
-                <div className="flex justify-around">
-                    <button
-                        onClick={() => handleResponse('accept')}
-                        className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-200"
-                    >
-                        Accept
-                    </button>
-                    <button
-                        onClick={() => handleResponse('reject')}
-                        className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-200"
-                    >
-                        Reject
-                    </button>
-                </div>
+
+
+                {loading ? (<div className="spinner"></div>) : (
+                    <div>
+
+
+<h2 className="text-2xl font-bold mb-4 text-center">Invitation to Join Board</h2>
+<p className="text-gray-700 mb-6 text-center">Would you like to accept or reject this invitation?</p>
+<div className="flex justify-around">
+    <button
+        onClick={() => handleResponse('accept')}
+        className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 transition duration-200"
+    >
+        Accept
+    </button>
+    <button
+        onClick={() => handleResponse('reject')}
+        className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-200"
+    >
+        Reject
+    </button>
+</div>
+</div>
+                )}
+
+                
             </div>
         </div>
     );

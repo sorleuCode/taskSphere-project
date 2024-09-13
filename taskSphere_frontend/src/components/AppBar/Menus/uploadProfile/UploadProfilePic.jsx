@@ -40,7 +40,6 @@ const UploadProfilePic = ({handleClose}) => {
 
         const snapshot = await fileRef.put(selectedFile);
         const downloadedUrl = await snapshot.ref.getDownloadURL();
-        console.log("downloadedUrl", downloadedUrl)
 
         if(downloadedUrl) {
           handleImageUrlUpload(downloadedUrl)
