@@ -20,10 +20,21 @@ const createNew = async (req, res, next) => {
 const updateCard = async (req , res, next) => {
 
   try {
-    
+        
+    if(req.body?.boardId) {
+      const {boardId, ...newdata} = req.body
+
+      const updatedCard = await cardService.updateCard(req.params.id, newdata)
+
+      return res.status(StatusCodes.CREATED).json(updatedCard)
+    }
+
     const updatedCard = await cardService.updateCard(req.params.id, req.body)
 
-    res.status(StatusCodes.CREATED).json(updatedCard)
+    return res.status(StatusCodes.CREATED).json(updatedCard)
+
+    
+
 
 
   } catch (error) {

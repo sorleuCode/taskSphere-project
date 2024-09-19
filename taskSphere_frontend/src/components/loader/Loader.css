@@ -8,10 +8,10 @@
   }
   
   .loader {
-    width: 64px;
-    height: 64px;
-    border: 8px solid #f3f3f3;
-    border-top: 8px solid #3498db;
+    width: 40px;
+    height: 40px;
+    border: 10px solid #f3f3f3;
+    border-top: 10px solid #3498db;
     border-radius: 50%;
     animation: spin 1s linear infinite;
   }
@@ -26,8 +26,8 @@
   
   @media (min-width: 1024px) {
     .loader {
-      width: 128px;
-      height: 128px;
+      width: 100px;
+      height: 100px;
     }
   }
   

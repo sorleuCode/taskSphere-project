@@ -62,7 +62,7 @@ const Login = () => {
       <div className="bg-white max-h-[100%] text-black rounded-lg p-6 shadow-lg w-full max-w-md">
         <button
           onClick={handleSignInwithGoogle}
-          className="bg-blue-700 text-white py-2 px-4 rounded mb-4 w-full flex items-center justify-start gap-28"
+          className="bg-blue-600 text-white py-2 px-4 rounded mb-4 w-full flex items-center justify-start gap-28"
         >
           <FaGoogle />
           <span>Sign In with Google</span>
@@ -105,13 +105,13 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="bg-blue-700 text-white py-2 px-4 rounded w-full"
+            className="bg-blue-600 text-white py-2 px-4 rounded w-full"
           >
             {loading ? "Logging in..." : "Log In"}
           </button>
           <p className="mt-4">
             Do not have an account?{" "}
-            <Link className="text-medium text-blue-700" to="/">
+            <Link className="text-medium text-blue-600" to="/">
               Register
             </Link>
           </p>

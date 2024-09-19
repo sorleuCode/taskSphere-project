@@ -30,21 +30,27 @@ const getDetails = async (req, res, next) => {
 
 const getAllboardsDetails = async (req, res) => {
   try {
+    const userId = req.user._id;
 
-      const boards = await boardModel.Board.find({creatorId: req.user._id});
+    // Find boards where the user is either the creator, a member, or an owner
+    const boards = await boardModel.Board.find({
+      $or: [
+        { creatorId: userId.toString() },
+        { memberIds: userId },
+        { ownerIds: userId }
+      ]
+    });
 
-      if(boards) {
-        res.status(StatusCodes.OK).json(boards)
-      }else {
-
-        res.status(500).json({message: "no boards found"})
-      }
+    if (boards.length > 0) {
+      res.status(StatusCodes.OK).json(boards);
+    } else {
+      res.status(StatusCodes.NOT_FOUND).json({ message: "No boards found" });
+    }
 
   } catch (error) {
-
-      res.json(error.message)
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error.message });
   }
-}
+};
 
 
 

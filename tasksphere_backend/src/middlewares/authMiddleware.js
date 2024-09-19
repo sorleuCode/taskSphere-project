@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 require('dotenv')
 const User = require("../models/userModel")
+const { boardModel } = require("../models/boardModel")
 
 const verifyToken = async (req, res, next) => {
   const token = req.cookies.token;
@@ -34,32 +35,94 @@ const verifyToken = async (req, res, next) => {
 
 
 
-const isAdmin = async (req, res, next) => {
+const isBoardCreator = async (req, res, next) => {
   try {
     const token = req.cookies.token;
-    if (token) {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
 
+    if (!token) {
+      return res.status(401).json({ message: "No token provided, authorization denied" });
+    }
+
+    // Verify the token and extract user info
+    const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
       req.user = await User.findOne({ email: decoded.email }).select("-password");
 
-      if (req?.user?.role !== "admin") {
-        // Return here to prevent further execution
-        return res.status(401).json({ message: "Not authorized, only Admin can perform this function" });
-      }
+    if (!req.user) {
+      return res.status(401).json({ message: "User not found, authorization denied" });
+    }
 
+    // Extract board ID from request params or body (adjust based on your use case)
+    const boardId = req.params.id;
+    if (!boardId) {
+      return res.status(400).json({ message: "Board ID is required" });
+    }
+
+    // Fetch the board details
+    const board = await boardModel.Board.findById(boardId);
+    if (!board) {
+      return res.status(404).json({ message: "Board not found" });
+    }
+
+    // Check if the user is the board creator
+    if (board.creatorId === req.user._id.toString()) {
       // Proceed to next middleware or route handler
       return next();
     } else {
       // Return here to prevent further execution
-      return res.status(401).json({ message: "No token provided, authorization denied" });
+      return res.status(403).json({ message: "Not authorized, only the board creator can perform this function" });
     }
   } catch (error) {
     // Return here to prevent further execution
-    return res.status(403).json({ message: error});
+    return res.status(403).json({ message: "Authorization error: " + error.message });
   }
 };
 
-module.exports = isAdmin;
 
 
-module.exports = { verifyToken, isAdmin };
+
+
+const isAdminOrBoardOwner = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(401).json({ message: "No token provided, authorization denied" });
+    }
+
+    // Verify the token and extract user info
+    const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['HS256'] });
+    req.user = await User.findOne({ email: decoded.email }).select("-password");
+
+    if (!req.user) {
+      return res.status(401).json({ message: "User not found, authorization denied" });
+    }
+
+  
+
+    // Extract board ID from request params or body (adjust based on your use case)
+    const boardId = req.params.boardId
+    if (!boardId) {
+      return res.status(400).json({ message: "Board ID is required" });
+    }
+
+    // Fetch the board details
+    const board = await boardModel.Board.findById(boardId);
+    if (!board) {
+      return res.status(404).json({ message: "Board not found" });
+    }
+
+    // Check if the user is the board creator or included in the ownerIds
+    if (board.creatorId === req.user._id.toString() || board.ownerIds.includes(req.user._id)) {
+      return next();
+    } else {
+      return res.status(403).json({ message: "Not authorized to access this board" });
+    }
+  } catch (error) {
+    return res.status(403).json({ message: "Authorization error: " + error.message });
+  }
+};
+
+
+
+
+module.exports = { verifyToken, isAdminOrBoardOwner, isBoardCreator };

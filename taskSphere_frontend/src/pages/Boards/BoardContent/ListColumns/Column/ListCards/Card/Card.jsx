@@ -12,11 +12,10 @@ import { CSS } from '@dnd-kit/utilities'
 import { Edit } from '@mui/icons-material'
 import { Box } from '@mui/material'
 import EditCard from './EditCard'
-import {  useState } from 'react'
-import {  useSelector } from 'react-redux'
+import {  useEffect, useState } from 'react'
+import {  useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
-
 
 function Card({ card }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -67,6 +66,9 @@ const completedChecklistLength = completedChecklist?.length
 
     
   }
+
+
+ 
 
   return (
     <MuiCard

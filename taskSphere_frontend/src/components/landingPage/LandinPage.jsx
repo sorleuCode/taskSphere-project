@@ -84,7 +84,7 @@ const LandinPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow bg-blue-700 text-white p-8 pt-20">
+      <main className="flex-grow bg-blue-600 text-white p-8 pt-20">
         <div className="flex items-center justify-between">
           <div className="">
             <h1
@@ -131,25 +131,25 @@ const LandinPage = () => {
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
                   <div className="flex flex-col items-center text-center">
-                    <FaProjectDiagram className="text-3xl mb-4 text-blue-700" />
+                    <FaProjectDiagram className="text-3xl mb-4 text-blue-600" />
                     <h3 className="text-sm font-normal">
                       Reinventing project management
                     </h3>
                   </div>
                   <div className="flex flex-col items-center text-center">
-                    <FaStream className="text-3xl mb-4 text-blue-700" />
+                    <FaStream className="text-3xl mb-4 text-blue-600" />
                     <h3 className="text-sm font-normal">
                       Streamlining the workflow
                     </h3>
                   </div>
                   <div className="flex flex-col items-center text-center">
-                    <FaFlag className="text-3xl mb-4 text-blue-700" />
+                    <FaFlag className="text-3xl mb-4 text-blue-600" />
                     <h3 className="text-sm font-normal">
                       Maximizing team productivity
                     </h3>
                   </div>
                   <div className="flex flex-col items-center text-center">
-                    <FaComments className="text-3xl mb-4 text-blue-700" />
+                    <FaComments className="text-3xl mb-4 text-blue-600" />
                     <h3 className="text-sm font-normal">
                       Enhancing team communication
                     </h3>
@@ -160,7 +160,7 @@ const LandinPage = () => {
 
             <div className="bg-white max-h-[100%] text-black rounded-lg p-6 shadow-lg w-full max-w-md">
               <div
-                className="bg-blue-700 cursor-pointer text-white py-2 px-4 rounded mb-4 w-full flex items-center justify-start gap-28"
+                className="bg-blue-600 cursor-pointer text-white py-2 px-4 rounded mb-4 w-full flex items-center justify-start gap-28"
                 onClick={handleSignUpwithGoogle}
               >
                 <FaGoogle />
@@ -256,7 +256,7 @@ const LandinPage = () => {
 
                 <button
                   type="submit"
-                  className="bg-blue-700 text-white text-center py-2 px-4 rounded w-full submit-button"
+                  className="bg-blue-600 text-white text-center py-2 px-4 rounded w-full submit-button"
                 >
                   {loading ? (
                     <div className="spinner"></div>

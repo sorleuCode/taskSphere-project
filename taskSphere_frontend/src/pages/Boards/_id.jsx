@@ -196,8 +196,10 @@ function Board() {
   }
 
   const deleteColumnDetails = async (columnId) => {
+
+    const boardId = board._id
     try {
-      await dispatch(deleteColumn(columnId));
+      await dispatch(deleteColumn(boardId));
       toast.success('Column deleted successfully');
     } catch (error) {
       toast.error('Failed to delete column');

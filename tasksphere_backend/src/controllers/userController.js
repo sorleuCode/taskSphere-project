@@ -92,7 +92,6 @@ const userRegister = async (req, res) => {
             await invitation.save();
           }
         }
-
         const user = await User.findById(newUser._id).select("-password");
 
         return res.status(200).json(user);

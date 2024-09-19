@@ -1,6 +1,5 @@
 
 import { StatusCodes } from 'http-status-codes'
-import { cardModel } from '~/models/cardModel'
 import { columnModel } from '~/models/columnModel'
 import { columnService } from '~/services/columnService'
 

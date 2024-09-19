@@ -3,15 +3,25 @@ import Sidebar from './Sidebar';
 import DashHeader from './DashHeader';
 import BoardMembershipTable from './BoardMembershipTable';
 import MainContent from "./MainContent"
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { fetchAllboardMembers } from '../../redux/reducers/boardSlice';
+
 
 
 
 const Dashboard = () => {
   const [selectedMenu, setSelectedMenu] = useState('Boards'); // Initialize with 'Boards'
+  const { boardsMembers, loading, error } = useSelector((state) => state.board);
+  const dispatch = useDispatch()
+
 
   
+  useEffect(() => {
+    if (boardsMembers.length === 0){
+
+      dispatch(fetchAllboardMembers());
+    }
+  }, [dispatch, boardsMembers.length]);
 
 
   return (

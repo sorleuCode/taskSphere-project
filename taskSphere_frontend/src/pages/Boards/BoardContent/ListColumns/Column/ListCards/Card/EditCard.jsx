@@ -9,6 +9,7 @@ import DOMPurify from "dompurify";
 import { FaTimes } from "react-icons/fa";
 import firebase from "firebase/compat/app";
 import "firebase/compat/storage";
+import { useParams } from "react-router-dom";
 
 const EditCard = ({ card, closeEdit, members }) => {
   const dispatch = useDispatch();
@@ -30,7 +31,8 @@ const EditCard = ({ card, closeEdit, members }) => {
   const [addAttachments, setAddAttachments] = useState(false);
   const [addCover, setAddCover] = useState(false)
   const [coverUrl, setCoverUrl] = useState("")
-
+  const {id} = useParams()
+  const boardId = id
   let cardId;
 
   if (card) {
@@ -98,6 +100,7 @@ const EditCard = ({ card, closeEdit, members }) => {
       updatedCard.dueDate = dueDate;
       updatedCard.memberIds = selectedMembers;
       coverUrl ? updatedCard.cover = coverUrl.trim() : updatedCard.cover = cover.trim() 
+      updatedCard.boardId = boardId
     } else {
       return toast.error("Title is required", { position: "top-right" });
     }

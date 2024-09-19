@@ -8,7 +8,6 @@ import { fetchAllboardMembers } from '../../redux/reducers/boardSlice';
 
 const BoardMembershipTable = () => {
   const { boardsMembers, loading, error } = useSelector((state) => state.board);
-
   const [selectedMember, setSelectedMember] = useState(null);
   const [selectedBoard, setSelectedBoard] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,7 +22,10 @@ const BoardMembershipTable = () => {
   }
 
   useEffect(() => {
-    dispatch(fetchAllboardMembers());
+    if (boardsMembers.length === 0){
+
+      dispatch(fetchAllboardMembers());
+    }
   }, [dispatch, boardsMembers.length]);
 
   useEffect(() => {

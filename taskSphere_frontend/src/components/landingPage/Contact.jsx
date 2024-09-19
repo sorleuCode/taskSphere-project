@@ -36,7 +36,7 @@ const Contact = () => {
           <div>
             <button
               type="submit"
-              className="w-full px-4 py-2 bg-blue-700 text-white font-medium rounded-md shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="w-full px-4 py-2 bg-blue-600 text-white font-medium rounded-md shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Reach out
             </button>

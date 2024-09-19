@@ -21,7 +21,6 @@ const app = firebase.initializeApp(firebaseConfig);
 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
     <Provider store={store}>
       <CssVarsProvider theme={theme}>
         <ConfirmProvider
@@ -41,5 +40,4 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </ConfirmProvider>
       </CssVarsProvider>
     </Provider>
-  </React.StrictMode>
 );
