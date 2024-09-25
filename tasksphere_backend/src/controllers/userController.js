@@ -59,7 +59,7 @@ const userRegister = async (req, res) => {
     });
 
     const mailConfigurations = {
-      from: process.env.EMAIL_USER,
+      from: "sorleu3@gmail.com",
       to: email,
       subject: 'Email Verification',
       html: htmlToSend, // Use HTML template

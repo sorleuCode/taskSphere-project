@@ -6,10 +6,10 @@ import {  verifyToken, isAdminOrBoardOwner} from '~/middlewares/authMiddleware'
 
 const Router = express.Router()
 
-Router.post("/create", isAdminOrBoardOwner, columnValidation.createNew, columnController.createNew)
+Router.post("/create", verifyToken, isAdminOrBoardOwner, columnValidation.createNew, columnController.createNew)
 
-Router.put("/update/:id",isAdminOrBoardOwner,  columnValidation.update, columnController.update)
+Router.put("/update/:id", verifyToken,  columnValidation.update, columnController.update)
 Router.get("/:boardId", verifyToken, columnController.getColumns)
-Router.delete("/delete/:id", isAdminOrBoardOwner, columnValidation.deleteItem, columnController.deleteItem)
+Router.delete("/delete/:id", verifyToken, isAdminOrBoardOwner, columnValidation.deleteItem, columnController.deleteItem)
 
 module.exports = Router;

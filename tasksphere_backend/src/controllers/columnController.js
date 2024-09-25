@@ -47,7 +47,7 @@ const deleteItem = async (req, res, next) => {
 
     res.status(StatusCodes.OK).json(result)
   } catch (error) {
-    res.status(StatusCodes.BAD_REQUEST).json(error)
+    res.status(StatusCodes.BAD_REQUEST).json({message: "Server error"})
   }
 }
 

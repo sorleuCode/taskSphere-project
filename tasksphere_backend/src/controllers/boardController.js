@@ -19,7 +19,7 @@ const createNew = async (req, res, next) => {
 
 const getDetails = async (req, res, next) => {
   try {
-    const boardId = req.params.id
+    const boardId = req.params.boardId
     
     const board = await boardService.getDetails(boardId)
     res.status(StatusCodes.OK).json(board)
@@ -161,7 +161,7 @@ const updateMemberRole = async (req, res) => {
     const { member, role } = req.body;
 
     // Find the board by ID
-    const board = await boardModel.Board.findById(req.params.id);
+    const board = await boardModel.Board.findById(req.params.boardId);
 
     if (board) {
       if (role === "admin") {
@@ -210,7 +210,7 @@ const updateMemberRole = async (req, res) => {
 
 const update = async (req, res, next) => {
   try {
-    const boardId = req.params.id
+    const boardId = req.params.boardId
 
     const updatedBoard = await boardService.update(boardId, req.body)
 

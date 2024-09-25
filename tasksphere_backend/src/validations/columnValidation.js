@@ -12,7 +12,6 @@ const createNew = async (req, res, next) => {
     },
     title: {
       type: String,
-      required: true,
       minlength: 3,
       maxlength: 50,
       trim: true

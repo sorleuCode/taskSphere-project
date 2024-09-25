@@ -44,7 +44,7 @@ const updateCard = async (req , res, next) => {
 
 const findOneById = async (req, res) => {
   try {
-    const card = await cardModel.findOneById(req.params.id);
+    const card = await cardModel.findOneById(req.params.cardId);
 
       if(card) {
         res.status(StatusCodes.OK).json(card)
@@ -70,6 +70,29 @@ const getAllcardsDetails = async (req, res) => {
       res.json(error.message)
   }
 }
+
+
+
+const getCardMembers = async (req, res) => {
+  const { cardId } = req.params;
+  console.log("cardId", cardId)
+
+  try {
+    // Find the card by ID and populate the 'memberIds' with user details
+    const card = await cardModel.Card.findById(cardId).populate({
+      path: 'memberIds',
+      select: 'name email _id'
+    });
+
+    if (!card) {
+      return res.status(404).json({ message: 'Card not found' });
+    }
+
+    res.status(200).json({ members: card.memberIds });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 
 // due date remainder
@@ -147,5 +170,5 @@ cron.schedule('0 */12  * * *', () => {
 
 
 export const cardController = {
-  createNew, getAllcardsDetails, updateCard, findOneById
+  createNew, getAllcardsDetails, updateCard, findOneById, getCardMembers
 }

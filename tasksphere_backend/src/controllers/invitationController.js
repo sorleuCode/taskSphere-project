@@ -159,7 +159,7 @@ const invitationAcceptance = async (req, res) => {
 
       // Email configurations
       const mailConfigurations = {
-        from: process.env.EMAIL_USER,
+        from: "sorleu3@gmail.com",
         to: inviter.email,
         subject: 'Invitation response',
         html: htmlToSend, // Send the compiled HTML
@@ -203,7 +203,7 @@ const invitationAcceptance = async (req, res) => {
 
       // Email configurations
       const mailConfigurations = {
-        from: process.env.EMAIL_USER,
+        from: "sorleu3@gmail.com",
         to: inviter.email,
         subject: 'Invitation response',
         html: htmlToSend, // Send the compiled HTML

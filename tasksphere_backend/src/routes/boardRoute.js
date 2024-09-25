@@ -17,9 +17,9 @@ Router.post("/create", verifyToken, boardValidation.createNew, boardController.c
 Router.get("/members", verifyToken,  boardController.getAllMembersAndOwnersByUser, boardController.createNew)
 
 
-Router.get("/:id", verifyToken, boardController.getDetails)
-Router.put("/update/:id", isAdminOrBoardOwner, boardValidation.update, boardController.update)
-Router.put("/update/role/:id",  isBoardCreator, boardController.updateMemberRole)
+Router.get("/:boardId", verifyToken, boardController.getDetails)
+Router.put("/update/:boardId", verifyToken, isAdminOrBoardOwner, boardValidation.update, boardController.update)
+Router.put("/update/role/:boardId", verifyToken,  isBoardCreator, boardController.updateMemberRole)
 
 
 Router.put('/moving-card', verifyToken, boardValidation.moveCardToDifferentColumn, boardController.moveCardToDifferentColumn)
