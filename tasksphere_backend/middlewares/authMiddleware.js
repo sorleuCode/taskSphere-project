@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 require('dotenv')
 const User = require("../models/userModel")
-const { boardModel } = require("../models/boardModel")
-const {cardModel} = require("../models/cardModel")
+const boardModel  = require('../models/boardModel')
+const cardModel = require("../models/cardModel")
 
 const verifyToken = async (req, res, next) => {
   const token = req.cookies.token;
@@ -71,32 +71,23 @@ const isBoardCreator = async (req, res, next) => {
 
 const isAdminOrBoardOwner = async (req, res, next) => {
   try {
-    
-    // Extract board ID from request params or body (adjust based on your use case)
-    let boardId
-    let board;
-    
-    const creator = req.user._id.toString()
-    board = await boardModel.Board.findOne({creatorId: creator});
-    console.log("board", board)
+    const userId = req.user?._id.toString();
+    let { boardId } = req.params;
 
-    boardId = board?._id
+    // Check if user is the creator of any board
+    let board = await boardModel.Board.findOne({ creatorId: userId });
+
+    // If no board found, use boardId from params or body
     if (!board) {
-      boardId =  req.params.boardId || req.body.boardId
-      board = await boardModel.Board.findById(boardId)
+      boardId = boardId || req.body.boardId;
+      if (!boardId) return res.status(400).json({ message: "Board ID is required" });
+
+      board = await boardModel.Board.findById(boardId);
+      if (!board) return res.status(404).json({ message: "Board not found" });
     }
 
-    if (!boardId) {
-      return res.status(400).json({ message: "Not authorized to do this" });
-    }
-
-    // Fetch the board details
-    if (!board) {
-      return res.status(404).json({ message: "Not authorized" });
-    }
-
-    // Check if the user is the board creator or included in the ownerIds
-    if (board.creatorId === req.user._id.toString() || board.ownerIds.includes(req.user._id)) {
+    // Verify user is board creator or in ownerIds
+    if (board.creatorId.toString() === userId || board.ownerIds.includes(req.user._id)) {
       return next();
     } else {
       return res.status(403).json({ message: "Not authorized to access this board" });
@@ -105,6 +96,7 @@ const isAdminOrBoardOwner = async (req, res, next) => {
     return res.status(403).json({ message: "Authorization error: " + error.message });
   }
 };
+
 
 
 /**
@@ -128,7 +120,7 @@ const checkCardMember = async (req, res, next) => {
       return res.status(404).json({ message: 'Card not found.' });
     }
 
-    const board = await boardModel.findOneById(card.boardId)
+    const board = await boardModel.Board.findOneById(card.boardId)
     console.log("board", board)
 
 
