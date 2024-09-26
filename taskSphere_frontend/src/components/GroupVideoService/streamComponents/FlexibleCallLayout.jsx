@@ -22,7 +22,7 @@ export default function FlexibleCallLayout() {
     <div className="space-y-3">
       <CallLayoutButtons layout={layout} setLayout={setLayout} />
       <CallLayoutView layout={layout} />
-      <CallControls onLeave={() => navigate(`/meeting/${call.id}/left`)} />
+      <CallControls onLeave={() => navigate(`/`)} />
       <EndCallButton />
     </div>
   );
