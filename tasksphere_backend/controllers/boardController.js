@@ -1,7 +1,7 @@
 
 const { StatusCodes } = require( 'http-status-codes')
-const { boardService } = require('../services/boardService')
-const { boardModel } = require('../models/boardModel')
+const boardService  = require('../services/boardService')
+const  boardModel  = require('../models/boardModel')
 const User = require("../models/userModel")
 
 
