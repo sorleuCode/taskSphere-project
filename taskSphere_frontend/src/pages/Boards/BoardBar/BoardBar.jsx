@@ -58,13 +58,6 @@ function BoardBar({ board, boardsMembers, handleInviteBtn}) {
           clickable
         />
 
-        <Chip
-          sx={MENU_STYLES}
-          icon={<FilterListIcon />}
-          label="Filters"
-          clickable
-        />
-
         <Button
           onClick={() => handleInviteBtn(true)}
           startIcon={<PersonAddIcon />}
