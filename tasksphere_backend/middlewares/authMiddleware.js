@@ -120,7 +120,7 @@ const checkCardMember = async (req, res, next) => {
       return res.status(404).json({ message: 'Card not found.' });
     }
 
-    const board = await boardModel.Board.findOneById(card.boardId)
+    const board = await boardModel.Board.findById(card.boardId)
     console.log("board", board)
 
 
