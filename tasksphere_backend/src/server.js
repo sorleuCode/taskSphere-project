@@ -28,6 +28,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use("/boards", boardRoute)
+app.get('/', (req, res) => {
+  res.send("You are welcome")
+})
 app.use("/cards", cardRoute)
 app.use("/columns", columnRoute)
 app.use("/users", userRoute)
