@@ -178,7 +178,7 @@ function StartTimeInput({ value, onChange }) {
 function MeetingLink({ card, call }) {
 
 
-  const meetingLink = `${import.meta.env.VITE_CLIENT_BASE_URL}/board/card/${card._id}/meeting/${call.id}`;
+  const meetingLink = `https://tasksphere-six-vercel.app/board/card/${card._id}/meeting/${call.id}`;
   const { user } = useSelector((state) => state.user)
 
 
