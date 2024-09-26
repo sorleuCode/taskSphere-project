@@ -54,7 +54,7 @@ const LandinPage = () => {
   };
 
   const handleSignUpwithGoogle = () => {
-    window.location.href = `${import.meta.env.VITE_BASE_URL}/users/auth/google`;
+    window.location.href = `https://tasksphereapi.vercel.app/users/auth/google`;
   };
 
   const handleSubmit = (e) => {

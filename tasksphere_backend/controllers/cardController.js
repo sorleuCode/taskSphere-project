@@ -24,12 +24,12 @@ const updateCard = async (req , res, next) => {
     if(req.body?.boardId) {
       const {boardId, ...newdata} = req.body
 
-      const updatedCard = await cardService.updateCard(req.params.id, newdata)
+      const updatedCard = await cardService.updateCard(req.params.cardId, newdata)
 
       return res.status(StatusCodes.CREATED).json(updatedCard)
     }
 
-    const updatedCard = await cardService.updateCard(req.params.id, req.body)
+    const updatedCard = await cardService.updateCard(req.params.cardId, req.body)
 
     return res.status(StatusCodes.CREATED).json(updatedCard)
 

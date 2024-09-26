@@ -33,8 +33,8 @@ const userRegister = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       expires: new Date(Date.now() + 1000 * 86400), // 1 day
-      sameSite: "strict",
-      secure: false // secure in production
+      sameSite: "none",
+      secure: true // secure in production
     });
 
     // Load the HTML template
@@ -113,8 +113,8 @@ if(user) {
       res.cookie("token", token, {
         httpOnly: true,
         expires: new Date(Date.now() + 1000 * 86400), // 1 day
-        sameSite: "strict",
-        secure: false // secure in production
+        sameSite: "none",
+        secure: true // secure in production
       });
       return res.status(200).json(user)
 }else{
@@ -140,8 +140,8 @@ const userLogin = async (req, res) => {
         res.cookie("token", token, {
           httpOnly: true,
           expires: new Date(Date.now() + 1000 * 86400), // 1 day
-          sameSite: "strict",
-          secure: false,
+          sameSite: "none",
+          secure: true,
         });
         const userWithoutPassword = await User.findById(user._id).select("-password")
         res.status(200).json(userWithoutPassword );
@@ -167,8 +167,8 @@ const loginWithEmail = async(req, res) => {
         res.cookie("token", token, {
           httpOnly: true,
           expires: new Date(Date.now() + 1000 * 86400), // 1 day
-          sameSite: "strict",
-          secure: false,
+          sameSite: "none",
+          secure: true,
         });
      return res.status(200).json(user)
   }else {
@@ -266,12 +266,11 @@ const updateUser = async (req, res) => {
 const logoutUser = async (req, res) => {
   try {
     // Clear the "token" cookie by setting it to an empty string and an expiration date in the past
-    res.cookie("token", "", {
-      path: "/",
+    res.cookie("token", token, {
       httpOnly: true,
-      expires: new Date(0),
-      sameSite: "strict",
-      secure: false,
+      expires: new Date(Date.now() + 1000 * 86400), // 1 day
+      sameSite: "none",
+      secure: true,
     });
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
@@ -310,8 +309,8 @@ const verifyEmail = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       expires: new Date(Date.now() + 1000 * 86400), // 1 day
-      sameSite: "strict", //set to none for production
-      secure: false,  //set to true for production
+      sameSite: "none",
+      secure: true,
     });
 
     res.status(200).json(user);
@@ -339,7 +338,7 @@ const authCallback = async (req, res) => {
       if (err || !user) {
         // Redirect to frontend login page with an error query
         res.status;
-        return res.redirect("http://localhost:5173/login");
+        return res.redirect("https://tasksphere-six.vercel.app/login");
       }
 
       // Generate a JWT and set it as a cookie
@@ -348,12 +347,12 @@ const authCallback = async (req, res) => {
       res.cookie("token", token, {
         httpOnly: true,
         expires: new Date(Date.now() + 1000 * 86400), // 1 day
-        sameSite: "strict", //set to none for production
-        secure: false,  //set to true for production
+        sameSite: "none",
+        secure: true,
       });
 
       // Redirect to the frontend profile page or another route
-      res.redirect("http://localhost:5173/user/googlecbk");
+      res.redirect("https://tasksphere-six.vercel.app/user/googlecbk");
     }
   )(req, res);
 };
