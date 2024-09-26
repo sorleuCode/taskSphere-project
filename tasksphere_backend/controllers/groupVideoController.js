@@ -2,14 +2,14 @@ const { StreamClient } = require("@stream-io/node-sdk");
 const cardModel = require("../models/cardModel");
 
 const getStreamToken = async (req, res) => {
-  const apiKey = process.env.STREAM_API_KEY;
-  const apiSecret = process.env.STREAM_SECRET_KEY;
+  
 
   const userId = req.user?._id.toString();
   const { cardId } = req.params;
 
   try {
-    if (!apiKey || !apiSecret) {
+    if (!process.env.STREAM_API_KEY || ! process.env.STREAM_SECRET_KEY
+    ) {
       return res.status(500).json({ message: "Invalid credentials" });
     }
 
