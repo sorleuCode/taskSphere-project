@@ -12,13 +12,14 @@ const GoogleCallback = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        if (!loading) {
+        if (loading) return
+        
             if (user && status) {
                     navigate('/dashboard');
             } else {
                 setIsLoading(false)
             }
-        }
+        
     }, [dispatch, user, error, loading, navigate]);
 
     useEffect(() => {
