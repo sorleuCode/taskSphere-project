@@ -25,14 +25,18 @@ function Board() {
   const { board, loading, moveCardStatus, error } = useSelector((state) => state.board);
   const { columns, column, status } = useSelector((state) => state.column);
   const { card} = useSelector((state) => state.card);
+  const {user} = useSelector((state) => state.user)
   const [inviteBtnClicked, setInviteBtnClicked] = useState(false)
 
   const { boardsMembers} = useSelector((state) => state.board);
+
+  // const isCreator = user._id === board._id;
 
   const membersOFaBoard = boardsMembers?.filter((member) => 
     member.boards.some(item => item._id === board._id)
   )
 
+  
   
 
   useEffect(() => {
@@ -58,38 +62,6 @@ function Board() {
 
 
 
-  // useEffect(() => {
-  //   if (columns.length > 0) {
-  //     // Sort columns by the specified order
-  //     const sortedColumns = mapOrder(columns, board.columnOrderIds, '_id');
-  //     sortedColumns.forEach((column) => {
-  //       // Handle empty columns
-  //       const columnCards = cards.filter((card) => card.columnId === column._id);
-  //       if (isEmpty(columnCards)) {
-
-  //         const placeholderCard = generatePlaceholderCard(column);
-
-  //         console.log("aiki", placeholderCard)
-  //         console.log(column)
-
-  //         // Create a copy of the column object and update cardOrderIds
-  //         const updatedColumn = {
-  //           ...column,
-  //           cardOrderIds: [placeholderCard._id]
-  //         };
-
-  //         // Now you can use updatedColumn as needed, for example, updating the Redux state
-  //         dispatch(updateColumn({
-  //           columnId: updatedColumn._id,
-  //           data: { cardOrderIds: updatedColumn.cardOrderIds }
-  //         }));
-  //       } else {
-  //         // Otherwise, sort cards within the column
-  //         mapOrder(columnCards, column.cardOrderIds, '_id');
-  //       }
-  //     });
-  //   }
-  // }, [ cards, dispatch]);
 
 
   const createNewColumn = async (newColumnData) => {
@@ -119,6 +91,7 @@ function Board() {
 
       toast.success('Card created successfully');
     } catch (error) {
+      if (error)
       toast.error('Failed to create card');
     }
   };
@@ -137,6 +110,7 @@ function Board() {
 
       toast.success('Columns reordered successfully');
     } catch (error) {
+    
       toast.error('Failed to reorder columns');
     }
   };
@@ -196,13 +170,14 @@ function Board() {
   }
 
   const deleteColumnDetails = async (columnId) => {
+    
 
-    const boardId = board._id
     try {
-      await dispatch(deleteColumn(boardId));
-      toast.success('Column deleted successfully');
+      await dispatch(deleteColumn(columnId));
+    
+
     } catch (error) {
-      toast.error('Failed to delete column');
+        toast.error('Failed to delete column');
     }
   };
 

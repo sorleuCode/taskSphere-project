@@ -12,11 +12,9 @@ const Sidebar = ({ setSelectedMenu }) => {
   const menuItems = [
     { name: 'Boards', icon: <FaTh /> },
     { name: 'Members', icon: <FaUsers /> },
-    { name: 'Settings', icon: <FaCog /> },
     { name: 'Table', icon: <FaTable /> },
     { name: 'Calendar', icon: <FaCalendarAlt /> },
     { name: 'Notifications', icon: <FaBell /> },
-    { name: 'Information', icon: <FaInfoCircle /> },
   ];
 
   return (

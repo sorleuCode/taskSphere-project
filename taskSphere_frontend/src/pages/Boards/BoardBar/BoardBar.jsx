@@ -1,22 +1,16 @@
 import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
-import DashboardIcon from '@mui/icons-material/Dashboard'
 import VpnLockIcon from '@mui/icons-material/VpnLock'
-import AddToDriveIcon from '@mui/icons-material/AddToDrive'
-import BoltIcon from '@mui/icons-material/Bolt'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import Avatar from '@mui/material/Avatar'
 import AvatarGroup from '@mui/material/AvatarGroup'
 import Button from '@mui/material/Button'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { capitalizeFirstLetter } from './../../../utils/formatters'
-import { FaArrowLeft } from 'react-icons/fa6'
+import { FaArrowLeft, FaVideo, FaVideoSlash } from 'react-icons/fa'  // Import video icons
 import { Link } from 'react-router-dom'
 import Tooltip from '@mui/material/Tooltip'
 import ModeSelect from '../../../components/ModeSelect/ModeSelect'
-
-
-
 
 const MENU_STYLES = {
   color: 'white',
@@ -33,10 +27,6 @@ const MENU_STYLES = {
 }
 
 function BoardBar({ board, boardsMembers, handleInviteBtn}) {
-
-
-
-  
   return (
     <Box sx={{
       width: '100%',
@@ -59,16 +49,14 @@ function BoardBar({ board, boardsMembers, handleInviteBtn}) {
               icon={<FaArrowLeft style={{ color: 'white', fontSize: "20px" }} />}
             />
           </Link>
-
         </Tooltip>
+
         <Chip
           sx={MENU_STYLES}
           icon={<VpnLockIcon />}
           label={capitalizeFirstLetter(board?.type)}
           clickable
         />
-
-
 
         <Chip
           sx={MENU_STYLES}
@@ -89,12 +77,11 @@ function BoardBar({ board, boardsMembers, handleInviteBtn}) {
           Invite
         </Button>
 
+       
       </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-
         <ModeSelect />
-
 
         <AvatarGroup
           max={7}
@@ -111,18 +98,11 @@ function BoardBar({ board, boardsMembers, handleInviteBtn}) {
             }
           }}
         >
-          
           {boardsMembers?.map((member) => (
-
-          <Tooltip title={member.fullname}>
-            <Avatar alt="name"
-              src={member.profileImage}
-            />
-          </Tooltip>
-
+            <Tooltip title={member.fullname} key={member._id}>
+              <Avatar alt={member.fullname} src={member.profileImage} />
+            </Tooltip>
           ))}
-          
-
         </AvatarGroup>
       </Box>
     </Box>

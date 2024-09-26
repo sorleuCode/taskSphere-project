@@ -32,11 +32,9 @@ const Dashboard = () => {
         {selectedMenu === 'Members' && <BoardMembershipTable />}
         {/* Render other components based on selectedMenu */}
         {selectedMenu === 'Boards' && <MainContent/>}
-        {selectedMenu === 'Settings' && <div>Settings Content</div>}
         {selectedMenu === 'Table' && <div>Table Content</div>}
         {selectedMenu === 'Calendar' && <div>Calendar Content</div>}
         {selectedMenu === 'Notifications' && <div>Notifications Content</div>}
-        {selectedMenu === 'Information' && <div>Information Content</div>}
       </div>
     </div>
   );

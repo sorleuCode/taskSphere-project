@@ -43,6 +43,14 @@ export const fetchAllCards= createAsyncThunk("card/fetchAllCards", async(boardId
         return rejectWithValue(error.response.data)
     }
 })
+export const fetchCardMembers= createAsyncThunk("card/fetchCardMembers", async(cardId, {rejectWithValue}) => {
+    try {
+        const response = await API_ROOT.get(`cards/members/${cardId}`)
+        return response.data
+    } catch (error) {
+        return rejectWithValue(error.response.data)
+    }
+})
 
 
 const cardSlice = createSlice({
@@ -51,6 +59,7 @@ const cardSlice = createSlice({
         cards: [],
         dndOrderedCards: [],
         card: {},
+        cardMembers: [],
         loading: false,
         error: "",
         status: false
@@ -86,7 +95,7 @@ const cardSlice = createSlice({
         })
         .addCase(createNewCard.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload;
+            state.error = action.payload.message;
             state.status = false;
         });
 
@@ -110,7 +119,7 @@ const cardSlice = createSlice({
         })
         .addCase(updateCard.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload;
+            state.error = action.payload.message;
             state.status = false;
         });
 
@@ -128,7 +137,7 @@ const cardSlice = createSlice({
         })
         .addCase(fetchSingleCard.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload;
+            state.error = action.payload.message;
             state.status = false;
         });
 
@@ -152,7 +161,24 @@ const cardSlice = createSlice({
         })
         .addCase(fetchAllCards.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload;
+            state.error = action.payload.message;
+            state.status = false;
+        });
+        // fetchCardMembers
+
+        builder.addCase(fetchCardMembers.pending, (state) => {
+            state.loading = true;
+            state.error = "";
+            state.status = false;
+        })
+        .addCase(fetchCardMembers.fulfilled, (state, action) => {
+            state.loading = false;
+            state.cardMembers = action.payload.members
+            state.status = true;
+        })
+        .addCase(fetchCardMembers.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload.message;
             state.status = false;
         });
     }

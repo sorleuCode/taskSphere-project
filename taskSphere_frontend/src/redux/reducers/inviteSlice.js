@@ -3,7 +3,7 @@ import { API_ROOT } from "../../apis/index";
 
 export const inviteBoardMember = createAsyncThunk("invitation/inviteBoardMember", async ({ boardId, inviteData }, { rejectWithValue }) => {
     try {
-      const response = await API_ROOT.post(`/api/invitations/board/${boardId}`, inviteData);
+      const response = await API_ROOT.post(`/api/invitations/board/${boardId}`, inviteData, {withCredentials: true});
       console.log(response.data)
       return response.data;
     } catch (error) {
@@ -14,7 +14,7 @@ export const inviteBoardMember = createAsyncThunk("invitation/inviteBoardMember"
 
 export const inviteAcceptance = createAsyncThunk( "invitation/inviteAcceptance", async ({ invitationId, actionData }, { rejectWithValue }) => {
     try {
-      const response = await API_ROOT.post(`/api/invitations/respond/${invitationId}`, actionData);
+      const response = await API_ROOT.post(`/api/invitations/respond/${invitationId}`, actionData, {withCredentials: true});
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

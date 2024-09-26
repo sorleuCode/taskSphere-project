@@ -98,7 +98,7 @@ const boardSlice = createSlice({
             })
             .addCase(fetchBoards.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.error = action.payload.message;
                 state.status = false;
                 state.moveCardStatus = null;
             })
@@ -119,7 +119,7 @@ const boardSlice = createSlice({
             })
             .addCase(createNewBoard.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.error = action.payload.message;
                 state.status = false;
                 state.moveCardStatus = null;
             })
@@ -140,7 +140,7 @@ const boardSlice = createSlice({
             })
             .addCase(fetchSingleBoard.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.error = action.payload.message;
                 state.status = false;
                 state.moveCardStatus = null;
             })
@@ -167,7 +167,7 @@ const boardSlice = createSlice({
             })
             .addCase(updateBoard.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.error = action.payload.message;
                 state.status = false;
                 state.moveCardStatus = null;
             })
@@ -189,7 +189,7 @@ const boardSlice = createSlice({
             })
             .addCase(moveCardToDifferentColumns.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.error = action.payload.message;
                 state.status = false;
                 state.moveCardStatus = null;
             })
@@ -211,7 +211,7 @@ const boardSlice = createSlice({
             })
             .addCase(fetchAllboardMembers.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.error = action.payload.message;
                 state.status = false;
             })
 

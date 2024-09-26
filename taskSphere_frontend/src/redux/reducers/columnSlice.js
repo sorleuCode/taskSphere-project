@@ -104,7 +104,7 @@ const columnSlice = createSlice({
       })
       .addCase(getColumns.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload.message;
         state.status = false;
       })
 
@@ -123,7 +123,7 @@ const columnSlice = createSlice({
       })
       .addCase(createColumn.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload.message;
         state.status = false;
       })
 
@@ -145,7 +145,7 @@ const columnSlice = createSlice({
       })
       .addCase(updateColumn.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload.message;
         state.status = false;
       })
 
@@ -163,7 +163,7 @@ const columnSlice = createSlice({
       })
       .addCase(deleteColumn.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload.message;
         state.status = false;
       });
   },
