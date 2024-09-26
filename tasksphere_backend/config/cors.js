@@ -13,7 +13,10 @@ const ApiError = require('../utils/ApiError')
       return callback(null, true)
     }
 
-    return callback(new ApiError(StatusCodes.FORBIDDEN, `${origin} not allowed by our CORS Policy.`))
+    return callback(null, true)
+
+
+    // return callback(new ApiError(StatusCodes.FORBIDDEN, `${origin} not allowed by our CORS Policy.`))
   },
 
   optionsSuccessStatus: 200,
