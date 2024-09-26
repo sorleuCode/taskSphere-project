@@ -46,7 +46,7 @@ const getStreamToken = async (req, res) => {
       return res.status(400).json({ message: 'Some members have missing data' });
     }
 
-    const streamClient = new StreamClient(apiKey, apiSecret, { timeout: 3000 });
+    const streamClient = new StreamClient(process.env.STREAM_API_KEY, process.env.STREAM_SECRET_KEY, { timeout: 3000 });
 
     // Upsert users
   // Create token
