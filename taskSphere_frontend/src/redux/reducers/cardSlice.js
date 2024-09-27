@@ -29,7 +29,7 @@ export const updateCard = createAsyncThunk("card/updateCard", async ({cardId, up
 export const inviteToMeeting = createAsyncThunk("card/inviteToMeeting", async (videoData, {rejectWithValue}) => {
     try {
         
-        const response =  await API_ROOT.put(`/cards/meeting-notif`, videoData);
+        const response =  await API_ROOT.post(`/cards/meeting-notif`, videoData);
 
             return response.data;
 
