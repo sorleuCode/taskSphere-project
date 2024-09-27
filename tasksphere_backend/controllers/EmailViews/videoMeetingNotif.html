@@ -21,13 +21,28 @@
       }
       p {
         color: #666;
+        line-height: 1.6;
       }
-      a {
+      a.button {
+        display: inline-block;
         background-color: #007bff;
         color: white;
         padding: 10px 20px;
         text-decoration: none;
         border-radius: 5px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+      }
+      a.button:hover {
+        background-color: #0056b3;
+      }
+      .footer {
+        margin-top: 30px;
+        padding-top: 10px;
+        border-top: 1px solid #e0e0e0;
+      }
+      .footer p {
+        color: #333;
       }
     </style>
   </head>
@@ -35,9 +50,15 @@
     <div class="container">
       <h2>{{greeting}}</h2>
       <p>You have been invited to join a video meeting for the project: <strong>{{cardTitle}}</strong>.</p>
-      <p>Meeting Link: <a href="{{meetingLink}}">{{meetingLink}}</a></p>
+      <p>Meeting Link: <a href="{{meetingLink}}" class="button">Join the Meeting</a></p>
       <p>Meeting Start Time: {{startTime}}</p>
-      <p>This meeting has been scheduled by <strong>{{schedulerName}}</strong>.</p> <!-- Scheduler's name -->
+      <p>This meeting has been scheduled by <strong>{{schedulerName}}</strong>.</p>
+
+      <!-- Formal sign-off -->
+      <div class="footer">
+        <p>Best regards,</p>
+        <p>John Doe<br/>Tasksphere Team</p> <!-- Signature including the scheduler and company name -->
+      </div>
     </div>
   </body>
 </html>
