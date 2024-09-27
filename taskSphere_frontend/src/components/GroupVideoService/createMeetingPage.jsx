@@ -185,7 +185,7 @@ function MeetingLink({startTime, card, call }) {
   const cardId = card._id
   const meetingLink = `https://tasksphere-six.vercel.app/board/card/${card._id}/meeting/${call.id}`;
 
-  const {loading, videoInviteStatus} = useSelector((state) => state.card)
+  const {loading, videoInviteStatus, error} = useSelector((state) => state.card)
 
   const videodata = {
     startTime,
@@ -206,7 +206,10 @@ useEffect(() => {
   if (loading) return;
 
   if(videoInviteStatus) {
-    toast.error(videoInviteStatus)
+    toast.success("members notified!")
+  }
+  if(error) {
+    toast.error("server error")
   }
 }, [videoInviteStatus])
  
@@ -233,7 +236,7 @@ useEffect(() => {
       onClick={handleVideoInvite}
         className="text-blue-500 hover:underline"
       >
-        Send email invitation
+        invite members
       </button>
     </div>
   );
