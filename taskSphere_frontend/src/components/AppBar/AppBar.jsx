@@ -24,7 +24,6 @@ function AppBar() {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'flex-end',
-      gap: 100,
       paddingX: 2,
       overflowX: 'auto',
       bgcolor: grey[50]
