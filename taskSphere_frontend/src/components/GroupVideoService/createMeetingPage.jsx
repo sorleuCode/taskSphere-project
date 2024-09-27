@@ -34,7 +34,7 @@ export default function CreateMeetingPage({ card }) {
       .concat({ user_id: user._id, role: "call_member" })
       .filter((v, i, a) => a.findIndex((v2) => v2.user_id === v.user_id) === i);
   }, [cardMembers, user]);
-  
+
 
   const starts_at = new Date(startTimeInput || Date.now()).toISOString();
 
@@ -235,7 +235,7 @@ useEffect(() => {
       </div>
       <button
       onClick={handleVideoInvite}
-        className="text-blue-500 hover:underline"
+        className="text-white px-3 py-2 bg-blue-500"
       >
         invite members
       </button>
