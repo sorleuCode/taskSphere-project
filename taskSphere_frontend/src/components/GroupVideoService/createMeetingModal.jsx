@@ -18,15 +18,14 @@ const CreateMeetingModal = ({card, open, onClose }) => {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          overflow: "auto"
+          maxHeight: '90vh',  
+          overflowY: 'auto',  
         }}
       >
-      <ClientProvider cardId ={card._id} >
-
-        <Navbar cardId={card._id}/>
-        <CreateMeetingPage card ={card} onClose={onClose} />
-
-      </ClientProvider>
+        <ClientProvider cardId={card._id} >
+          <Navbar cardId={card._id} />
+          <CreateMeetingPage card={card} onClose={onClose} />
+        </ClientProvider>
       </Box>
     </Modal>
   );
