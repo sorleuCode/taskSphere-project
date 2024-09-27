@@ -235,7 +235,7 @@ useEffect(() => {
       </div>
       <button
       onClick={handleVideoInvite}
-        className="text-white px-3 py-2 bg-blue-500"
+        className="text-white px-3 py-1 bg-blue-500 rounded-full"
       >
         invite members
       </button>
