@@ -23,8 +23,8 @@ function AppBar() {
       height: (theme) => theme.tasksphere.appBarHeight,
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'space-between',
-      gap: 2,
+      justifyContent: 'flex-end',
+      gap: 100,
       paddingX: 2,
       overflowX: 'auto',
       bgcolor: grey[50]
