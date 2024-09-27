@@ -50,7 +50,7 @@ function Profiles() {
       navigate("/login")
 
     }
-  }, [])
+  }, [message])
 
   const handleLogout = async () => {
     if (!loading) {
