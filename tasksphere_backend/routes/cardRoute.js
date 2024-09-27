@@ -7,7 +7,7 @@ const {  verifyToken, isAdminOrBoardOwner} = require('../middlewares/authMiddlew
 const Router = express.Router()
 
 Router.post("/create", verifyToken, isAdminOrBoardOwner, cardValidation.createNew, cardController.createNew)
-Router.put("/update/:cardId", verifyToken, isAdminOrBoardOwner, cardController.updateCard)
+Router.put("/update/:cardId", verifyToken, cardController.updateCard)
 Router.get("/:boardId", verifyToken, cardController.getAllcardsDetails)
 Router.get("/:cardId",verifyToken, cardController.findOneById)
 Router.post("/meeting-notif",verifyToken, cardController.sendMeetingInvite)
