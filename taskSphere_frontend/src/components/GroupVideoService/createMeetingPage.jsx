@@ -87,7 +87,7 @@ export default function CreateMeetingPage({ card }) {
             Create meeting
           </Button>
         </div>
-        {call && <MeetingLink startTime ={startTimeInput} card={card} call={call} />}
+        {call && <MeetingLink startTime ={starts_at} card={card} call={call} />}
       </div>
     </div>
 
