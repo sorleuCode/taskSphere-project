@@ -245,7 +245,7 @@ const userSlice = createSlice({
             })
             .addCase(logoutUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.message = action.payload;
+                state.message = action.payload.message;
                 state.status = true
 
             })

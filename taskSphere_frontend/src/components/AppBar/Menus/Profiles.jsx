@@ -11,15 +11,20 @@ import PersonAdd from '@mui/icons-material/PersonAdd'
 import Settings from '@mui/icons-material/Settings'
 import Logout from '@mui/icons-material/Logout'
 import UploadProfilePic from './uploadProfile/UploadProfilePic'
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from '../../../redux/reducers/userSlice'
+import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 
 function Profiles() {
   const [anchorEl, setAnchorEl] = useState(null)
   const [uploadOpen, setUploadOpen] = useState(false)
-  const {user} = useSelector((state) => state.user)
+  const { user, loading, message } = useSelector((state) => state.user)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
-   
+
   const open = Boolean(anchorEl)
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
@@ -37,9 +42,22 @@ function Profiles() {
   //     setUploadOpen(false)
   //   }
   // }, [status])
+  useEffect(() => {
+    if (loading) return;
 
+    if (message) {
+      toast.success("logged out")
+      navigate("/login")
 
- 
+    }
+  }, [])
+
+  const handleLogout = async () => {
+    if (!loading) {
+      dispatch(logoutUser())
+
+    }
+  }
 
 
 
@@ -54,7 +72,7 @@ function Profiles() {
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
         >
-          <Avatar 
+          <Avatar
             sx={{ width: 36, height: 36 }}
             alt="profile pic"
             src={user?.profileImage ? user?.profileImage : null}
@@ -70,22 +88,22 @@ function Profiles() {
           'aria-labelledby': 'basic-button-profiles'
         }}
       >
-        {!uploadOpen?  <MenuItem onClick={handleProfile}>
-          <Avatar sx={{ width: 28, height: 28, mr: 2 }}  /> Profile
+        {!uploadOpen ? <MenuItem onClick={handleProfile}>
+          <Avatar sx={{ width: 28, height: 28, mr: 2 }} /> Profile
         </MenuItem> : <UploadProfilePic handleClose={handleClose} />}
 
         <MenuItem>
           <Avatar sx={{ width: 28, height: 28, mr: 2 }} /> My account
         </MenuItem>
         <Divider />
-       
+
         <MenuItem>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem>
+        <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
