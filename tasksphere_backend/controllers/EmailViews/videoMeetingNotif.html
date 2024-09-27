@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f4f4f4;
+      }
+      .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        max-width: 600px;
+        margin: 0 auto;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        color: #333;
+      }
+      p {
+        color: #666;
+      }
+      a {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>{{greeting}}</h2>
+      <p>You have been invited to join a video meeting for the project: <strong>{{cardTitle}}</strong>.</p>
+      <p>Meeting Link: <a href="{{meetingLink}}">{{meetingLink}}</a></p>
+      <p>Meeting Start Time: {{startTime}}</p>
+      <p>This meeting has been scheduled by <strong>{{schedulerName}}</strong>.</p> <!-- Scheduler's name -->
+    </div>
+  </body>
+</html>

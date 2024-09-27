@@ -10,6 +10,7 @@ Router.post("/create", verifyToken, isAdminOrBoardOwner, cardValidation.createNe
 Router.put("/update/:cardId", verifyToken, isAdminOrBoardOwner, cardController.updateCard)
 Router.get("/:boardId", verifyToken, cardController.getAllcardsDetails)
 Router.get("/:cardId",verifyToken, cardController.findOneById)
+Router.post("/meeting-notif",verifyToken, cardController.sendMeetingInvite)
 Router.get("/members/:cardId",verifyToken, cardController.getCardMembers)
 
 module.exports = Router

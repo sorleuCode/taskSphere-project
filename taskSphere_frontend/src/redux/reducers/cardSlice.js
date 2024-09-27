@@ -26,6 +26,18 @@ export const updateCard = createAsyncThunk("card/updateCard", async ({cardId, up
         return rejectWithValue(error.response.data)
     }
 })
+export const inviteToMeeting = createAsyncThunk("card/inviteToMeeting", async (videoData, {rejectWithValue}) => {
+    try {
+        
+        const response =  await API_ROOT.put(`/cards/meeting-notif`, videoData);
+
+            return response.data;
+
+    } catch (error) {
+
+        return rejectWithValue(error.response.data)
+    }
+})
 
 export const fetchSingleCard= createAsyncThunk("card/fetchSingleCard", async(cardId, {rejectWithValue}) => {
     try {
@@ -62,6 +74,7 @@ const cardSlice = createSlice({
         cardMembers: [],
         loading: false,
         error: "",
+        videoInviteStatus: "",
         status: false
     },
 
@@ -177,6 +190,23 @@ const cardSlice = createSlice({
             state.status = true;
         })
         .addCase(fetchCardMembers.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload.message;
+            state.status = false;
+        });
+        // inviteToMeeting
+
+        builder.addCase(inviteToMeeting.pending, (state) => {
+            state.loading = true;
+            state.error = "";
+            state.status = false;
+        })
+        .addCase(inviteToMeeting.fulfilled, (state, action) => {
+            state.loading = false;
+            state.videoInviteStatus = action.payload.message
+            state.status = true;
+        })
+        .addCase(inviteToMeeting.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload.message;
             state.status = false;

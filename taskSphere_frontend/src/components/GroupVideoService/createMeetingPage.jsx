@@ -4,9 +4,11 @@ import {
   useStreamVideoClient,
 } from "@stream-io/video-react-sdk";
 import { Copy, Loader2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 // import Link from "next/link";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { inviteToMeeting } from "../../redux/reducers/cardSlice";
+import { toast } from "react-toastify";
 
 
 
@@ -16,6 +18,7 @@ export default function CreateMeetingPage({ card }) {
   //   const [participantsInput, setParticipantsInput] = useState("");
   const { user } = useSelector((state) => state.user)
   const { cardMembers, loading } = useSelector((state) => state.card)
+
 
 
   const [call, setCall] = useState(null);
@@ -84,7 +87,7 @@ export default function CreateMeetingPage({ card }) {
             Create meeting
           </Button>
         </div>
-        {call && <MeetingLink card={card} call={call} />}
+        {call && <MeetingLink startTime ={startTimeInput} card={card} call={call} />}
       </div>
     </div>
 
@@ -175,21 +178,38 @@ function StartTimeInput({ value, onChange }) {
 }
 
 
-function MeetingLink({ card, call }) {
+function MeetingLink({startTime, card, call }) {
 
+  const dispatch = useDispatch()
 
+  const cardId = card._id
   const meetingLink = `https://tasksphere-six.vercel.app/board/card/${card._id}/meeting/${call.id}`;
-  const { user } = useSelector((state) => state.user)
 
+  const {loading, videoInviteStatus} = useSelector((state) => state.card)
 
-  const { cardMembers } = useSelector((state) => state.card)
-
-
-  let memberEmails;
-  if (cardMembers?.length !== 0) {
-    memberEmails = cardMembers?.map((member) => member.email)
-      .filter((email) => email !== user?.email)
+  const videodata = {
+    startTime,
+    meetingLink,
+    cardId
   }
+
+
+const handleVideoInvite = async() => {
+
+  if(!loading) {
+   await dispatch(inviteToMeeting(videodata))
+  }
+
+}
+
+useEffect(() => {
+  if (loading) return;
+
+  if(videoInviteStatus) {
+    toast.error(videoInviteStatus)
+  }
+}, [videoInviteStatus])
+ 
 
 
 
@@ -209,44 +229,38 @@ function MeetingLink({ card, call }) {
           <Copy />
         </button>
       </div>
-      <a
-        href={getMailToLink(
-          meetingLink,
-          call.state.startsAt,
-          call.state.custom.description,
-          memberEmails
-        )}
-        target="_blank"
+      <button
+      onClick={handleVideoInvite}
         className="text-blue-500 hover:underline"
       >
         Send email invitation
-      </a>
+      </button>
     </div>
   );
 }
 
-function getMailToLink(meetingLink, startsAt, description, recipients) {
+// function getMailToLink(meetingLink, startsAt, description, recipients) {
 
 
-  const startDateFormatted = startsAt
-    ? new Date(startsAt).toLocaleString("en-US", {
-      dateStyle: "full",
-      timeStyle: "short",
-    })
-    : undefined;
+//   const startDateFormatted = startsAt
+//     ? new Date(startsAt).toLocaleString("en-US", {
+//       dateStyle: "full",
+//       timeStyle: "short",
+//     })
+//     : undefined;
 
-  const subject =
-    "Join my meeting" + (startDateFormatted ? ` at ${startDateFormatted}` : "");
+//   const subject =
+//     "Join my meeting" + (startDateFormatted ? ` at ${startDateFormatted}` : "");
 
-  const body =
-    `Join my meeting at ${meetingLink}.` +
-    (startDateFormatted
-      ? `\n\nThe meeting starts at ${startDateFormatted}.`
-      : "") +
-    (description ? `\n\nDescription: ${description}` : "");
+//   const body =
+//     `Join my meeting at ${meetingLink}.` +
+//     (startDateFormatted
+//       ? `\n\nThe meeting starts at ${startDateFormatted}.`
+//       : "") +
+//     (description ? `\n\nDescription: ${description}` : "");
 
-  // Join the recipients into a comma-separated string
-  const to = recipients?.join(",");
+//   // Join the recipients into a comma-separated string
+//   const to = recipients?.join(",");
 
-  return `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-}
+//   return `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+// }

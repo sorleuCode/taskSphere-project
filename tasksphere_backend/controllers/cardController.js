@@ -1,7 +1,7 @@
 
-const  { StatusCodes } = require('http-status-codes')
+const { StatusCodes } = require('http-status-codes')
 const cardModel = require('../models/cardModel')
-const cardService  = require('../services/cardService')
+const cardService = require('../services/cardService')
 const cron = require('node-cron');
 const nodemailer = require('nodemailer');
 const User = require('../models/userModel');
@@ -12,17 +12,17 @@ const handlebars = require('handlebars');
 const createNew = async (req, res, next) => {
   try {
     const createdCard = await cardService.createNew(req.body)
-    
+
     res.status(StatusCodes.CREATED).json(createdCard)
   } catch (error) { next(error) }
 }
 
-const updateCard = async (req , res, next) => {
+const updateCard = async (req, res, next) => {
 
   try {
-        
-    if(req.body?.boardId) {
-      const {boardId, ...newdata} = req.body
+
+    if (req.body?.boardId) {
+      const { boardId, ...newdata } = req.body
 
       const updatedCard = await cardService.updateCard(req.params.cardId, newdata)
 
@@ -33,7 +33,7 @@ const updateCard = async (req , res, next) => {
 
     return res.status(StatusCodes.CREATED).json(updatedCard)
 
-    
+
 
 
 
@@ -46,28 +46,28 @@ const findOneById = async (req, res) => {
   try {
     const card = await cardModel.findOneById(req.params.cardId);
 
-      if(card) {
-        res.status(StatusCodes.OK).json(card)
-      }
-      res.status(500).json({message: "no card found"})
+    if (card) {
+      res.status(StatusCodes.OK).json(card)
+    }
+    res.status(500).json({ message: "no card found" })
   } catch (error) {
-    throw(error)
+    throw (error)
   }
 }
 
 const getAllcardsDetails = async (req, res) => {
   try {
 
-      const cards = await cardModel.Card.find({boardId: req.params.boardId});
-      if(cards) {
-        res.status(StatusCodes.OK).json(cards)
-      }
-      else {
+    const cards = await cardModel.Card.find({ boardId: req.params.boardId });
+    if (cards) {
+      res.status(StatusCodes.OK).json(cards)
+    }
+    else {
 
-        res.status(500).json({message: "no cards found"})
-      }
+      res.status(500).json({ message: "no cards found" })
+    }
   } catch (error) {
-      res.json(error.message)
+    res.json(error.message)
   }
 }
 
@@ -100,62 +100,62 @@ const getCardMembers = async (req, res) => {
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-      user: "sorleu3@gmail.com",
-      pass: "iwfi ozbb cucb mlfr"
+    user: "sorleu3@gmail.com",
+    pass: "iwfi ozbb cucb mlfr"
   },
 });
 
 const sendDueDateReminders = async () => {
   try {
-      const currentDate = new Date();
+    const currentDate = new Date();
 
-      // Find cards with due dates within the next 24 hours
-      const cards = await cardModel.Card.find({
-          dueDate: {
-              $gte: currentDate,
-              $lte: new Date(currentDate.getTime() + 24 * 60 * 60 * 1000), // 24 hours from now
-          },
-      }).populate('memberIds');
+    // Find cards with due dates within the next 24 hours
+    const cards = await cardModel.Card.find({
+      dueDate: {
+        $gte: currentDate,
+        $lte: new Date(currentDate.getTime() + 24 * 60 * 60 * 1000), // 24 hours from now
+      },
+    }).populate('memberIds');
 
-      // Load the HTML template
-      const filePath = path.join(__dirname, 'EmailViews', 'dueDateReminderTemplate.html');
-      const source = fs.readFileSync(filePath, 'utf-8').toString();
+    // Load the HTML template
+    const filePath = path.join(__dirname, 'EmailViews', 'dueDateReminderTemplate.html');
+    const source = fs.readFileSync(filePath, 'utf-8').toString();
 
-      // Compile the template with Handlebars
-      const template = handlebars.compile(source);
+    // Compile the template with Handlebars
+    const template = handlebars.compile(source);
 
-      for (const card of cards) {
-          const dueDate = new Date(card.dueDate).toDateString();
+    for (const card of cards) {
+      const dueDate = new Date(card.dueDate).toDateString();
 
-          for (const member of card.memberIds) {
-              const user = await User.findById(member._id);
-              if (user && user.email) {
+      for (const member of card.memberIds) {
+        const user = await User.findById(member._id);
+        if (user && user.email) {
 
-                  // Prepare the replacements for the template
-                  const replacements = {
-                      userName: user.name,
-                      cardTitle: card.title,
-                      dueDate: dueDate,
-                  };
+          // Prepare the replacements for the template
+          const replacements = {
+            userName: user.name,
+            cardTitle: card.title,
+            dueDate: dueDate,
+          };
 
-                  // Generate the final HTML email content
-                  const htmlToSend = template(replacements);
+          // Generate the final HTML email content
+          const htmlToSend = template(replacements);
 
-                  // Send the email
-                  const mailOptions = {
-                      from: process.env.EMAIL_USER,
-                      to: user.email,
-                      subject: `Reminder: Task Due Soon - ${card.title}`,
-                      html: htmlToSend,
-                  };
+          // Send the email
+          const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: user.email,
+            subject: `Reminder: Task Due Soon - ${card.title}`,
+            html: htmlToSend,
+          };
 
-                  await transporter.sendMail(mailOptions);
-                  console.log(`Reminder email sent to ${user.email}`);
-              }
-          }
+          await transporter.sendMail(mailOptions);
+          console.log(`Reminder email sent to ${user.email}`);
+        }
       }
+    }
   } catch (error) {
-      console.error('Error sending reminder emails:', error);
+    console.error('Error sending reminder emails:', error);
   }
 };
 
@@ -166,10 +166,72 @@ cron.schedule('0 */12  * * *', () => {
 });
 
 
+const sendMeetingInvite = async (req, res) => {
+  const { cardId, meetingLink, startTime } = req.body;
+
+  try {
+    // Fetch the card details and members from the cardId
+    const card = await cardModel.Card.findById(cardId).populate('memberIds', 'email name');
+
+    if (!card) {
+      return res.status(404).json({ message: 'Card not found' });
+    }
+
+    // Get all members' emails
+    const memberEmails = card.memberIds.map(member => member.email);
+
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: "sorleu3@gmail.com",
+        pass: "iwfi ozbb cucb mlfr"
+      },
+    });
+    // Load the HTML template
+    const filePath = path.join(__dirname, 'EmailViews', 'videoMeetingNotif.html');
+    const source = fs.readFileSync(filePath, 'utf-8').toString();
+
+    // Compile the template using Handlebars
+    const template = handlebars.compile(source);
+
+    // Define dynamic content for the email
+    const replacements = {
+      greeting: 'Dear Board Member',
+      cardTitle: card.title,
+      meetingLink: meetingLink,
+      startTime: startTime,
+      schedulerName: req.user.fullname // The scheduler is the authenticated user
+    };
+
+    // Generate the HTML with replacements
+    const htmlToSend = template(replacements);
+
+    // Prepare email options
+    const mailOptions = {
+      from: "sorleu3@gmail.com",
+      to: memberEmails, // Array of member emails
+      subject: `Meeting Scheduled for the project: ${card.title}`,
+      html: htmlToSend
+    };
+
+    // Send the email
+    await transporter.sendMail(mailOptions);
+
+    return res.status(200).json({ message: 'Meeting invitation sent successfully.' });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Failed to send meeting invitation.', error: error.message });
+  }
+};
+
+
+
 
 
 
 const cardController = {
-  createNew, getAllcardsDetails, updateCard, findOneById, getCardMembers
+  createNew, getAllcardsDetails, updateCard, findOneById, getCardMembers, sendMeetingInvite
 }
 module.exports = cardController
