@@ -29,61 +29,11 @@ function AppBar() {
       overflowX: 'auto',
       bgcolor: grey[50]
     }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
-          <Button
-            sx={{
-              color: 'black',
-              border: 'none',
-              '&:hover': { border: 'none' }
-            }}
-            variant="outlined"
-            startIcon={<LibraryAddIcon />}
-          >
-            Create
-          </Button>
-        </Box>
-
-      </Box>
-
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-  
-        <TextField
       
-          id="outlined-search"
-          type="text"
-          size="small"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon sx={{ color: 'black' }} />
-              </InputAdornment>
-            ),
-            endAdornment: (
-              <InputAdornment position="end">
-                <CloseIcon
-                  fontSize="small"
-                  sx={{ color: searchValue ? 'black' : 'transparent', cursor: 'pointer' }}
-                  onClick={() => setSearchValue('')}
-                />
-              </InputAdornment>
-            )
-          }}
-          sx={{
-            minWidth: '120px',
-            maxWidth: '180px',
-            bgcolor: 'white',
-            '& label': { color: 'black' },
-            '& input': { color: 'black' },
-            '& label.Mui-focused': { color: 'black' },
-            '& .MuiOutlinedInput-root': {
-              '&:hover fieldset': { borderColor: 'black' },
-              '&.Mui-focused fieldset': { borderColor: 'black' }
-            }
-          }}
-        />
+
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, justifyContent: "flex-end"}}>
+  
+        
 
         
 
