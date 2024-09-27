@@ -34,7 +34,9 @@ export default function CreateMeetingPage({ card }) {
       .concat({ user_id: user._id, role: "call_member" })
       .filter((v, i, a) => a.findIndex((v2) => v2.user_id === v.user_id) === i);
   }, [cardMembers, user]);
+  
 
+  const starts_at = new Date(startTimeInput || Date.now()).toISOString();
 
 
 
@@ -52,7 +54,6 @@ export default function CreateMeetingPage({ card }) {
 
 
 
-      const starts_at = new Date(startTimeInput || Date.now()).toISOString();
 
 
       await call.getOrCreate({
