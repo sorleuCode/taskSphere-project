@@ -240,7 +240,7 @@ const userSlice = createSlice({
                 state.loading = false;
                 state.user = {};
                 state.message = action.payload.message
-                state.status = false;
+                state.status = true;
             })
             .addCase(logoutUser.rejected, (state, action) => {
                 state.loading = false;
