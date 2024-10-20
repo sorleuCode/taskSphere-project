@@ -265,15 +265,17 @@ const updateUser = async (req, res) => {
 
 const logoutUser = async (req, res) => {
   try {
-    // Clear the "token" cookie by setting it to an empty string and an expiration date in the past
-    res.cookie("token", token, {
+    res.cookie("token", "", {
       httpOnly: true,
-      expires: new Date(Date.now() + 1000 * 86400), // 1 day
+      expires: new Date(0),
       sameSite: "none",
       secure: true,
     });
+    
+    // Send success response
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
+    // Handle any errors during logout
     res.status(500).json({
       message: "An error occurred during logout",
       error: error.message,
