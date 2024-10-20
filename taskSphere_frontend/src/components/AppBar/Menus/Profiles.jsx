@@ -37,27 +37,21 @@ function Profiles() {
     setUploadOpen(true)
   }
 
-  // useEffect(() => {
-  //   if(status) {
-  //     setUploadOpen(false)
-  //   }
-  // }, [status])
-  useEffect(() => {
-    if (loading) return;
-
-    if (message) {
-      toast.success("logged out")
-      navigate("/login")
-
-    }
-  }, [message])
 
   const handleLogout = async () => {
-    if (!loading) {
-      dispatch(logoutUser())
-
+    console.log("Logging out...");
+    dispatch(logoutUser());
+  };
+  
+  useEffect(() => {
+    console.log("Logout useEffect triggered, message:", message);
+    if (loading) return;
+  
+    if (message) {
+      toast.success("Logged out successfully");
+      navigate("/login");
     }
-  }
+  }, [message, loading, navigate]);
 
 
 

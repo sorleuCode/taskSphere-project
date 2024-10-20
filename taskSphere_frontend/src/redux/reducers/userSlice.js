@@ -97,21 +97,14 @@ export const uploadProfilePicture = createAsyncThunk("user/uploadProfilePicture"
 }
 )
 
-export const logoutUser = createAsyncThunk("user/logoutUser", async ({ rejectWithValue }) => {
+export const logoutUser = createAsyncThunk("user/logoutUser", async (_, { rejectWithValue }) => {
     try {
-
-
-        const response = await API_ROOT.post("/users/logout",  {withCredentials: true});
-
+        const response = await API_ROOT.post("/users/logout", { withCredentials: true });
         return response.data;
-
     } catch (error) {
-
         return rejectWithValue(error.response.data);
-
-
     }
-})
+});
 
 
 
@@ -243,11 +236,11 @@ const userSlice = createSlice({
 
 
             })
-            .addCase(logoutUser.fulfilled, (state, action) => {
+            .addCase(logoutUser.fulfilled, (state) => {
                 state.loading = false;
-                state.message = action.payload.message;
-                state.status = true
-
+                state.user = {};
+                state.message = action.payload.message
+                state.status = false;
             })
             .addCase(logoutUser.rejected, (state, action) => {
                 state.loading = false;
