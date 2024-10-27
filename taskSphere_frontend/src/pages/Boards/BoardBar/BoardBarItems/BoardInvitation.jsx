@@ -42,7 +42,7 @@ const BoardInvitation = ({ board, handleInviteBtn }) => {
 
   return (
     <form onSubmit={handleInvite} className="absolute flex flex-col gap-2 top-0 right-0 mt-5 mr-5 p-4 bg-white shadow-lg rounded-lg w-80 md:w-96 z-10 text-center">
-    <span className='w-full mb-3 text-blue-400 flex justify-end items-center'><FaTimesCircle/></span>
+    <span onClick={() => handleInviteBtn(false)} className='w-full mb-3 text-blue-400 flex justify-end items-center'><FaTimesCircle/></span>
       <input
         type="email"
         required
