@@ -62,7 +62,7 @@ const Login = () => {
       <div className="bg-white max-h-[100%] text-black rounded-lg p-6 shadow-lg w-full max-w-md">
         <button
           onClick={handleSignInwithGoogle}
-          className="bg-blue-600 text-white text-sm sm:text-base py-2 px-4 rounded mb-4 w-full flex items-center justify-start gap-28"
+          className="bg-blue-600 text-white text-sm sm:text-base py-2 px-4 rounded mb-4 w-full flex items-center justify-center gap-3 sm:gap-6 md:gap-16 lg:gap-28"
         >
           <FaGoogle />
           <span>Sign In with Google</span>
