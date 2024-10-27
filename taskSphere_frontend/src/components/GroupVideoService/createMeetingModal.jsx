@@ -3,6 +3,8 @@ import { Modal, Box } from '@mui/material';
 import CreateMeetingPage from './createMeetingPage';
 import ClientProvider from './clientProvider';
 import Navbar from './streamComponents/Navbar';
+import { Loader2 } from "lucide-react";
+
 
 const CreateMeetingModal = ({card, open, onClose }) => {
 const [isConnected, setIsConnected] = useState(false)
