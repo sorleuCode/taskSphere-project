@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { inviteBoardMember } from '../../../../redux/reducers/inviteSlice';
 import { toast } from 'react-toastify';
+import { FaTimesCircle } from 'react-icons/fa';
 
 const BoardInvitation = ({ board, handleInviteBtn }) => {
   const [email, setEmail] = useState('');
@@ -40,7 +41,8 @@ const BoardInvitation = ({ board, handleInviteBtn }) => {
 
 
   return (
-    <form onSubmit={handleInvite} className="absolute top-0 right-0 mt-5 mr-5 p-4 bg-white shadow-lg rounded-lg w-80 md:w-96 z-10 text-center">
+    <form onSubmit={handleInvite} className="absolute flex flex-col gap-2 top-0 right-0 mt-5 mr-5 p-4 bg-white shadow-lg rounded-lg w-80 md:w-96 z-10 text-center">
+    <span className='w-full'><FaTimesCircle/></span>
       <input
         type="email"
         required
