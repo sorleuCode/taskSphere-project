@@ -7,7 +7,7 @@ const date = new Date();
 
 const Footer = () => {
     return (
-        <footer className=" bg-gray-800 flex justify-between w-full  text-white px-4  py-2 lg:px-8 h-25">
+        <footer className=" bg-gray-800 flex justify-between w-full  text-white px-4  py-4 lg:px-8 h-25">
             <span className=' flex text-sm sm:text-base flex-col min-w-[15%] justify-end min-h-[100%] '>TaskSpere&copy; 2024</span>
             <div className=" mx-auto flex flex-col justify-center items-center">
                 <p className=' mb-[8px] sm:mb-2 lg:mb-4 text-base sm:text-lg font-medium'>Our Socials</p>
