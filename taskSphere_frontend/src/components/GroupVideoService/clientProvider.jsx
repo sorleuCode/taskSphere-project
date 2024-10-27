@@ -71,16 +71,20 @@ export default function ClientProvider({ cardId, children }) {
           <Loader2 className="mx-auto animate-spin" />
         </div>
       );
+    }else if(isConnected === true) {
+
+        return (
+
+            <StreamVideo client={client}>
+              {children}
+            </StreamVideo>
+          );
+
     }
 
 
 
-    return (
-
-      <StreamVideo client={client}>
-        {children}
-      </StreamVideo>
-    );
+    
   } else if (errorMessage) {
     toast.error(errorMessage);
   }
