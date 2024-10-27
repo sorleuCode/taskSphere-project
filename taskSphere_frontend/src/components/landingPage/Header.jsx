@@ -11,7 +11,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-blue-700 shadow-xlg shadow-blue-600 sticky top-0 py-2 sm:py-4 z-10 px-3 sm:px-8 flex justify-between items-center">
+    <header className="bg-blue-700 shadow-xlg shadow-blue-600 sticky top-0 py-3 sm:py-4 z-10 px-3 sm:px-8 flex justify-between items-center">
       <div className="text-white text-[18px] sm:text-[22px] md:text-[25px] font-bold">TaskSphere</div>
 
       {/* Mobile Menu Icon */}
