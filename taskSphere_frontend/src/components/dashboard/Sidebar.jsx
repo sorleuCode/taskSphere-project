@@ -16,7 +16,7 @@ const Sidebar = ({ setSelectedMenu }) => {
   ];
 
   return (
-    <div className="w-57 gap-10 bg-gray-50 h-screen p-5 flex flex-col text-black">
+    <div className="w-57 gap-10 bg-gray-50 min-h-screen p-5 flex flex-col text-black">
       <div className="flex justify-center items-center mb-5">
         <img src="" alt="" />
         <span className='font-bold text-lg'>Tasksphere</span>

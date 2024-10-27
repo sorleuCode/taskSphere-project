@@ -25,7 +25,7 @@ const Dashboard = () => {
 
 
   return (
-    <div className="flex h-screen">
+    <div className="flex max-h-screen">
       <Sidebar setSelectedMenu={setSelectedMenu} />
       <div className="flex-1 flex flex-col">
         <DashHeader />
