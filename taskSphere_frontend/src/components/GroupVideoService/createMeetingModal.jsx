@@ -14,13 +14,6 @@ const [isConnected, setIsConnected] = useState(false)
 
 
 
-
-  // if (!isConnected) {
-  //   return (
-  //     
-  //   )
-  // }
-
   return (
 
     
@@ -40,7 +33,7 @@ const [isConnected, setIsConnected] = useState(false)
           overflowY: 'auto',  
         }}
       >
-        {isConnected ? (<div className="flex items-center justify-center">
+        {!isConnected ? (<div className="flex items-center justify-center">
         <Loader2 className="mx-auto animate-spin" />
        </div> ): (<ClientProvider handleStreamConnect={handleStreamConnect} cardId={card._id} >
           <Navbar cardId={card._id} />
