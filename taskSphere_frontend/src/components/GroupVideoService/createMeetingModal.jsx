@@ -3,14 +3,11 @@ import { Modal, Box } from '@mui/material';
 import CreateMeetingPage from './createMeetingPage';
 import ClientProvider from './clientProvider';
 import Navbar from './streamComponents/Navbar';
-import { Loader2 } from "lucide-react";
 
 
 const CreateMeetingModal = ({card, open, onClose }) => {
-const [isConnected, setIsConnected] = useState(false)
 
 
-  const handleStreamConnect = (value) => setIsConnected(value)
 
 
 
@@ -33,12 +30,10 @@ const [isConnected, setIsConnected] = useState(false)
           overflowY: 'auto',  
         }}
       >
-        {isConnected === false ? (<div className="flex items-center justify-center">
-        <Loader2 className="mx-auto animate-spin" />
-       </div> ): (<ClientProvider handleStreamConnect={handleStreamConnect} cardId={card._id} >
+        <ClientProvider handleStreamConnect={handleStreamConnect} cardId={card._id} >
           <Navbar cardId={card._id} />
           <CreateMeetingPage card={card} onClose={onClose} />
-        </ClientProvider>)}
+        </ClientProvider>
         
       </Box>
     </Modal>

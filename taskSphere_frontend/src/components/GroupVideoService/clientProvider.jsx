@@ -7,13 +7,14 @@ import { getUserDetail } from "../../redux/reducers/userSlice";
 import { fetchCardMembers } from "../../redux/reducers/cardSlice";
 import { toast } from "react-toastify";
 
-export default function ClientProvider({ cardId, handleStreamConnect, children }) {
+export default function ClientProvider({ cardId, children }) {
   const { token, errorMessage } = useSelector((state) => state.clientToken);
   const { user, status } = useSelector((state) => state.user);
   const { cardMembers } = useSelector((state) => state.card);
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
+  const [isConnected, setIsonnected] = useState(false)
   const getTokenFunc = async () => (token ? token : undefined);
 
   useEffect(() => {
@@ -62,9 +63,9 @@ export default function ClientProvider({ cardId, handleStreamConnect, children }
       tokenProvider: () => (user?._id ? getTokenFunc() : undefined),
     });
 
-    client.on("connect", () => handleStreamConnect(true));
+    client.on("connect", () => setIsonnected(true));
 
-    if (!token && loading) {
+    if ((!token && loading) || isConnected === false) {
       return (
         <div className="flex items-center justify-center">
           <Loader2 className="mx-auto animate-spin" />
@@ -72,7 +73,10 @@ export default function ClientProvider({ cardId, handleStreamConnect, children }
       );
     }
 
+
+
     return (
+
       <StreamVideo client={client}>
         {children}
       </StreamVideo>
