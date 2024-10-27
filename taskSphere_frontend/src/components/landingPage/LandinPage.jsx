@@ -158,7 +158,7 @@ const LandinPage = () => {
 
             <div className="bg-white  max-h-[100%] text-black mt-6 md:mt-0 p-4 rounded-lg md:p-6 shadow-lg md:w-[50%] w-full max-w-md">
               <div
-                className="bg-blue-600 cursor-pointer text-white py-2 px-4 rounded mb-4 w-full flex items-center justify-between sm:justify-start sm:gap-16 lg:gap-28"
+                className="bg-blue-600 cursor-pointer text-white py-2 px-4 rounded mb-4 w-full flex items-center justify-center gap-3 sm:gap-6 md:gap-16 lg:gap-28"
                 onClick={handleSignUpwithGoogle}
               >
                 <FaGoogle />
