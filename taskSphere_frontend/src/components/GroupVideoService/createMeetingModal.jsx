@@ -30,7 +30,7 @@ const CreateMeetingModal = ({card, open, onClose }) => {
           overflowY: 'auto',  
         }}
       >
-        <ClientProvider handleStreamConnect={handleStreamConnect} cardId={card._id} >
+        <ClientProvider cardId={card._id} >
           <Navbar cardId={card._id} />
           <CreateMeetingPage card={card} onClose={onClose} />
         </ClientProvider>
