@@ -33,10 +33,10 @@ const Contact = () => {
               required
             ></textarea>
           </div>
-          <div>
+          <div className=' text-center'>
             <button
               type="submit"
-              className="w-full px-4 py-2 bg-blue-600 text-white font-medium rounded-md shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className=" text-sm sm:text-base px-2 py-1 sm:px-4 sm:py-2 bg-blue-600 text-white font-medium rounded-md shadow-sm hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Reach out
             </button>

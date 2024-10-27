@@ -11,7 +11,7 @@ import {
   FaGoogle,
 } from "react-icons/fa";
 import FAQ from "./FAQ";
-import { Link, useNavigate,  } from "react-router-dom";
+import { Link, useNavigate, } from "react-router-dom";
 import Contact from "./Contact";
 import { useDispatch, useSelector } from "react-redux";
 import ProgressBar from "./ProgressBar";
@@ -60,18 +60,18 @@ const LandinPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const lowercaseEmail = formData.email.toLowerCase()
-    const newFormData = {...formData, email: lowercaseEmail}
-    dispatch(registerUser({...newFormData, invitationId: invitationId ? invitationId : null}));
+    const newFormData = { ...formData, email: lowercaseEmail }
+    dispatch(registerUser({ ...newFormData, invitationId: invitationId ? invitationId : null }));
     setShouldSubmit(true)
 
-    
+
   };
 
   useEffect(() => {
     if (!shouldSubmit) return; // Early return if not submitting
-  
+
     if (status) {
-      toast.success("Confirm your Email", {position: "top-right"});
+      toast.success("Confirm your Email", { position: "top-right" });
       navigate("/user/verifyEmail");
       setShouldSubmit(false);
     } else if (!status && error) {
@@ -84,38 +84,36 @@ const LandinPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow bg-blue-600 text-white p-8 pt-20">
-        <div className="flex items-center justify-between">
-          <div className="">
+      <main className="flex-grow bg-blue-600 text-white py-4 pt-8 px-4 lg:px-5 md:py-8  md:pt-18 lg:pt-20">
+        <div className="flex flex-col lg:flex-row items-center justify-between">
+          <div className="lg:w-1/2">
             <h1
               data-aos="slide-right"
               data-aos-duration="2500"
-              className="text-4xl font-bold mb-4 w-3/4"
+              className="text-lg sm:text-2xl md:text-4xl font-bold mb-4 lg:w-[80%]"
             >
-              Join millions of TaskSphere users who manage and schedule their
-              tasks easily.
+              Join millions of TaskSphere users who manage and schedule their tasks easily.
             </h1>
-            <p className="text-base mb-8 w-3/4 fade-in-text">
-              Enjoy the goodness of in-app real-time communication through
-              chatting and video conferencing with your team members. Tasksphere
-              is a dynamic project management platform to provide an integrated
-              web app for all your project needs.
+            <p className="text-[14px] w-full  sm:text-base md:text-lg mb-8 lg:w-[90%] fade-in-text">
+              Enjoy the goodness of in-app real-time communication through chatting and video conferencing with your team members. TaskSphere is a dynamic project management platform that provides an integrated web app for all your project needs.
             </p>
           </div>
           <img
-            className="w-[90%] h-[400px] rounded-[10px] zoom-in"
+            className="w-full lg:w-[50%] h-[200px] sm:h-[300px] lg:h-[400px] rounded-[10px] zoom-in"
             src="/team.webp"
             alt="Team collaboration"
           />
         </div>
 
+
+
         <div className="about px-4 py-8 flex flex-col items-center justify-center min-h-3/4 bg-gray-200 text-white rounded-[10px] mt-16">
-          <div className="m-auto text-black flex items-center justify-between w-full">
-            <div className="w-[50%]">
-              <h1 className="text-3xl font-medium mb-8">
+          <div className="m-auto text-black  flex flex-col md:flex-row items-center md:gap-16 lg:justify-between w-full">
+            <div className=" w-[100%] md:w-[50%]">
+              <h1 className=" text-md md:text-lg lg:text-3xl font-medium mb-8">
                 Empowering Teams to Achieve More
               </h1>
-              <div className="mt-4">
+              <div className="mt-4 ">
                 {progressData.map((item, index) => (
                   <ProgressBar
                     key={index}
@@ -126,7 +124,7 @@ const LandinPage = () => {
               </div>
 
               <section className="text-black">
-                <h2 className="text-3xl font-medium text-center mb-8">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-medium text-center mb-8">
                   Our mission
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
@@ -158,18 +156,18 @@ const LandinPage = () => {
               </section>
             </div>
 
-            <div className="bg-white max-h-[100%] text-black rounded-lg p-6 shadow-lg w-full max-w-md">
+            <div className="bg-white  max-h-[100%] text-black mt-6 md:mt-0 p-4 rounded-lg md:p-6 shadow-lg md:w-[50%] w-full max-w-md">
               <div
-                className="bg-blue-600 cursor-pointer text-white py-2 px-4 rounded mb-4 w-full flex items-center justify-start gap-28"
+                className="bg-blue-600 cursor-pointer text-white py-2 px-4 rounded mb-4 w-full flex items-center justify-between sm:justify-start sm:gap-16 lg:gap-28"
                 onClick={handleSignUpwithGoogle}
               >
                 <FaGoogle />
-                <span>Sign up with Google</span>
+                <span className="text-[14px] sm:text-base">Sign up with Google</span>
               </div>
               <div className="text-center mb-4">OR</div>
               <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                  <label htmlFor="email" className="block text-sm font-medium">
+                <div className="mb-4 ">
+                  <label htmlFor="email" className="block text-[14px] sm:text-sm font-medium">
                     Work Email (required)
                   </label>
                   <input
@@ -185,7 +183,7 @@ const LandinPage = () => {
                 <div className="mb-4">
                   <label
                     htmlFor="fullname"
-                    className="block text-sm font-medium"
+                    className="block text-[14px] sm:text-sm font-medium"
                   >
                     Fullname
                   </label>
@@ -256,7 +254,7 @@ const LandinPage = () => {
 
                 <button
                   type="submit"
-                  className="bg-blue-600 text-white text-center py-2 px-4 rounded w-full submit-button"
+                  className="bg-blue-600 text-white text-[14px] sm:text-base text-center py-2 px-4 rounded w-full submit-button"
                 >
                   {loading ? (
                     <div className="spinner"></div>
@@ -264,7 +262,7 @@ const LandinPage = () => {
                     "Register for free"
                   )}
                 </button>
-                <p className="mt-4">
+                <p className="mt-4 w-full sm:text-base text-sm">
                   By signing up, you agree to TaskSphere's terms of service and
                   privacy policy.
                 </p>

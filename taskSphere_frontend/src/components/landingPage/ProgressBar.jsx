@@ -45,13 +45,13 @@ const ProgressBar = ({ label, percentage }) => {
 
     return (
         <div ref={progressBarRef} className="mb-4">
-            <div className="flex justify-between mb-1">
+            <div className="flex text-[14px] sm:text-base justify-between mb-1">
                 <span>{label}</span>
                 <span>{percentage}%</span>
             </div>
-            <div className="w-full bg-gray-700 rounded-full h-2.5">
+            <div className="w-full bg-gray-700 rounded-full h-2 sm:h-2.5">
                 <div
-                    className="bg-blue-600 h-2.5 rounded-full progress-bar"
+                    className="bg-blue-600 h-2 sm:h-2.5 rounded-full progress-bar"
                     style={{ "--progress-width": `${width}%` }}
                 ></div>
             </div>

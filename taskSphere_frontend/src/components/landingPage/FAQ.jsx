@@ -43,7 +43,7 @@ const FAQ = () => {
 
   return (
     <div name="faq" className="max-w-4xl mx-auto p-4">
-      <h2 className="text-2xl  font-normal mb-4">Find answers to Frequently Asked Questions (FAQS)</h2>
+      <h2 className=" text-lg sm:text-xl lg:text-2xl  font-normal mb-4">Find answers to Frequently Asked Questions (FAQS)</h2>
       <div className="space-y-2">
         {faqs.map((faq, index) => (
           <div key={index} className="border-b">
@@ -51,10 +51,10 @@ const FAQ = () => {
               onClick={() => toggleFAQ(index)}
               className="flex justify-between items-center w-full p-4 text-left focus:outline-none"
             >
-              <span className="font-semibold">{faq.question}</span>
+              <span className="font-semibold text-sm">{faq.question}</span>
               {openIndex === index ? <FaCaretUp /> : <FaCaretRight />}
             </button>
-            {openIndex === index && <div className="p-4">{faq.answer}</div>}
+            {openIndex === index && <div className="p-4 text-sm sm:text-base">{faq.answer}</div>}
           </div>
         ))}
       </div>
