@@ -29,7 +29,7 @@ const MainContent = () => {
         if (user && allBoards.length === 0 && !loading && !error) {
             dispatch(fetchBoards());
         }
-    }, [dispatch, user, allBoards.length, loading, error]);
+    }, [dispatch, allBoards.length, loading, error]);
 
     useEffect(() => {
         if (error) {
