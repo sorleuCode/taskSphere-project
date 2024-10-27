@@ -63,7 +63,17 @@ export default function ClientProvider({ cardId, children }) {
       tokenProvider: () => (user?._id ? getTokenFunc() : undefined),
     });
 
-    client.on("connect", () => setIsonnected(true));
+    client.on('connection.ok', e => {
+        if (e.received_at) {
+            setIsonnected(true)
+            console.log('the connection is up!');
+        } else {
+            setIsonnected(false)
+            console.log('the connection is down!');
+
+            
+        }
+    });
 
     if ((!token && loading) || isConnected === false) {
       return (

@@ -27,7 +27,8 @@ const CreateMeetingModal = ({card, open, onClose }) => {
           left: '50%',
           transform: 'translate(-50%, -50%)',
           maxHeight: '90vh',  
-          overflowY: 'auto',  
+          overflowY: 'auto', 
+          minHeight: '30vh' 
         }}
       >
         <ClientProvider cardId={card._id} >
