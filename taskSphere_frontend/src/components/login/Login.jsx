@@ -58,11 +58,11 @@ const Login = () => {
   }, [ status, error, navigate]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-blue-600">
+    <div className="flex flex-col justify-center items-center px-4 min-h-screen bg-blue-600">
       <div className="bg-white max-h-[100%] text-black rounded-lg p-6 shadow-lg w-full max-w-md">
         <button
           onClick={handleSignInwithGoogle}
-          className="bg-blue-600 text-white py-2 px-4 rounded mb-4 w-full flex items-center justify-start gap-28"
+          className="bg-blue-600 text-white text-sm sm:text-base py-2 px-4 rounded mb-4 w-full flex items-center justify-start gap-28"
         >
           <FaGoogle />
           <span>Sign In with Google</span>
@@ -105,7 +105,7 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="bg-blue-600 text-white py-2 px-4 rounded w-full"
+            className="bg-blue-600 text-white py-2 text-sm sm:text-base  px-4 rounded w-full"
           >
             {loading ? "Logging in..." : "Log In"}
           </button>
