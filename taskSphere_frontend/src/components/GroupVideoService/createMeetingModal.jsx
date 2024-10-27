@@ -35,8 +35,11 @@ const CreateMeetingModal = ({card, open, onClose }) => {
         }}
       >
         <ClientProvider cardId={card._id} >
+        <div>
           <Navbar cardId={card._id} />
           <CreateMeetingPage card={card} onClose={onClose} />
+        </div>
+          
         </ClientProvider>
         
       </Box>
