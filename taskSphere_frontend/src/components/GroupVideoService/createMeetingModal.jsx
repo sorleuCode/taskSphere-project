@@ -20,6 +20,9 @@ const CreateMeetingModal = ({card, open, onClose }) => {
           width: 400,
           bgcolor: 'background.paper',
           p: 4,
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
           borderRadius: 2,
           boxShadow: 24,
           position: 'absolute',
@@ -28,7 +31,7 @@ const CreateMeetingModal = ({card, open, onClose }) => {
           transform: 'translate(-50%, -50%)',
           maxHeight: '90vh',  
           overflowY: 'auto', 
-          minHeight: '30vh' 
+          minHeight: '25vh' 
         }}
       >
         <ClientProvider cardId={card._id} >
