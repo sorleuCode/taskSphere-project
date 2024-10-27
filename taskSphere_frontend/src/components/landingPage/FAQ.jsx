@@ -54,7 +54,7 @@ const FAQ = () => {
               <span className="font-semibold text-sm">{faq.question}</span>
               {openIndex === index ? <FaCaretUp /> : <FaCaretRight />}
             </button>
-            {openIndex === index && <div className="p-4 text-sm sm:text-base">{faq.answer}</div>}
+            {openIndex === index && <div className="p-4 w-full text-sm sm:text-base">{faq.answer}</div>}
           </div>
         ))}
       </div>
