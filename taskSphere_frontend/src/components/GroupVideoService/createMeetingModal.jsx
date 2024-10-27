@@ -15,13 +15,11 @@ const [isConnected, setIsConnected] = useState(false)
 
 
 
-  if (!isConnected) {
-    return (
-      <div className="flex items-center justify-center">
-        <Loader2 className="mx-auto animate-spin" />
-      </div>
-    );
-  }
+  // if (!isConnected) {
+  //   return (
+  //     
+  //   )
+  // }
 
   return (
 
@@ -42,10 +40,13 @@ const [isConnected, setIsConnected] = useState(false)
           overflowY: 'auto',  
         }}
       >
-        <ClientProvider handleStreamConnect={handleStreamConnect} cardId={card._id} >
+        {isConnected ? (<div className="flex items-center justify-center">
+        <Loader2 className="mx-auto animate-spin" />
+       </div> ): (<ClientProvider handleStreamConnect={handleStreamConnect} cardId={card._id} >
           <Navbar cardId={card._id} />
           <CreateMeetingPage card={card} onClose={onClose} />
-        </ClientProvider>
+        </ClientProvider>)}
+        
       </Box>
     </Modal>
   );
