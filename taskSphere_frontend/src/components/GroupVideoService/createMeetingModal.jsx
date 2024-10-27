@@ -1,11 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Modal, Box } from '@mui/material';
 import CreateMeetingPage from './createMeetingPage';
 import ClientProvider from './clientProvider';
 import Navbar from './streamComponents/Navbar';
 
 const CreateMeetingModal = ({card, open, onClose }) => {
+const [isConnected, setIsConnected] = useState(false)
+
+
+  const handleStreamConnect = (value) => setIsConnected(value)
+
+
+
+
+  if (!isConnected) {
+    return (
+      <div className="flex items-center justify-center">
+        <Loader2 className="mx-auto animate-spin" />
+      </div>
+    );
+  }
+
   return (
+
+    
     <Modal open={open} onClose={onClose}>
       <Box
         sx={{
@@ -22,7 +40,7 @@ const CreateMeetingModal = ({card, open, onClose }) => {
           overflowY: 'auto',  
         }}
       >
-        <ClientProvider cardId={card._id} >
+        <ClientProvider handleStreamConnect={handleStreamConnect} cardId={card._id} >
           <Navbar cardId={card._id} />
           <CreateMeetingPage card={card} onClose={onClose} />
         </ClientProvider>

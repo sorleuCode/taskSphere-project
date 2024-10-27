@@ -7,15 +7,13 @@ import { getUserDetail } from "../../redux/reducers/userSlice";
 import { fetchCardMembers } from "../../redux/reducers/cardSlice";
 import { toast } from "react-toastify";
 
-export default function ClientProvider({ cardId, children }) {
+export default function ClientProvider({ cardId, handleStreamConnect, children }) {
   const { token, errorMessage } = useSelector((state) => state.clientToken);
   const { user, status } = useSelector((state) => state.user);
   const { cardMembers } = useSelector((state) => state.card);
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
-  const [isConnected, setIsConnected] = useState(false); // Track connection status
-
   const getTokenFunc = async () => (token ? token : undefined);
 
   useEffect(() => {
@@ -64,21 +62,7 @@ export default function ClientProvider({ cardId, children }) {
       tokenProvider: () => (user?._id ? getTokenFunc() : undefined),
     });
 
-    // Event listeners for connection tracking
-    client.on("connect", () => {
-      setIsConnected(true);
-      console.log("Stream video connected successfully.");
-    });
-
-    client.on("disconnect", () => {
-      setIsConnected(false);
-      console.log("Stream video disconnected.");
-    });
-
-    client.on("error", (error) => {
-      setIsConnected(false);
-      toast.error("Stream video connection error: " + error.message);
-    });
+    client.on("connect", () => handleStreamConnect(true));
 
     if (!token && loading) {
       return (
@@ -90,11 +74,7 @@ export default function ClientProvider({ cardId, children }) {
 
     return (
       <StreamVideo client={client}>
-        {isConnected ? (
-          children
-        ) : (
-          <div className="text-center">Connecting to video...</div>
-        )}
+        {children}
       </StreamVideo>
     );
   } else if (errorMessage) {
