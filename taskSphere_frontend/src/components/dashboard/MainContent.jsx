@@ -26,15 +26,16 @@ const MainContent = () => {
 
     // Fetch boards once after the user details have been fetched
     useEffect(() => {
-        if(loading) return
-        if (user && allBoards.length === 0) {
+        if (user && allBoards.length === 0 && !loading && !error) {
             dispatch(fetchBoards());
-        }else if (error) {
-            toast.error("Error fetching boards")
         }
     }, [dispatch, user, allBoards.length, loading, error]);
 
-   
+    useEffect(() => {
+        if (error) {
+            toast.error("Error fetching boards", { position: "top-right" });
+        }
+    }, [error]);
 
     const handleCreateBoardClick = () => {
         setShowForm(true);
