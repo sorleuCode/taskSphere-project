@@ -90,7 +90,7 @@ const MainContent = () => {
                                 <div className='flex flex-col justify-center items-start gap-[2px] flex-nowrap'>
                                     <label className="text-sm md:text-base">Filter by:</label>
                                     <select
-                                        className="border text-sm md:text-base outline-none border-gray-300 rounded py-[5px]"
+                                        className="border text-sm md:text-base outline-none border-gray-300 rounded p-[1px] py-[5px]"
                                         value={filter}
                                         onChange={(e) => setFilter(e.target.value)}
                                     >
@@ -103,7 +103,7 @@ const MainContent = () => {
                                     <label className='text-sm md:text-base' htmlFor="">Search:</label>
                                     <input
                                         type="text"
-                                        className="border placeholder:text-sm md:placeholder:text-base outline-none border-gray-300 rounded py-[2px] w-[50%] sm:w-[70%] md:w-[80%]"
+                                        className="border placeholder:text-sm md:placeholder:text-base outline-none border-gray-300 rounded p-[1px] py-[2px] w-[50%] sm:w-[70%] md:w-[80%]"
                                         placeholder="Search by title"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
