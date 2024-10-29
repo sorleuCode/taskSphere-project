@@ -24,8 +24,14 @@ const BoardForm = ({ onClose }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(createNewBoard(formData));
-        setShouldSubmit(true);
+        if(formData.description && formData.title && formData.title){
+            dispatch(createNewBoard(formData));
+            setShouldSubmit(true);
+
+        }else {
+            toast.error("All fields required")
+        }
+        
     };
 
     useEffect(() => {
