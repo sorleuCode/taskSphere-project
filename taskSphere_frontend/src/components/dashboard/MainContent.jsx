@@ -83,7 +83,7 @@ const MainContent = () => {
 
             {!showForm && (
                 <div>
-                    <div className="mb-6">
+                    <div className="mb-6 ">
                         <div className="flex justify-between items-center">
                             <h3 className=" text-sm md:text-base font-semibold hidden md:block">My Boards</h3>
                             <div className="flex gap-3 items-center">
