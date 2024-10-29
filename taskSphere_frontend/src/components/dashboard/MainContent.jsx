@@ -56,7 +56,7 @@ const MainContent = () => {
 
     return (
         <>
-            { user ? (<div className="flex-1 p-6 bg-white text-black">
+            { user ? (<div className="flex-1 overflow-x-auto overflow-y-auto p-6 bg-white text-black">
             <h1 className='pt-3 pb-4'>
                 {status === "loading" ? (
                     <p>Loading user...</p>
@@ -67,7 +67,7 @@ const MainContent = () => {
             {!showForm && (
                 <button
                     onClick={handleCreateBoardClick}
-                    className="bg-gray-200 text-[16px] sm:text-base text-gray-700 hover:scale-110 transition duration-500 py-2 sm px-2 rounded-lg mb-6 flex items-center"
+                    className="bg-gray-200 text-[16px] sm:text-base  text-gray-700 hover:scale-110 transition duration-500 py-2 sm px-2 rounded-lg mb-6 flex items-center"
                 >
                     <FaPlus className="mr-2 text-sm sm:text-base" />
                     Create new board
