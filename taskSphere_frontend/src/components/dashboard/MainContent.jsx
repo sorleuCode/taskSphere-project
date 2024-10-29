@@ -67,7 +67,7 @@ const MainContent = () => {
             {!showForm && (
                 <button
                     onClick={handleCreateBoardClick}
-                    className="bg-gray-200 text-gray-700 hover:scale-110 transition duration-500 py-2 sm px-2 rounded-lg mb-6 flex items-center"
+                    className="bg-gray-200 text-[16px] sm:text-base text-gray-700 hover:scale-110 transition duration-500 py-2 sm px-2 rounded-lg mb-6 flex items-center"
                 >
                     <FaPlus className="mr-2 text-sm sm:text-base" />
                     Create new board
@@ -103,7 +103,7 @@ const MainContent = () => {
                                     <label className='text-sm md:text-base' htmlFor="">Search:</label>
                                     <input
                                         type="text"
-                                        className="border placeholder:text-sm md:placeholder:text-base outline-none border-gray-300 rounded px-[1px] py-[2px] w-[100%] sm:w-[60%] md:w-[50%]"
+                                        className="border placeholder:text-sm md:placeholder:text-base outline-none border-gray-300 rounded px-[1px] py-[2px] min-w-[100%] sm:w-[80%] md:w-[70%]"
                                         placeholder="Search"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
