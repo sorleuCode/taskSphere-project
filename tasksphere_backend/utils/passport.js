@@ -6,7 +6,7 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: "https://tasksphereapi.vercel.app/users/auth/google/callback",
+      callbackURL: "https://tasksphere-six.vercel.app/user/googlecbk",
       passReqToCallback: true,
     },
     async (request, accessToken, refreshToken, profile, done) => {
