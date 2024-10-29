@@ -30,7 +30,7 @@ const Dashboard = () => {
       <div className="flex-1 flex flex-col">
         <DashHeader />
         {selectedMenu === 'Members' && <BoardMembershipTable />}
-        {/* Render other components based on selectedMenu */}
+        
         {selectedMenu === 'Boards' && <MainContent/>}
         {selectedMenu === 'Table' && <div>Table Content</div>}
         {selectedMenu === 'Calendar' && <div>Calendar Content</div>}
