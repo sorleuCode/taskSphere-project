@@ -90,7 +90,7 @@ const MainContent = () => {
                                 <div className="gap-2">
                                     <label className="ml-4 mr-2">Filter by:</label>
                                     <select
-                                        className="border text-sm md:text-base outline-none border-gray-300 rounded py-1"
+                                        className="border text-sm md:text-base outline-none border-gray-300 rounded py-2"
                                         value={filter}
                                         onChange={(e) => setFilter(e.target.value)}
                                     >
@@ -102,7 +102,7 @@ const MainContent = () => {
                                 <div className="items-center bg-white border outline-none py-1">
                                     <input
                                         type="text"
-                                        className="outline-none"
+                                        className="outline-none w-fit"
                                         placeholder="Search by title"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
