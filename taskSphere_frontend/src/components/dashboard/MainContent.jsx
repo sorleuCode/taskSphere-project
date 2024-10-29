@@ -31,11 +31,6 @@ const MainContent = () => {
         }
     }, [dispatch, allBoards.length, loading, error]);
 
-    useEffect(() => {
-        if (error) {
-            toast.error("Error fetching boards", { position: "top-right" });
-        }
-    }, [error]);
 
     const handleCreateBoardClick = () => {
         setShowForm(true);
