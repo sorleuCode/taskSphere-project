@@ -56,7 +56,7 @@ const MainContent = () => {
 
     return (
         <>
-            { user ? (<div className="flex-1 p-6 overflow-y-auto bg-white text-black">
+            { user ? (<div className="flex-1 p-6 overflow-y-auto overflow-x-auto bg-white text-black">
             <h1 className='pt-3 pb-4'>
                 {status === "loading" ? (
                     <p>Loading user...</p>
