@@ -87,7 +87,7 @@ const MainContent = () => {
                         <div className="flex justify-between items-center">
                             <h3 className=" text-sm md:text-base font-semibold">My Boards</h3>
                             <div className="flex gap-3 items-center">
-                                <div className="gap-2">
+                                <div className='flex justify-center items-center gap-[3px] flex-nowrap'>
                                     <label className="ml-4 mr-2">Filter by:</label>
                                     <select
                                         className="border text-sm md:text-base outline-none border-gray-300 rounded py-2"
