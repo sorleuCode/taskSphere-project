@@ -5,19 +5,20 @@ import userReduder from "../reducers/userSlice"
 import columnReducer from "../reducers/columnSlice"
 import inviteReducer from "../reducers/inviteSlice"
 import StreamClientTokenReducer from "../reducers/videoSlice"
-import { persistReducer } from 'redux-persist'
+import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 const persistConfig = {
     key: 'root',
-    storage
+    storage,
+    whitelist: ['user'] 
 };
 
 const persistedUserReducer = persistReducer(persistConfig, userReduder);
 
 
 
-export const store = configureStore({
+const store = configureStore({
     reducer: {
         board: boardReducer,
         card: cardReducer,
@@ -30,3 +31,7 @@ export const store = configureStore({
 
     }
 })
+
+
+export const persistor = persistStore(store);
+export default store;
