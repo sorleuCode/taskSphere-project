@@ -102,7 +102,7 @@ const MainContent = () => {
                                 <div className="items-center bg-white border outline-none py-1">
                                     <input
                                         type="text"
-                                        className="outline-none w-fit"
+                                        className="outline-none w-auto"
                                         placeholder="Search by title"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
