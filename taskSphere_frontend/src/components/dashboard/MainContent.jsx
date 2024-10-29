@@ -90,7 +90,7 @@ const MainContent = () => {
                                 <div className="gap-2">
                                     <label className="ml-4 mr-2">Filter by:</label>
                                     <select
-                                        className="border outline-none border-gray-300 rounded p-2"
+                                        className="border text-sm md:text-base outline-none border-gray-300 rounded p-2"
                                         value={filter}
                                         onChange={(e) => setFilter(e.target.value)}
                                     >
