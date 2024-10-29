@@ -31,6 +31,7 @@ const Login = () => {
   const handleSignInwithGoogle = () => {
     window.location.href = `${import.meta.env.VITE_BASE_URL}/users/auth/google`;
   };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
