@@ -13,7 +13,7 @@ Router.get("/", (req, res) => {
 
 Router.get("/myboards", verifyToken, boardController.getAllboardsDetails)
 
-Router.post("/create", verifyToken, boardValidation.createNew, boardController.createNew)
+Router.post("/create", boardValidation.createNew, boardController.createNew)
 Router.get("/members", verifyToken,  boardController.getAllMembersAndOwnersByUser, boardController.createNew)
 
 
