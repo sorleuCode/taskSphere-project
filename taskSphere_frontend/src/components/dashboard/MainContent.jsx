@@ -103,7 +103,7 @@ const MainContent = () => {
                                     <label htmlFor="">Search:</label>
                                     <input
                                         type="text"
-                                        className="border outline-none border-gray-300 rounded py-[5px] "
+                                        className="border outline-none border-gray-300 rounded py-[3px] "
                                         placeholder="Search by title"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
