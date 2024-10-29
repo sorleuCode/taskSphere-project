@@ -104,7 +104,7 @@ const MainContent = () => {
                                     <input
                                         type="text"
                                         className="border placeholder:text-sm md:placeholder:text-base outline-none border-gray-300 rounded px-[1px] py-[2px] w-[100%] sm:w-[60%] md:w-[50%]"
-                                        placeholder="Search by title"
+                                        placeholder="Search"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                     />
