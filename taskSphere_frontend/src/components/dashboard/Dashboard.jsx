@@ -25,12 +25,12 @@ const Dashboard = () => {
 
 
   return (
-    <div className="flex max-h-screen">
+    <div className="flex min-h-screen">
       <Sidebar setSelectedMenu={setSelectedMenu} />
       <div className="flex-1 flex flex-col">
         <DashHeader />
         {selectedMenu === 'Members' && <BoardMembershipTable />}
-        
+
         {selectedMenu === 'Boards' && <MainContent/>}
         {selectedMenu === 'Table' && <div>Table Content</div>}
         {selectedMenu === 'Calendar' && <div>Calendar Content</div>}
