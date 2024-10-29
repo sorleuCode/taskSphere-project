@@ -85,7 +85,7 @@ const MainContent = () => {
                 <div>
                     <div className="mb-6">
                         <div className="flex justify-between items-center">
-                            <h3 className="font-semibold">My Boards</h3>
+                            <h3 className=" text-sm md:text-base font-semibold">My Boards</h3>
                             <div className="flex gap-3 items-center">
                                 <div className="gap-2">
                                     <label className="ml-4 mr-2">Filter by:</label>
