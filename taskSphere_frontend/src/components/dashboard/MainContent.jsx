@@ -85,7 +85,7 @@ const MainContent = () => {
                 <div>
                     <div className="mb-6">
                         <div className="flex justify-between items-center">
-                            <h3 className=" text-sm md:text-base font-semibold">My Boards</h3>
+                            <h3 className=" text-sm md:text-base font-semibold hidden md:block">My Boards</h3>
                             <div className="flex gap-3 items-center">
                                 <div className='flex flex-col justify-center items-start gap-[2px] flex-nowrap'>
                                     <label className="text-sm md:text-base">Filter by:</label>
