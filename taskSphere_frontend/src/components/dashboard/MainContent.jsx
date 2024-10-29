@@ -94,12 +94,12 @@ const MainContent = () => {
                                         value={filter}
                                         onChange={(e) => setFilter(e.target.value)}
                                     >
-                                        <option value="">All Types</option>
-                                        <option value="private">Private</option>
-                                        <option value="public">Public</option>
+                                        <option className='text-sm md:text-base' value="">All Types</option>
+                                        <option className='text-sm md:text-base' value="private">Private</option>
+                                        <option className='text-sm md:text-base' value="public">Public</option>
                                     </select>
                                 </div>
-                                <div className="relative flex items-center bg-white border outline-none border-gray-300 rounded p-2">
+                                <div className="items-center bg-white border outline-none border-gray-300 rounded p-2">
                                     <input
                                         type="text"
                                         className="outline-none"
@@ -107,7 +107,6 @@ const MainContent = () => {
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
                                     />
-                                    <FaSearch className="ml-2" />
                                 </div>
                             </div>
                         </div>
