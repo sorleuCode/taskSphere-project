@@ -87,7 +87,7 @@ const MainContent = () => {
                         <div className="flex justify-between items-center">
                             <h3 className=" text-sm md:text-base font-semibold">My Boards</h3>
                             <div className="flex gap-3 items-center">
-                                <div className='flex flex-col justify-center items-center gap-[2px] flex-nowrap'>
+                                <div className='flex flex-col justify-center items-start gap-[2px] flex-nowrap'>
                                     <label className="text-sm md:text-base">Filter by:</label>
                                     <select
                                         className="border text-sm md:text-base outline-none border-gray-300 rounded py-2"
@@ -99,11 +99,11 @@ const MainContent = () => {
                                         <option className='text-sm md:text-base' value="public">Public</option>
                                     </select>
                                 </div>
-                                <div className="flex flex-col justify-center items-center gap-[2px] flex-nowrap">
+                                <div className="flex flex-col justify-center items-start gap-[2px] flex-nowrap">
                                     <label htmlFor="">Search:</label>
                                     <input
                                         type="text"
-                                        className="outline-none w-auto"
+                                        className=" outline "
                                         placeholder="Search by title"
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
