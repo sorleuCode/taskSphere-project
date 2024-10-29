@@ -69,7 +69,7 @@ const MainContent = () => {
                     onClick={handleCreateBoardClick}
                     className="bg-gray-200 text-gray-700 hover:scale-110 transition duration-500 py-2 sm px-4 rounded-lg mb-6 flex items-center"
                 >
-                    <FaPlus className="mr-2" />
+                    <FaPlus className="mr-2 text-sm sm:text-base" />
                     Create new board
                 </button>
             )}
