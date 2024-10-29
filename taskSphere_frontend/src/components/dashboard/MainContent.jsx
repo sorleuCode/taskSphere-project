@@ -87,8 +87,8 @@ const MainContent = () => {
                         <div className="flex justify-between items-center">
                             <h3 className=" text-sm md:text-base font-semibold">My Boards</h3>
                             <div className="flex gap-3 items-center">
-                                <div className='flex justify-center items-center gap-[3px] flex-nowrap'>
-                                    <label className="ml-4 mr-2">Filter by:</label>
+                                <div className='flex flex-col justify-center items-center gap-[3px] flex-nowrap'>
+                                    <label className="text-sm md:text-base">Filter by:</label>
                                     <select
                                         className="border text-sm md:text-base outline-none border-gray-300 rounded py-2"
                                         value={filter}
@@ -100,6 +100,7 @@ const MainContent = () => {
                                     </select>
                                 </div>
                                 <div className="items-center bg-white border outline-none py-1">
+                                    <label htmlFor="">Search:</label>
                                     <input
                                         type="text"
                                         className="outline-none w-auto"
