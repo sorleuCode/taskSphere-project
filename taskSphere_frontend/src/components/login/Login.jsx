@@ -52,9 +52,6 @@ const Login = () => {
     } else if (!status && error) {
       toast.error(error, {position: "top-right"});
     }
-    else{
-      toast.error("Server error", {position: "top-right"});
-    }
   }, [ status, error, navigate]);
 
   return (
