@@ -15,6 +15,7 @@ const persistConfig = {
 };
 
 const persistedUserReducer = persistReducer(persistConfig, userReduder);
+const persistedStreamClientReducer = persistReducer(persistConfig, StreamClientTokenReducer);
 
 
 
@@ -25,7 +26,7 @@ const store = configureStore({
         user: persistedUserReducer,
         column: columnReducer,
         invitation: inviteReducer,
-        clientToken: StreamClientTokenReducer
+        clientToken: persistedStreamClientReducer
 
 
 
