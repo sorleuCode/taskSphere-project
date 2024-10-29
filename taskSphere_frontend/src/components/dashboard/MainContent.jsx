@@ -100,7 +100,7 @@ const MainContent = () => {
                                     </select>
                                 </div>
                                 <div className="flex flex-col justify-center items-start gap-[2px] flex-nowrap">
-                                    <label htmlFor="">Search:</label>
+                                    <label className='text-sm md:text-base' htmlFor="">Search:</label>
                                     <input
                                         type="text"
                                         className="border outline-none border-gray-300 rounded py-[2px] w-[50%] "
