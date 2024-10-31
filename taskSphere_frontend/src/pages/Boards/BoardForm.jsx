@@ -24,7 +24,7 @@ const BoardForm = ({ onClose }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(formData.description && formData.title && (formData.title === "Private" || formData.title === "Public") ){
+        if(formData.description && formData.title && (formData.type === "Private" || formData.title) ){
             dispatch(createNewBoard(formData));
             setShouldSubmit(true);
 
